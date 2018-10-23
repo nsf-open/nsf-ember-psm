@@ -1,0 +1,13 @@
+
+{{#if (not isButton)}}
+
+  <a {{ action "openFile"}} class="a-security__link filename-saved break-all-word" title="opens in a new window" data-test-open-file-new-window="">
+    {{yield}}
+  </a>
+{{else}}
+
+  <button class={{ buttonCSS }} {{ action "openFile"}} data-test-open-file-new-window="">
+    {{yield}}
+  </button>
+
+{{/if}}

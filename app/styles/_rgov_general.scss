@@ -1,0 +1,375 @@
+/* General site-wide layouts -------------------------------------- */
+
+html {
+  min-width: 940px !important;
+}
+
+body {
+  background: url('../assets/images/bodybg.png') 0 0 repeat-x;
+  color: #333;
+  font: normal 0.875em arial, helvetica, sans-serif;
+  padding-bottom: 0px;
+  margin: 0;
+  min-width: 940px !important;
+}
+
+table, p, div {
+  color: #333;
+}
+
+a {
+	&:hover {
+		text-decoration: none !important;
+	}
+  &:not(.btn) {
+    &.disabled, &:disabled {
+      cursor: not-allowed;
+      text-decoration: none;
+      color: #333;
+    }
+  }
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid #cccccc;
+  min-height: 330px;
+  padding-left: 10px;
+  padding-top: 7px;
+}
+
+/* General IDs / Classes -------------------------------------- */
+
+.right {
+  float: right;
+}
+
+.right.inline-btns {
+  margin-left: -10px;
+}
+
+.left {
+  float: left;
+}
+
+.datepicker {
+  margin-right: 7px;
+  vertical-align: bottom;
+}
+
+.leftPadding {
+  padding-left: 7px;
+}
+
+.leftMargin {
+  margin-left: 7px;
+}
+
+.topPadding {
+  padding-top: 10px;
+}
+
+.topMargin {
+  margin-top: 10px;
+}
+
+.bottomPadding {
+  padding-bottom: 10px;
+}
+
+.bottomMargin {
+  margin-bottom: 10px;
+}
+
+.bottomMoreMargin {
+  margin-bottom: 20px;
+}
+
+.bottomMorePadding {
+  padding-bottom: 20px;
+}
+
+.bottomExtraMorePadding {
+  padding-bottom: 30px;
+}
+
+.bottomBorder {
+  border-bottom: 1px solid #B2B4B7;
+  width: 460px;
+}
+
+.widthFull {
+  width: 100%;
+}
+
+.extraWideInput {
+  width: 450px;
+}
+
+.noBullet {
+  list-style: none;
+  padding-left: 0;
+}
+
+.icoLabel {
+  padding-top: 3px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.indentLeft {
+  margin-left: 17px;
+}
+.reverseIndentLeft {
+  margin-left: -17px;
+}
+
+/* Print and Adjust Font Size Section styles -------------------------------------- */
+
+.controlContainer {
+  padding: 0 0 10px 0;
+  overflow: hidden;
+}
+
+.siteControls {
+  float: right;
+  border-bottom: 4px solid #fff;
+  list-style-type: none;
+  li {
+    display: inline;
+    float: left;
+    margin-left: 10px;
+  }
+}
+
+.printIcon {
+  background: url('../assets/images/ico_sprites.png') 4px -112px no-repeat;
+  list-style: none;
+  padding: 5px 0 5px 30px;
+}
+
+.fontSizeSelector a {
+  color: #999;
+}
+
+a.fontSizeSelected {
+  color: #333; //#000;
+  font-weight: bold;
+}
+
+#regularFontSizeAnchor {
+  font-size: 100%;
+}
+
+#mediumFontSizeAnchor {
+  font-size: 120%;
+}
+
+#largeFontSizeAnchor {
+  font-size: 150%;
+}
+
+/* Displaytag styles -------------------------------------- */
+
+.vert-spacing {
+  margin: 10px 0;
+}
+
+.xml {
+  background: url("../assets/images/ico_sprites.png") no-repeat scroll 0 0 transparent;
+  padding: 0 0 0 20px;
+}
+
+.excel {
+  background: url("../assets/images/ico_sprites.png") no-repeat scroll 0 -50px transparent;
+  padding: 0 0 0 20px;
+}
+
+.csv {
+  background: url("../assets/images/ico_sprites.png") no-repeat scroll 0 -74px transparent;
+  padding: 0 0 0 20px;
+}
+
+.pdf {
+  background: url("../assets/images/ico_sprites.png") no-repeat scroll 0 -98px transparent;
+  padding: 0 0 0 20px;
+}
+
+/* Section 508 Skip navigation link */
+
+.visuallyhidden {
+  position: absolute;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  &.focusable {
+    &:active, &:focus {
+      clip: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      position: static;
+      width: auto;
+    }
+  }
+}
+
+/* Icon color styles -------------------------------------- */
+
+.fa-file-excel-o {
+	color: #27ae60;
+}
+.fa-file-pdf-o {
+	color: #c0392b;
+}
+.fa-star {
+	color: #f39c12;
+}
+.fa-flag {
+	color: #c0392b;
+}
+.fa-asterisk {
+  color: #b12a1f;
+  font-size: 7px;
+  vertical-align: top;
+  padding-right: 4px;
+}
+.fa-exclamation-circle, .fa-red-x {
+  color: #b12a1f;
+}
+.fa-exclamation-triangle {
+  color: #8e5300;
+}
+.fa-check-circle, .fa-green-check {
+  color: #006149;
+}
+.row-expanded {
+  .fa.hide-if-expanded {
+    display: none;
+  }
+}
+/* Make all spinners gray color per UX */
+.app-loading {
+  .fa-spinner {
+    color: #999999;
+  }
+  /* use a fixed container for loading screens */
+  .panel-default {
+    height: 890px;
+    margin-top: 134px;
+  }
+  .logo-container {
+    padding-top: 100px;
+    > p {
+      color: #666666;
+    }
+  }
+  &.proposal-loading {
+    .panel-default {
+      margin-top: 31px;
+    }
+  }
+
+  &.panel-body-loading {
+    height: 660px;
+    margin-top: 30px;
+  }
+}
+
+/* Globally remove IE x icon in input fields -------------------------------------- */
+input::-ms-clear {
+  display: none;
+}
+/* Globally apply gray background and not-allowed cursor to disabled inputs */
+html body input:disabled, html body input[disabled], html body textarea:disabled, html body textarea[disabled] {
+  background-color: $input-bg-disabled;
+  cursor: not-allowed;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
+
+
+$direction-list: "top" "right" "bottom" "left";
+$pixel-multi: 5;
+$property-list: "p" "m";
+@for $i from 0 through 100 {
+  $pixel-number: $pixel-multi * $i;
+
+
+  @each $direction in $direction-list {
+    @each $property in $property-list {
+      $property-name: "margin";
+      @if $property == "p" {
+        $property-name: "padding";
+      }
+
+      .#{$property}-#{$direction}-#{$pixel-number} {
+        #{$property-name}-#{$direction}: #{$pixel-number}px;
+      }
+    }
+
+  }
+}
+
+
+.label.green-success {
+  background-color: #10795f;
+
+  padding-left: 0.8em;
+  padding-top: 0.3em
+}
+
+.input-md-addon-width {
+  width: 315px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+
+
+.proposal-search-box {
+  $search-box-input-lg-width: 257px;
+
+  @mixin proposal-search-box-width($md-with, $lg-width) {
+    @media (max-width: $screen-md-max) {
+      width: $md-with;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      width: $lg-width;
+    }
+
+  }
+
+  .proposal-search-box__search-container {
+    // width: 590px;
+
+  }
+
+  .proposal-search-box__form-input {
+    @media (max-width: $screen-md-max) {
+      margin-right: 10px;
+    }
+
+    @media (min-width: $screen-lg-min) {
+      margin-right: 30px;
+    }
+  }
+
+  .proposal-search-box__id-number-input {
+    @include proposal-search-box-width(219px, $search-box-input-lg-width)
+  }
+
+  .proposal-search-box__last-name-input {
+    @include proposal-search-box-width(184px, $search-box-input-lg-width)
+  }
+}

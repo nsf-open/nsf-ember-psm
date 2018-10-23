@@ -1,0 +1,1096 @@
+
+
+.psm-container {
+  @extend .container;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 0px; //15px;
+  padding-right: 0px; //15px;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 8px;
+  border-radius: 5px;
+  background-color: #d8d8d8;
+}
+::-webkit-scrollbar-track {
+  width: 14px;
+  background-color: #ffffff;
+  background-color: var(--white-four);
+  border: solid 1px #f2f5f7;
+}
+.textarea-scroll {
+  background: #ffffff !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.error {
+  border: solid 1px #e74c3c;
+}
+.error-text {
+  &:empty:before {
+    content: "\200b"; // unicode zero width space character
+  }
+  color: #b12a1f;
+  font-size: 13px;
+}
+.display-block {
+  display: block;
+}
+
+.display-inline {
+  display: inline;
+}
+
+.display-inline-block {
+  display: inline-block;
+
+  &.vertical-top {
+    vertical-align: top;
+  }
+
+  &.button-inline-block {
+    padding-top: 23px;
+  }
+}
+
+.error-tooltip + .tooltip {
+  z-index: 1040;
+  opacity: 1.0;
+  margin-top: 0;
+
+  > .tooltip-inner{
+    background-color: #b33127;
+    border-radius: 2px;
+    max-width: 280px;
+    width: 280px;
+    font-size: 14px;
+    display: flex;
+    padding-right: 25px !important;
+    > div {
+      color:inherit;
+      word-wrap: normal;
+      text-align: left;
+    }
+    > button.close-tooltip {
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      -webkit-appearance: none;
+      font-weight: normal !important;
+      font-size: 13px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #fff !important;
+      margin-top: 5px !important;
+      padding: 2px 6px !important;
+      // margin-right: -6px !important;
+    }
+  }
+  > .tooltip-arrow  {
+    border-top-color: #b33127;
+    padding-top: 1px;
+  }
+
+}
+
+.error-icon {
+  font-family: FontAwesome;
+  font-size: 13px !important;
+  color: #b33127;
+
+  // position: absolute;
+  // margin-top: -9px;
+
+  position: absolute;
+  //top: 0;
+  //right: 0;
+  top: -7px;
+  right: -7px;
+
+
+  // margin-right: -9px;
+  // margin-top: -9px;
+  &:hover {
+    color: #b33127 !important;
+    cursor: pointer;
+  }
+}
+
+.validation-error-text {
+  color: #b12a1f;
+  font-size: 13px;
+  vertical-align: top;
+  span {
+    display: inline-block;
+    width: 90%;
+  }
+}
+
+.budget-text-box-entry {
+  .error-icon {
+    right: 0;
+  }
+}
+#indirectCosts {
+  .budget-text-box-entry {
+    .error-icon {
+      right: 2px;
+    }
+  }
+}
+
+#equipment .position-relative, #indirectCosts .position-relative {
+  //width: 90px;
+  //width: 88%;
+  width: 80%;
+  white-space: nowrap;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.searchBar {
+  padding: 8px 10px !important;
+  margin-top: -25px;
+
+  label {
+    width: 100%;
+  }
+}
+
+
+.staticFormsPageImg {
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid black;
+}
+
+.sortable-header {
+  color: white;
+  padding-top: 4px;
+  float: right;
+}
+
+
+//Widths
+.width-perc-100 {
+  width: 100%;
+}
+
+.cover-sheet-540, .input-width-540 {
+  width: 540px;
+}
+.cover-sheet-327 {
+  width: 327px;
+}
+.cover-sheet-184 {
+  width: 184px;
+}
+// move content slightly to left to line up with other content, offsets the inline edit outline
+section.inline-edit {
+  margin-left: -3px;
+  .inline-edit-readonly {
+    margin-left: 3px;
+  }
+}
+
+
+
+//Padding
+
+.padding-top-10 {
+  padding-top: 10px !important;
+}
+.padding-top-20 {
+  padding-top: 20px !important;
+}
+
+.padding-btm-0 {
+  padding-bottom: 0px !important;
+}
+.padding-btm-5 {
+  padding-bottom: 5px !important;
+}
+.padding-btm-10 {
+  padding-bottom: 10px !important;
+}
+.padding-btm-15 {
+  padding-bottom: 15px !important;
+}
+
+.padding-right-0 {
+  padding-right: 0px !important;
+}
+.padding-right-5 {
+  padding-right: 5px !important;
+}
+.padding-right-30 {
+  padding-right: 30px !important;
+}
+
+.padding-left-0 {
+  padding-left: 0px !important;
+}
+.padding-left-10 {
+  padding-left: 10px !important;
+}
+.padding-left-20 {
+  padding-left: 20px !important;
+}
+.padding-left-16 {
+  padding-left: 16px !important;
+}
+.padding-left-30 {
+  padding-left: 30px !important;
+}
+.padding-left-50 {
+  padding-left: 50px !important;
+}
+.padding-left-60 {
+  padding-left: 60px !important;
+}
+
+
+
+
+
+//Fonts
+.font-size-13 {
+  font-size: 13px;
+}
+
+.font-size-16 {
+  font-size: 16px !important;
+}
+
+.no-label-label {
+  font-weight: normal;
+  display: inherit;
+}
+
+
+.display-input-inline-block {
+  > input[type="text"] {
+    font-weight: normal;
+    display: inline-block !important;
+  }
+}
+label {
+  > select, input[type="text"]{
+    font-weight: normal;
+    display: block;
+  }
+}
+
+.vert-aligned-numbered-label {
+  text-align: left;
+  width: 25px;
+  display: inline-block;
+}
+
+.not-bold {
+  font-weight: normal;
+}
+
+//Margin
+.margin-top-204 {
+  margin-top: 204px;
+}
+.margin-top-45 {
+  margin-top: 45px;
+}
+.margin-top-10 {
+  margin-top: 10px;
+}
+.margin-top-5 {
+  margin-top: 5px;
+}
+.margin-top-minus-5 {
+  margin-top: -5px;
+}
+
+.margin-btm-0 {
+  margin-bottom: 0;
+}
+
+.margin-right-0 {
+  margin-right: 0;
+}
+.margin-right-4 {
+  margin-right: 4px;
+}
+.margin-right-11 {
+  margin-right: 11px !important;
+}
+
+.margin-left-0 {
+  margin-left: 0;
+}
+.margin-left-22 {
+  margin-left: 22px;
+}
+.margin-left-30 {
+  margin-left: 30px !important;
+}
+
+.margin-btm-10 {
+  margin-bottom: 10px !important;
+}
+.margin-btm-7 {
+  margin-bottom: 7px !important;
+}
+
+.margin-btm-20 {
+  margin-bottom: 20px !important;
+}
+
+.margin-btm-45 {
+  margin-bottom: 45px !important;
+}
+
+.margin-right-30 {
+  margin-right: 30px !important;
+}
+
+//Links
+a:hover {
+  cursor: pointer;
+}
+a.fa:focus {
+  color: $link-color;
+}
+a.fa:hover, a>i:hover {
+  color: $link-hover-color
+}
+thead th {
+  a.fa:hover, a>i:hover {
+    color: #ffffff;
+  }
+}
+div.panel-header {
+  a.fa:hover, a>i:hover {
+    color: #fff;
+  }
+}
+a.fa.fa-sort, a.fa.fa-sort-asc, a.fa.fa-sort-desc {
+  color: #fff;
+  outline: none;
+}
+
+.close {
+  opacity: inherit;
+  &:hover {
+    color: $link-hover-color;
+  }
+}
+
+//Icons
+.icon-pad-right {
+  padding-right: 4px;
+}
+
+.icon-pad-left {
+  padding-left: 4px;
+}
+
+.icon-float-left {
+  float: left;
+  height: 40px;
+  padding-top: 2px;
+}
+
+.icon-link-flex {
+  display: flex;
+
+  .icon-link-flex__icon {
+    padding-top: 2px;
+  }
+}
+
+.text-align-left {
+  text-align: left;
+}
+.text-align-right {
+  text-align: right;
+}
+
+p.side-paragraph {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+//Input Symbols
+.input-symbol {
+    position: relative;
+}
+.input-symbol.symbol-left input {
+    padding-left: 13px;
+}
+.input-symbol.symbol-right input {
+    padding-right: 15px;
+  padding-right: 20px;
+    text-align: right;
+  float: right;
+}
+.input-symbol.dollar input {
+  float: right;
+  text-align: right;
+}
+.input-symbol.dollar:before {
+    position: absolute;
+    // top: 0;
+    content:"$";
+}
+.input-symbol.percent:before {
+    position: absolute;
+    top: 0;
+    top: 3px;
+    content:"%";
+}
+.input-symbol.symbol-left:before {
+    left: 8px; //22px;
+    top: 3px; //13px;
+}
+.input-symbol.symbol-right:before {
+    right: 3px;
+  right: 6px;
+}
+.year-count-1 {
+  .input-symbol.symbol-left:before {
+    left: 11px;
+  }
+}
+
+dd {
+  padding-bottom: 5px;
+}
+dt {
+  padding-top: 5px;
+}
+@media (min-width: 1200px) {
+  .descending-row-margins {
+    .col-lg-4:nth-of-type(2), .col-lg-4:nth-of-type(3) {
+      dt {
+        width: 100px;
+      }
+      dd {
+        margin-left: 100px;
+      }
+    }
+    .col-lg-3:nth-of-type(2), .col-lg-3:nth-of-type(3) {
+      dt {
+        width: 80px;
+      }
+      dd {
+        margin-left: 80px;
+      }
+    }
+  }
+}
+
+
+.dl-horizontal dt, dd {
+  text-align: left;
+  padding-bottom: 5px;
+  padding-top: 0px;
+  //min-height: 30px;
+  min-height: 20px;
+}
+
+.title {
+  position: relative;
+  top: 5px;
+}
+
+//Table
+.uoc {
+	border-left: none !important;
+	border-right: none !important;
+}
+
+//Budget specific table indents
+.budget-table {
+  width: 100%;
+  tr:not(.bold) {
+    th:first-child {
+      padding-left: 10px;
+    }
+    td:first-child {
+      padding-left: 45px;
+    }
+  }
+  tr.rotated-sub-header.taller {
+    th:first-child {
+      padding-left: 0;
+    }
+    th.col-budget-funds {
+      //max-width: 100px;
+      width: 100px;
+    }
+  }
+  tr.subtotal, tr.total {
+    td:first-child {
+      padding-left: 16px;
+    }
+  }
+  tr.subtotal.no-lettering {
+    td:first-child {
+      padding-left: 10px;
+    }
+  }
+  // budget specific header alignment
+  .panel-title h1 {
+    margin-top: 0;
+  }
+
+  // hoping this will fix an issue with Chrome/IE on VDI where budget table exceeds the container which is caused by unset/inheritted input widths
+  td input {
+    max-width: 50px;
+    &.width-100 {
+      max-width: 100%;
+    }
+  }
+
+
+}
+// budget page Manage Personnel modal
+#managePersonnelModal {
+  table {
+    width: 100%;
+  }
+  td.multi-select-buttons {
+    width: 104px;
+    text-align: center;
+  }
+  select {
+    width: 380px;
+    height: 150px;
+    padding-top: 3px;
+  }
+  select option {
+    padding-left: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .fa.fa-angle-double-left, .fa.fa-angle-double-right {
+    font-size: 18px;
+  }
+}
+
+//Table Column Widths
+.col-select {
+	width: 7%;
+}
+.td-select {
+	text-align: center;
+}
+.col-fon {
+	width: 30%;
+}
+.col-fot {
+	width: 63%;
+}
+.col-prop-sec {
+	width: 30%;
+}
+.col-prop-sec-status {
+	width: 20%;
+}
+.col-budget-items {
+	width: 30%;
+}
+.col-budget-months {
+	width: 8%;
+	// min-width: 7%;
+  // min-width: 5%;
+  max-width: 25px;
+}
+.col-budget-personnel {
+  > td {
+    display: inline-block;
+  }
+  max-width: 25px;
+}
+
+.budget-table > thead > tr > td, .budget-table > tbody > tr > th, .budget-table > tbody > tr > td, .table > tfoot > tr > th, .budget-table > tfoot > tr > td {
+  min-width: 50px;
+  &.col-slider, &.slider-col {
+    min-width: 20px;
+  }
+  padding: 5px 5px 2px 2px;
+    > label > input, > ul > label > input {
+        //width:98%;
+      width: 90%;
+      min-width: 50px;
+      //max-width: 120px;
+      &.budget-indirect-cost-no-sliders, .budget-indirect-cost-rate, .budget-indirect-cost-sliders {
+        width: 95%;
+        max-width: 95%;
+        min-width: 70px;
+        margin-left: 5px;
+      }
+      &.budget-indirect-cost-no-sliders, &.budget-indirect-cost-sliders {
+        min-width: 110px;
+      }
+      &.budget-indirect-cost-rate {
+        //width: 95%;
+        width: 70px;
+        max-width: 70px;
+      }
+      //&.budget-indirect-cost-rate {
+      //  width: 70px;
+      //}
+    }
+  &.td-budget-indirect-cost-rate {
+    width: 80px;
+  }
+  &.td-budget-indirect-cost-base {
+    width: 120px;
+  }
+  &.other-personnel-months {
+    input {
+      min-width: 65px;
+    }
+  }
+  &.dividing-character {
+    min-width: 30px;
+    max-width: 30px;
+  }
+  &.budget-indirect-cost-spacer {
+    min-width: 90px;
+  }
+  //&:first-child {
+  //  max-width: 350px;
+  //}
+  &:last-child {
+    //width: 100px;
+    width: 12%;
+  }
+}
+// this might be nice to dim the table a bit while data is loading to populate it
+//.budget-table.budget-data-loading {
+//  opacity: 0.5;
+//}
+.budget-table {
+  tbody:not(.collapse) {
+    tr:first-child {
+      td {
+        padding-top: 14px;
+      }
+    }
+    //tr:not(.spacer-row) {
+    //  td:first-child {
+    //    border-left: 1px solid #ced6da !important;
+    //  }
+    //  td:last-child {
+    //    border-right: 1px solid #ced6da !important;
+    //  }
+    //}
+  }
+  tbody.collapse {
+    tr:last-child {
+      td {
+        padding-bottom: 14px;
+      }
+    }
+    //tr {
+    //  td:first-child {
+    //    border-left: 1px solid #ced6da !important;
+    //  }
+    //  td:last-child {
+    //    border-right: 1px solid #ced6da !important;
+    //  }
+    //}
+  }
+  tr.total td, tr.subtotal td {
+    padding-top: 14px;
+    padding-bottom: 10px;
+  }
+  a.fa-minus-circle, a.fa-plus-circle {
+    padding-left: 8px;
+  }
+}
+
+
+.budget-indirect-cost-sliders {
+    //max-width: 150px;
+    width: 95%;
+    max-width: 95%;
+}
+
+.budget-indirect-cost-no-sliders {
+    //max-width:150px;
+    width: 95%;
+    max-width: 95%;
+}
+
+.budget-section-header {
+    max-width: 25px;
+}
+
+.col-budget-amounts {
+  @extend .word-wrap;
+  min-width: 15%;
+	// max-width: 24%;
+  .sliders {
+    max-width:150px;
+    width: 95%;
+  }
+  .no-sliders {
+    //max-width:150px;
+    width: 95%;
+    max-width: 95%;
+  }
+}
+
+.default-cursor {
+    cursor: default;
+    text-decoration: none;
+}
+
+.hand-cursor {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* absolute position expand/collapse icon on submitted proposals page and adjust position - this is so we can wrap text for the adjacent title */
+.expand-icon-adjust-pfu {
+  position: absolute;
+  margin-top: 2px;
+}
+.submitted-table {
+  tbody {
+    th {
+      padding-right: 15px !important;
+    }
+  }
+}
+
+.col-slider {
+  width: 7px;
+  height: 18px;
+  font-family: FontAwesome;
+  font-size: 18px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  vertical-align: middle !important;
+}
+
+#table-no-lettering-subtotal td.table-no-lettering-subtotal-td {
+    border-right: 1px solid #ffe2a1 !important;
+}
+
+#table-no-lettering-subtotal-bold td.table-no-lettering-subtotal-bold-td {
+    border-right: 1px solid #ffe2a1 !important;
+}
+
+#table-lettering-total td.table-lettering-total-td {
+   border-right: 1px solid #e2c686 !important;
+}
+
+th[class*="rectangle-slider"][style*="cursor: pointer"]:hover {
+     > a[class*="enabled-slide"] > i {
+        color: #ffffff;
+    }
+    background-color: #49a4b7;
+}
+
+td[class*="rectangle-slider-adjusted"][style*="cursor: pointer"]:hover {
+    > a[class*="enabled-slide-adjusted"] > i {
+        color: #333333;
+    }
+    background-color: #ebddbf;
+}
+
+td[class*="rectangle-slider-adjusted-total"][style*="cursor: pointer"]:hover {
+    > a[class*="enabled-slide-adjusted-total"] > i {
+        color: #333333;
+    }
+    background-color: #ebd094;
+}
+
+.rectangle-slider {
+  width: 28px;
+  height: 38px;
+  background-color: #4ba9bc;
+}
+
+.rectangle-slider-adjusted {
+  width: 28px;
+  height: 38px;
+  background-color: #f2e3c4;
+}
+
+.rectangle-slider-adjusted-total {
+  width: 28px;
+  height: 38px;
+  background-color: #f3d799;
+}
+
+.rectangle-cell {
+  width: 28px;
+  height: 38px;
+  background-color: #f2f2f2;
+}
+
+.rectangle-cell-adjusted {
+  width: 28px;
+  height: 38px;
+  background-color: #e8eaeb;
+}
+
+.disabled-slide {
+    color: #9cd0db;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.disabled-slide-adjusted {
+    color: #989180;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.disabled-slide-adjusted-total {
+    color: #989180;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.slider-adjustment {
+  padding-left: 8px;
+}
+
+.enabled-slide {
+   color: white;
+}
+
+.enabled-slide-adjusted {
+    color: #333333;
+}
+
+.enabled-slide-adjusted-total {
+    color: #333333;
+}
+
+// used to vertically align text with buttons on the same row, ie. expand/collapse with add/delete year buttons on budget
+.vertical-align-text {
+  line-height: 60px;
+}
+
+.not-active{
+  box-shadow: none !important;
+}
+.btn-default.not-active {
+  border-color: #ccc !important;
+  &:hover {
+    border-color: #adadad !important;
+  }
+}
+
+// Manage Personnel Specific
+//.nsf-id-input {
+//  width: 120px;
+//}
+//input.disabled {
+//  opacity: 0.6;
+//}
+a.fa-plus-circle {
+  &.icon-warning-outline {
+    outline: 2px solid #8e5300;
+    outline-offset: 10px;
+    width: 11px;
+    height: 15px;
+    margin-right: 14px;
+    margin-left: 1px;
+    &:after {
+      content: "\f071"; // unicode fa-exclamation-triangle space character
+      color: #8e5300;
+      width: 16px;
+      height: 16px;
+      position: relative;
+      top: -17px;
+      right: -6px;
+    }
+  }
+  &.icon-error-outline {
+
+  }
+}
+
+// Div wrapping/resizing
+.menu-fixed {
+    display: inline-block;
+}
+
+.wrapper {
+    float: left;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.panel:not(.panel-prop):not(.panel-gray-prop) {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.panel-prop {
+    @extend .panel;
+    width-min: 940px;
+}
+
+.panel-gray-prop {
+    @extend .panel-gray;
+    height:287px;
+    width-min:293px;
+    width:auto;
+}
+
+.btn-primary-prop {
+    @extend .btn-primary;
+    width: 239px;
+    text-align: center;
+    vertical-align: middle;
+    border: 0 !important;
+    padding: 0 !important;
+    line-height: 40px;
+}
+
+// Text Formatting
+.word-wrap {
+    word-wrap: break-word;
+}
+
+.word-break-all {
+  word-break: break-all;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  -ms-word-wrap: break-word;
+  display: inline-block;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.psm-pd-including-results {
+  width: 315px;
+  height: 19px;
+  font-family: Georgia;
+  font-size: 16px;
+  font-style: italic;
+  color: #535353;
+}
+
+// PSM content areas should still stay on same row on small/mobile sizes
+.psm-proposal-container {
+  padding-top: 5px;
+  > .col-sm-3, .col-sm-9 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}
+
+
+// PSM Budget Add Year Modal - show warning inline if only some years have errors
+.warning-float-right {
+  > label {
+    display: inline-block;
+    width: 48%;
+  }
+  > div {
+    display: inline-block;
+    width: 50%;
+    float: right;
+  }
+}
+
+// PSM Cover Sheet Proposal Duration - reduce width to allow "months" text to appear on same line as input box
+.psm-cv-proposal-duration {
+	width: 65% !important;
+}
+
+li.rbContainerDisabled > label.ember-radio-button {
+	@extend .disabled;
+}
+
+// Proposal Prep - disabled Submitted Proposals panel needs an absolute positioned Not yet available text
+.psm-submitted-proposals-disabled {
+  position: absolute;
+  bottom: 40px;
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: -15px;
+}
+
+.input-group-addon {
+  &.no-background-border {
+    background-color: transparent;
+    border-width: 0px;
+  }
+}
+
+
+.select-divisions__spinner {
+  position: absolute;
+  bottom: 7px;
+  left: 10px;
+  color: #6a6a6a;
+  font-weight: normal;
+}
+
+.select-divisions__label {
+  position: relative;
+}
+
+// Test Output
+#qunit-header {
+  background-color: #303b53 !important;
+  a {
+    color: #fff !important;
+  }
+}
+#qunit-banner {
+  height: 10px !important;
+}
+#qunit-banner.qunit-pass {
+  background-color: green !important;
+}
+#qunit-testresult {
+  background: transparent !important;
+}
+#qunit-tests li.pass {
+  background: transparent;
+}
+#qunit-testrunner-toolbar {
+  color: #34495e !important;
+  background: url(../assets/images/bodybg.png);
+  input[type=checkbox] {
+    vertical-align: 0 !important;
+  }
+}
+#qunit-userAgent {
+  background-color: #303b53 !important;
+  text-shadow: none !important;
+  color: #fff !important;
+}
+#qunit-tests .pass {
+  color: green !important;
+  .test-name {
+    color: green !important;
+  }
+}
+.fa-times-circle::before {
+  position: relative;
+  top: 5px;
+}

@@ -1,0 +1,198 @@
+
+<h3>Review Proposal Information</h3>
+{{screen-messages-service}}
+
+<div class="row">
+  <div class="col-xs-offset-9 col-xs-3 padding-btm-10">
+    <div class="right">
+      {{#a-security-link href=viewProposalLink }}
+        <i class="fa fa-file-pdf-o red" aria-hidden="true"></i>
+        <span data-test-single-upload-current-file>View full proposal</span>
+      {{/a-security-link}}
+    </div>
+  </div>
+</div>
+
+<div class="panel-ocean-two" data-test-proposal-information>
+  <div class="panel-header">Proposal Information</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <dl>
+          <dt data-test-submission-proposal-title-title>Proposal Title</dt>
+          <dd data-test-submission-proposal-title>{{proposalPackageData.proposalTitle}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-5">
+        <dl>
+          <dt data-test-submission-temp-prop-id-title>Temporary Proposal ID</dt>
+          <dd data-test-submission-temp-prop-id>{{proposalPackageData.propPrepId}}</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-7">
+        <dl>
+          <dt data-test-submission-funding-op-title>Funding Opportunity</dt>
+          <dd data-test-submission-funding-op>{{proposalPackageData.fundingOp.fundingOpportunityId}} - {{proposalPackageData.fundingOp.fundingOpportunityTitle}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-5">
+        <dl>
+          <dt data-test-submission-due-date-title>Due Date</dt>
+          <dd data-test-submission-due-date>
+            {{if (eq proposalPackageData.deadline.deadlineTypeCode "3") 'Accepted Anytime' '' }}
+            {{format-unix-date proposalPackageData.deadline.deadlineDate}}
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-7">
+        <dl>
+          <dt data-test-submission-where-to-apply-title>Where to Apply</dt>
+          <dd data-test-submission-where-to-apply>
+            {{#each orderedUocs as |uoc index|}}
+              {{#if (gt index 0)}}
+                <br/>
+              {{/if}}
+              {{uoc.directorate.directorateName}} ({{uoc.directorate.directorateAbbrv}}) - {{uoc.division.divisionName}} ({{uoc.division.divisionAbbrv}}), {{uoc.programElement.programElementName}}
+            {{/each}}
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-5">
+        <dl>
+          <dt data-test-submission-federal-agencies-title>Other Federal Agencies to which this proposal will be submitted</dt>
+          <dd data-test-submission-federal-agencies>
+            {{#each coverSheet.federalAgencies as |fedAg index|}}
+              {{if (gt index 0) ', ' ''}}
+              {{fedAg.fedAgencyNameAbbreviation}}
+            {{/each}}
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2">
+        <dl>
+          <dt data-test-submission-total-requested-amount-title class="no-wrap">Total Requested Amount</dt>
+          <dd data-test-submission-total-requested-amount>{{format-whole-dollar coverSheet.totalRequtestedDollars}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-2">
+        <dl>
+          <dt data-test-submission-requested-state-date-title>Requested Start Date</dt>
+          <dd data-test-submission-requested-state-date>{{format-unix-date coverSheet.requestedStartDate}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-2">
+        <dl>
+          <dt data-test-submission-proposal-duration-title>Proposal Duration</dt>
+          <dd data-test-submission-proposal-duration>{{coverSheet.proposalDuration}} months</dd>
+        </dl>
+      </div>
+      <div class="col-xs-offset-1 col-xs-5">
+        <dl>
+          <dt data-test-submission-ein-title>Employer Identification Number</dt>
+          <dd data-test-submission-ein>{{format-employee-id-number coverSheet.employerTIN}}</dd>
+        </dl>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="panel-ocean-two" data-test-awardee-org-information>
+  <div class="panel-header">Awardee Organization Information</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <dl>
+          <dt data-test-submission-name-of-org-title>Name of Organization to which award should be made</dt>
+          <dd data-test-submission-name-of-org>{{coverSheet.awdOrganization.organizationName}}</dd>
+          {{!-- <dt data-test-submission-awardee-org-code-title>Awardee Organization Code</dt>
+          <dd data-test-submission-awardee-org-code>{{coverSheet.awdOrganization.id}}</dd> --}}
+        </dl>
+      </div>
+      <div class="col-xs-5">
+        <dl>
+          <dt data-test-submission-awardee-org-address-title>Awardee Organization Address</dt>
+          <dd data-test-submission-awardee-org-address>
+            <span data-test-awardee-org-street1>{{coverSheet.awdOrganization.address.streetAddress}}</span><br/>
+            {{#if coverSheet.awdOrganization.address.streetAddress2}}
+              <span data-test-awardee-org-street2>{{coverSheet.awdOrganization.address.streetAddress2}}</span><br/>
+            {{/if}}
+            <span data-test-awardee-org-city-state-postal-code>
+              {{if coverSheet.awdOrganization.address.stateCode (concat coverSheet.awdOrganization.address.cityName ',' ) coverSheet.awdOrganization.address.cityName}}
+              {{if coverSheet.awdOrganization.address.stateCode coverSheet.awdOrganization.address.stateCode ''}}
+              {{if (eq "US" coverSheet.awdOrganization.address.countryCode) (format-postal-code coverSheet.awdOrganization.address.postalCode) coverSheet.awdOrganization.address.postalCode}}
+
+            </span><br/>
+            <span data-test-awardee-org-country>{{coverSheet.awdOrganization.address.countryCode}}</span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel-ocean-two" data-test-pi-copi-information>
+  <div class="panel-header">PI/co-PI Information</div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-7">
+        <dl>
+          <dt data-test-submission-pi-department-title>Principal Investigator (PI) / PD Department</dt>
+          <dd data-test-submission-pi-department>{{piData.departmentName}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-5">
+        <dl>
+          <dt data-test-submission-pi-address-title>Principal Investigator (PI) / PD Address</dt>
+          <dd data-test-submission-pi-address>
+            <span data-test-awardee-org-street1>{{piData.address.streetAddress}}</span><br/>
+            {{#if piData.address.streetAddress2}}
+              <span data-test-awardee-org-street2>{{piData.address.streetAddress2}}</span><br/>
+            {{/if}}
+            <span data-test-awardee-org-city-state-postal-code>
+              {{if piData.address.stateCode (concat piData.address.cityName ',' ) piData.address.cityName}}
+              {{if piData.address.stateCode piData.address.stateCode ''}}
+              {{if (eq "US" piData.address.countryCode) (format-postal-code piData.address.postalCode) piData.address.postalCode}}
+            </span><br/>
+            <span data-test-awardee-org-country>{{piData.address.countryCode}}</span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-fixed table-striped psm-manage-personnel">
+  <thead>
+    <tr>
+        <th>
+            <span class="pm-table-col" data-test-mng-personnel-th1>Name</span>
+        </th>
+        <th>
+            <span class="pm-table-col" data-test-mng-personnel-th2>Role</span>
+        </th>
+        <th>
+            <span class="pm-table-col" data-test-mng-personnel-th3>Email</span>
+        </th>
+    </tr>
+  </thead>
+
+  <tbody>
+       {{#each coverSheet.piCopiList as |person|}}
+       {{!-- Only display PIs('01') and co-PIs('02') --}}
+        {{#if (or (eq person.personRoleCode "01") (eq person.personRoleCode "02") ) }}
+          <tr>
+              <td data-test-mng-personnel-name><span class="pm-table-col">{{person.name}}</span></td>
+              <td data-test-mng-personnel-role><span class="pm-table-col">{{code-to-psm-role person.personRoleCode}}</span></td>
+              <td data-test-mng-personnel-email><span class="pm-table-col">{{person.emailAddress}}</span></td>
+          </tr>
+        {{/if}}
+      {{/each}}
+  </tbody>
+</table>

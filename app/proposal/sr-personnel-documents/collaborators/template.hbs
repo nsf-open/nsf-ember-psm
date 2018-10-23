@@ -1,0 +1,46 @@
+{{title breadCrumb}}
+
+
+<div class="panel-body">
+
+  {{screen-messages-service fileUploadForm=true}}
+
+    <div class="panel panel-gray right pappg-panel">
+        <div class="panel-body">
+            <a data-test-collaborators-pappg-link href="{{props.pappgLinks.coaLink}}" target="_blank" title="opens in a new window">Collaborators and Other Affiliations<br>(PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        </div>
+    </div>
+
+    <p class="bold" data-test-upload-instructions-title>Step 1:  Complete the Collaborators and Other Affiliations template</p>
+    <ul data-test-upload-instructions>
+        <li data-test-upload-instructions1>Download the required <a data-test-file-upload-coa-template-link href="https://nsf.gov/bfa/dias/policy/coa.jsp" target="_blank" title="opens in a new window">Collaborators and Other Affiliations template <i class="fa fa-external-link" aria-hidden="true"></i></a> and follow the instructions</li>
+        <li data-test-upload-instructions2>View <a data-test-file-upload-coa-link href="https://www.nsf.gov/bfa/dias/policy/coa/faqs_coatemplatejan2918.pdf" target="_blank" title="opens in a new window">Frequently Asked Questions <i class="fa fa-external-link" aria-hidden="true"></i></a> for additional information.</li>
+        <li data-test-upload-instructions3>NSF uses the information in this single-copy document to manage reviewer selection, and it is not seen by reviewers. For more on <a data-test-file-upload-pappg-link href="{{props.pappgLinks.conflictsOfInterest}}" target="_blank" title="opens in a new window">potential review conflicts <i class="fa fa-external-link" aria-hidden="true"></i></a> see the PAPPG.</li>
+    </ul>
+
+    <p class="bold" data-test-upload-instructions-title-2>Step 2: Upload the completed Collaborators and Other Affiliations template</p>
+    <ul data-test-upload-instructions>
+        <li data-test-upload-instructions4>The template must be saved in .xlsx format</li>
+        <li data-test-upload-instructions5>After selecting your template file, a preview will be displayed for your confirmation</li>
+        <li data-test-upload-instructions6>Max file size permitted is {{maxFileSizeDisplay}}</li>
+    </ul>
+
+  {{single-file-upload-with-messages-service
+    sectionInfo=sectionInfo
+    fileName=fileName
+    pendingFileName=pendingFileName
+    previewAccepted=previewAccepted
+    spreadSheetModelData=spreadSheetModelData
+    allowableFileTypes=allowableFileTypes
+    onDelete=(action 'deleteFile')
+    onFileChange=(action 'uploadFile')
+    onFileBrowseClick=(action 'fileBrowseClick')
+    onFileClick=(action 'fileLinkClick')
+    isLoading=isDocumentLoading
+    isError=isError
+    selectedFilePath=selectedDocumentPath
+    previewRequired=previewRequired
+    isPreviewMode=isPreviewMode
+    editPermission='proposal.personnel.modify'}}
+
+</div>

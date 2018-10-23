@@ -1,0 +1,99 @@
+{{title "NSF Proposal Preparation" replace=true}}
+
+  <div class="panel-prop">
+
+    <h1 class="panel-title h1" data-test-proposal-prep-title>Proposal Preparation</h1>
+
+    {{screen-messages-service}}
+
+    <h3 class="panel-subtitle">What would you like to work on?</h3>
+
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="panel panel-gray-prop">
+            <h2 class="panel-title h2">Prepare New Proposal</h2>
+            <div class="panel-body">
+              <p>
+                By answering a few questions, NSF will customize the process and compliance rules.
+                <br />
+                <br />
+              </p>
+              <span data-test-create-new-proposal-button>{{link-to "Prepare Proposal" "wizard" trackNote='Prepare Proposal button' tagName='button' class="btn btn-primary-prop" disabled=disableCreate title=disableCreateText}}</span>
+              <p class="padding-top-20">
+                <a class="font-size-13" data-toggle="modal" data-target="#proposalInfoModal" tabindex="0" onkeyup={{action "onEnter"}}><i class="fa fa-info-circle fa-lg icon-pad-right" aria-hidden="true"></i>What information will need to be provided?</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="panel panel-gray-prop">
+            <h2 class="panel-title h2">In Progress Proposals</h2>
+            <div class="panel-body">
+              <p>
+                Continue working on a previously prepared proposal, that has not yet been submitted to NSF.
+                <br />
+                <br />
+              </p>
+              {{link-to "Work on an In Progress Proposal" "proposals" "inprogress" trackNote='Work on an In Progress Proposal button' class="btn btn-primary-prop"}}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="panel panel-gray-prop {{submittedProposalsDisabledClass}}">
+            <h2 class="panel-title h2">Submitted Proposals</h2>
+            <div class="panel-body">
+              <p id="submittedProposalDescription">
+                View, download, or perform a Proposal File Update/Budget Revision on proposals that have previously been submitted to NSF.
+              </p>
+              {{link-to "View/Update Submitted Proposals" "proposals" "submitted" trackNote='View Update Submitted Proposals button' class="btn btn-primary-prop" disabled=submittedProposalsDisabled}}
+            </div>
+          </div>
+          {{#if submittedProposalsDisabled}}
+              <div class="psm-submitted-proposals-disabled">{{props.uiFeatureToggles.disabledTextDefault}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal" id="proposalInfoModal" role="dialog" aria-labelledby="proposalInfoModalLabel">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title" id="proposalInfoModalLabel">{{modalText.prepareProposalTitle}}</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            It is recommended that you have access to the funding opportunity, as you may need to provide:
+          </p>
+          <ul>
+            <li>
+              Funding Opportunity Number
+            </li>
+            <li>
+              Proposal Type (e.g. Research, Conference, RAPID, etc.)
+            </li>
+            <li>
+              Submission Type (e.g. Full Proposal, Renewal, Letter of Intent, etc.)
+            </li>
+          </ul>
+          <p>
+            <strong>Where do I find my funding opportunity?</strong><br>
+            You can view/download your specific funding opportunity as well as the Proposal &amp; Award Policies &amp; Procedures Guide (PAPPG) on NSF.gov.
+          </p>
+          <p>
+            <a target="_blank" href="https://nsf.gov/funding/pgm_list.jsp?org=NSF&ord=date">View active funding opportunities on NSF.gov <i class="fa fa-external-link" title="Opens new window" aria-hidden="true"></i></a>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{{outlet}}

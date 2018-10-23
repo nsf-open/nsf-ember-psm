@@ -1,0 +1,180 @@
+
+
+// Left Hand Navigation for PSM Proposal Section
+// Corresponds to Component: proposal-nav
+
+.rgov-left-nav {
+
+  li.hidden {
+    display: none;
+  }
+
+  // Show/Hide Menu Header
+  > li:first-child {
+
+    background-color: #00566e;
+
+    &.header > a {
+      margin-top: -6px;
+
+      font-size: 12px;
+      border-bottom: 3px solid #3597b0;
+      padding: 6px 15px;
+      &:hover, &:focus {
+        background-color: transparent;
+      }
+      &.collapsed {
+        border-bottom: none;
+      }
+    }
+  }
+
+  > li > ul:last-child {
+    &.collapse.in {
+      margin-bottom: 10px;
+    }
+  }
+
+  >li:first-child > ul > li:first-child {
+    font-weight: bold;
+  }
+
+  // All sub header items
+  li.header {
+    border-bottom: none;
+    > a {
+      padding: 10px 15px;
+      border-bottom: 1px solid #3597b0;
+
+      span {
+        pointer-events: none;
+      }
+    }
+
+    ul#allItems {
+      > li {
+        > a {
+          padding: 10px 15px; // indent 1st level items 10px
+        }
+      }
+    }
+    ul {
+      padding-left: 0;
+      li {
+        a {
+          padding: 10px 15px 10px 30px; // indent 2nd level items 30px
+          display: block;
+        }
+      }
+    }
+  }
+
+  // All menu items
+  li {
+    background-color: #00748d;
+    border-bottom: 1px solid #3597b0;
+    padding: 0;
+    list-style: none;
+
+    a {
+      font-family: Arial;
+      font-size: 14px;
+      color: #ffffff;
+      padding: 10px 30px;
+
+      //&:hover, &:focus, &.activated {
+      //  background-color: #1b728a;
+      //}
+    }
+    > &:last-child  {
+      border-bottom: none;
+    }
+  }
+  li:not(.header) {
+    a {
+      &:hover, &:focus, &.activated {
+        background-color: #1b728a;
+        background-color: #00566e;
+      }
+    }
+    &.activated {
+      a {
+        background-color: #1b728a;
+        background-color: #00566e;
+      }
+    }
+  }
+
+  // icons
+  .fa-angle-right, .fa-angle-down {
+    float: right;
+    font-size: 18px;
+    pointer-events: none;
+  }
+  .fa-minus-square, .fa-plus-square {
+    padding-right: 3px;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+}
+
+
+ul.nav-tabs {
+	li {
+		a {
+			border-radius: 10px 10px 0 0 !important;
+			margin-right: 10px;
+			font-weight: bold;
+			background-color: #a6a6a6;
+			color: #fff;
+			&:hover {
+				background-color: #a6a6a6;
+				color: #ecf0f1;
+			}
+		}
+	}
+	li.active {
+		a {
+			background-color: #c8d7e0;
+			color: #333;
+			&:hover {
+				background-color: #c8d7e0;
+				color: #333;
+			}
+		}
+	}
+}
+
+.nav-pills {
+	li {
+		a {
+			background-color: transparent;
+			color: #00748d;
+			font-weight: bold;
+			border-bottom:  1px solid #ced6da;
+			&:hover {
+				color: #b13900;
+			}
+		}
+		&:last-child  {
+			a {
+				border-bottom:  1px solid #ced6da;
+			}
+		}
+	}
+}
+
+.nav-stacked {
+	width:  200px;
+	background: white;
+	border:  1px solid #ced6da;
+	border-top: 2px solid #b13900;
+	margin-bottom: 20px;
+	.header {
+		padding: 8px 14px !important;
+		font: 22px $font-family-serif;
+		background: $gray-lighter;
+		color: #34495e;
+	}
+}

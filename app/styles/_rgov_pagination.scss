@@ -1,0 +1,61 @@
+.pagination {
+	.btn {
+		padding: 8px !important;
+	}
+}
+
+div.pagination {
+	display: block !important;
+	padding: 4px 0 0 0;
+	margin: 0px 0 20px 0;
+	.dropdown {
+		display: inline;
+		float: left;
+		//margin: 6px 0 0 0;
+    margin: 3px 0 0 0;
+    width: 115px;
+	}
+	nav {
+		display: inline;
+	}
+	p {
+		display: inline;
+	}
+	div.btn-group {
+		margin: 0px 6px 0 0;
+	}
+	div.dropdown {
+		margin: 0px 10px 0 0;
+	}
+}
+
+span.pagination {
+	margin: 0;
+	float: right;
+	padding: 6px 10px 4px;
+}
+
+ul.pagination {
+	margin: 0;
+	float:right;
+	padding: 0 0 0 4px;
+	border-left: 1px solid #777777;
+
+	li.first {
+		a {
+			border-left: 1px solid #ccc !important;
+		}
+	}
+	li {
+		a {
+			border: 0 !important;
+		}
+	}
+}
+
+.pagination-sm > li > a, .pagination-sm > li > span {
+  font-size: 14px;
+}
+.pagination > .active > a {
+  font-weight: bold;
+}

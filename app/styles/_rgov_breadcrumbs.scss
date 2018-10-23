@@ -1,0 +1,181 @@
+.breadcrumb-psm-nav {
+  @extend .breadcrumb;
+  background-color: transparent;
+  margin-top: -21px;
+  margin-bottom: 0px;
+  padding: 20px 0px 12px 0px;
+  font-size: 13px;
+
+  a {
+    color: #00566e;
+    &:hover {
+      color: $link-hover-color;
+    }
+  }
+
+  li.active {
+    color: #333;
+  }
+  > li + li:before {
+    content: " ";
+    padding: 0 1px;
+  }
+}
+
+.breadcrumb-progress {
+  @extend .breadcrumb;
+  overflow: hidden;
+  background-color: transparent;
+  padding-left: 0px;
+  padding-right: 0px;
+  height: 50px;
+  list-style-type: decimal;
+  list-style-position: inside;
+
+  width: 100%; //960px;
+
+  .active {
+    color: $breadcrumb-active-color;
+    background: $breadcrumb-active-bg;
+    &:not(:last-child):after {
+      border-left: 14px solid $breadcrumb-active-bg;
+    }
+  }
+
+  li {
+    color: $breadcrumb-color;
+    text-decoration: none;
+    //padding: 10px 0px 10px 20px;
+    padding: 17px 0px 10px 42px;
+    text-indent: -20px;
+    background: $breadcrumb-bg;
+    border: $breadcrumb-border-size solid $breadcrumb-border-color;
+
+    position: relative;
+    display: block;
+    float: left;
+    width: 20%;
+    height: 62px;
+    display: list-item;
+
+    > span {
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        /* IE10+ CSS styles go here */
+        position: relative;
+        left: -10px;
+      }
+      @supports (-ms-accelerator:true) {
+        /* IE Edge 12+ CSS styles go here */
+        position: relative;
+        left: -10px;
+      }
+    }
+
+    .fa.fa-check {
+      text-indent: -1px;
+    }
+
+    &:not(:last-child):after {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 26px solid transparent;
+      border-bottom: 26px solid transparent;
+      border-left: 14px solid $breadcrumb-bg;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      left: 100%;
+      z-index: 2;
+    }
+
+    &:not(:last-child):before {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 26px solid transparent; //20
+      border-bottom: 26px solid transparent; //20
+      border-left: 16px solid $breadcrumb-border-color;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px; //20
+      // margin-left: 1px;
+      left: 100%;
+      z-index: 1;
+    }
+
+    &:last-child:before {
+      display: none;
+    }
+
+    &:first-child {
+      padding-left: 26px;
+    }
+  }
+
+  li {
+    height: auto;
+    padding-top: 10px;
+    text-indent: -17px;
+
+    &.breadcrumb-progress-long {
+      padding-top: 10px;
+    }
+
+    &.long-content {
+      @media (min-width: $screen-md-min) {
+        letter-spacing: -.3px;
+      }
+    }
+
+    .fa.fa-check {
+      text-indent: 0;
+    }
+
+    &:not(:last-child):after {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 14px solid $breadcrumb-bg;
+      position: absolute;
+      top: 50%;
+      margin-top: -20px;
+      left: 100%;
+      z-index: 2;
+    }
+
+    &:not(:last-child):before {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 22px solid transparent; //20
+      border-bottom: 22px solid transparent; //20
+      border-left: 16px solid $breadcrumb-border-color;
+      position: absolute;
+      top: 50%;
+      margin-top: -22px; //20
+      left: 100%;
+      z-index: 1;
+    }
+
+    &:first-child {
+      padding-left: 32px;
+    }
+
+  }
+
+  a:hover {
+    background: transparent; //hsla(190, 99%, 20%, 1.0); //hsla(34, 85%, 25%, 1);
+
+    &:after {
+      border-left-color: hsla(190, 99%, 20%, 1.0) !important; //hsla(34, 85%, 25%, 1) !important;
+    }
+  }
+
+}

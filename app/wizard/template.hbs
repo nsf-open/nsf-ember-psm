@@ -1,0 +1,146 @@
+{{title "NSF Proposal Preparation" replace=true}}
+
+<div class="row col-xs-12">
+      {{bread-crumbs}}
+</div>
+
+<div class="row wrapper width-perc-100">
+  <div class="col-xs-12">
+
+    <div class="panel">
+      <h1 class="panel-title">Prepare New Proposal</h1>
+
+      <div class="panel-body">
+
+        <ol class="breadcrumb-progress decimal">
+          <li class={{if (eq stateIndex 0) 'active long-content' 'long-content'}} data-test-breadbrumb-progress-0>
+            <!--1.-->
+            <span>
+              {{#if (gt stateIndex 0)}}
+                 <a tabindex="0" {{action 'toState' 0}} data-test-breadbrumb-progress-link-0> Funding Opportunity</a>
+              {{else}}
+                 Funding Opportunity
+              {{/if}}
+              {{#if model.wizard.fundingOp}}
+               <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-0></i>
+              {{/if}}
+            </span>
+          </li>
+          <li class={{if (eq stateIndex 1) 'active' ''}} data-test-breadbrumb-progress-1>
+            <!--2.-->
+            <span>
+              {{#if (and model.wizard.fundingOp (not-eq stateIndex 1))}}
+                <a tabindex="0" {{action 'toState' 1}} data-test-breadbrumb-progress-link-1> Where to Apply</a>
+              {{else}}
+                 Where to Apply
+              {{/if}}
+              {{#if (gt model.wizard.uocs.length 0)}}
+               <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-1></i>
+              {{/if}}
+            </span>
+          </li>
+          <li class={{if (eq stateIndex 2) 'active' ''}} data-test-breadbrumb-progress-2>
+            <!--3.-->
+            <span>
+              {{#if (and (gt model.wizard.uocs.length 0) (not-eq stateIndex 2))}}
+                <a tabindex="0" {{action 'toState' 2}} data-test-breadbrumb-progress-link-2> Proposal Type</a>
+              {{else}}
+                 Proposal Type
+              {{/if}}
+              {{#if model.wizard.proposalType}}
+               <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-2></i>
+              {{/if}}
+            </span>
+          </li>
+          <li class={{if (eq stateIndex 3) 'active' ''}} data-test-breadbrumb-progress-3>
+            <!--4.-->
+            <span>
+              {{#if (and (gt model.wizard.uocs.length 0) (and model.wizard.proposalType (not-eq stateIndex 3)) )}}
+                <a tabindex="0" {{action 'toState' 3 }} data-test-breadbrumb-progress-link-3> Submission Type</a>
+              {{else}}
+                 Submission Type
+              {{/if}}
+              {{#if model.wizard.submissionType}}
+               <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-3></i>
+              {{/if}}
+            </span>
+          </li>
+          <li class="breadcrumb-progress-long {{if (eq stateIndex 4) 'active' ''}}" data-test-breadbrumb-progress-4>
+            <!--5.-->
+            <span>
+              {{#if (and (and (gt model.wizard.uocs.length 0) model.wizard.proposalType) (and model.wizard.submissionType (not-eq stateIndex 4)) )}}
+                 <a tabindex="0" {{action 'toState' 4}} data-test-breadbrumb-progress-link-4> {{proposalInformationTitle}}</a> <!--<i class="fa fa-check" aria-hidden="true"></i> -->
+              {{else}}
+                 {{proposalInformationTitle}}
+              {{/if}}
+              {{#if model.wizard.proposalTitle}}
+               <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-4></i>
+              {{/if}}
+            </span>
+          </li>
+        </ol>
+
+        {{#if (eq stateIndex 0)}}
+          {{wizard/select-funding-op wizard=model.wizard fundingOps=model.fundingOps next=(action 'nextState') exitWizard=(action 'exitWizard')}}
+        {{/if}}
+
+        {{#if (eq stateIndex 1)}}
+          {{wizard/select-division-program wizard=model.wizard previous=(action 'previousState') next=(action 'nextState') error=(action 'error')}}
+        {{/if}}
+
+        {{#if (eq stateIndex 2)}}
+          {{wizard/select-proposal-type wizard=model.wizard previous=(action 'previousState') next=(action 'nextState')}}
+        {{/if}}
+
+        {{#if (eq stateIndex 3)}}
+          {{wizard/select-submission-type wizard=model.wizard previous=(action 'previousState') next=(action 'nextState')}}
+        {{/if}}
+
+        {{#if (eq stateIndex 4)}}
+          {{wizard/proposal-title wizard=model.wizard previous=(action 'previousState') created=(action 'created') error=(action 'error')}}
+        {{/if}}
+
+
+
+        {{#if currentlyLoading}}
+          <div id="loadingOverlay" class="overlay">
+            <div class="overlay-content">
+              <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        {{/if}}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{{outlet}} {{leave-wizard-modal exitWizard=(action 'exitWizard')}}
+
+<div class="modal" id="changeFOStateModal" tabindex="-1" role="dialog" aria-labelledby="changeFOStateModalLabel" data-test-change-fo-state-modal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="changeFOStateModalLabel"data-test-change-fo-state-modal-title>Confirm Funding Opportunity Change</h4>
+      </div>
+      <div class="modal-body" data-test-change-fo-state-modal-body>
+        <p>
+          You selected a new funding opportunity, which requires you to re-complete the proposal setup workflow. Please confirm you would like to proceed with the new funding opportunity.
+        </p>
+        <dl>
+          <dt>New funding opportunity</dt>
+          <dd>{{model.wizard.fundingOpChoice.fundingOpportunityId}} - {{model.wizard.fundingOpChoice.fundingOpportunityTitle}}</dd>
+          <dt>Original funding opportunity</dt>
+          <dd>{{model.wizard.fundingOp.fundingOpportunityId}} - {{model.wizard.fundingOp.fundingOpportunityTitle}}</dd>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'changeFO'}} data-test-change-fo-state-modal-continue-with-new>Continue with New</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'revertState'}} data-test-change-fo-state-modal-revert>Revert to Original &amp; Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-change-fo-state-modal-cancel>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

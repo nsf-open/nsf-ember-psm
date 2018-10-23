@@ -1,0 +1,186 @@
+
+.psm-personnel {
+  padding-top: 0;
+
+  .table th, td { // give spacing to table cells
+    padding: 10px 10px;
+  }
+
+  .table thead th:last-child { // make right side of header align with table
+    border-right-width: 1px;
+    border-right-style: solid;
+  }
+}
+
+.psm-sr-personnel-documents, .proposals-list {
+  .psm-sr-personnel-documents__toggle-bar{
+    height: 50px;
+  }
+
+  .row-expanded {
+    th, td {
+      font-weight: bold;
+    }
+  }
+
+  .row-collapsed {
+    th, td {
+      font-weight: normal;
+    }
+  }
+
+  .table {
+    // border: 1px solid #ced6da;
+    .secondary-row > td {
+      padding-left: 30px;
+      &.no-border {
+        border: none !important;
+      }
+    }
+
+    .primary-row, .secondary-row{
+      background-color: #fff;
+    }
+    .primary-row.row-odd {
+      background-color: #f5f7f8;
+      // -webkit-transition: background 0.3s linear;
+      // -moz-transition: background 0.3s linear;
+      // -ms-transition: background 0.3s linear;
+      // -o-transition: background 0.3s linear;
+      // transition: background 0.3s linear;
+    }
+    .secondary-row.row-odd {
+      background-color: #f5f5f5;
+      // -webkit-transition: background 0.3s linear;
+      // -moz-transition: background 0.3s linear;
+      // -ms-transition: background 0.3s linear;
+      // -o-transition: background 0.3s linear;
+      // transition: background 0.3s linear;
+    }
+    .primary-row {
+      border-top: 1px solid #ced6da;
+    }
+    a.sortable-header.fa:hover, a.sortable-header.fa:focus {
+      color: #ffffff;
+      outline: none;
+    }
+    .doc-table {
+      padding: 10px 14px;
+
+      .fa {
+        &.red {
+          color: #b12a1f;
+        }
+        &.green {
+          color: #006149;
+        }
+      }
+      .nested-data-table {
+        border: 1px solid #ced6da;
+        margin-bottom: 5px;
+        thead {
+          background: $sub-header-bg-color;
+          border: 1px solid $sub-header-bg-color;
+          tr {
+            th {
+              padding: 10px 10px;
+              font-weight: bold;
+              border-color: $sub-header-bg-color;
+            }
+          }
+        }
+        td {
+          padding: 10px 10px;
+          border: none;
+        }
+      }
+    }
+  }
+}
+
+.psm-sr-personnel-documents {
+  .table {
+    td {
+     border: none;
+    }
+  }
+}
+
+
+.modal-input-table {
+  width: 100%;
+  button.modal-search-button {
+    //padding-top: 2px !important;
+    //padding-bottom: 2px !important;
+    margin-left: 3px !important;
+  }
+  td.or-text {
+    width: 30px !important;
+    text-align: center;
+  }
+  td input {
+    height: 35px;
+    width: 100%;
+    padding-left: 6px;
+  }
+  td.nsf-id-input {
+    width: 217px;
+  }
+  .table-middle-initial {
+    width: 100px;
+  }
+  td {
+    padding-right: 10px;
+  }
+  td.modal-inline-button {
+    width: 120px;
+    padding-right: 0;
+  }
+}
+.modal.psm-manage-personnel {
+  table:not(.modal-input-table) {
+    margin-top: 20px;
+  }
+  .table th {
+    border-right: 1px solid #00637b;
+  }
+}
+
+
+.psm-manage-personnel {
+  &:not(.modal) .table thead:first-child th:last-child { // remove extreme padding when button is in header
+    padding-top: 5px !important;
+    padding-bottom: 4px !important;
+  }
+  a .fa {
+    margin-right: 4px;
+  }
+}
+
+// Personnel Management
+.pm-table-col {
+    display:inline-block;
+    height:100%;
+}
+
+.pm-section-header {
+    display:inline-block;
+    height:100%;
+    padding-top:12px;
+    padding-bottom:12px;
+    padding-right:0px;
+    padding-left:0px;
+}
+
+.pm-section-header-btn {
+    display:inline-block;
+    height:100%;
+    padding-right:5px;
+    padding-top:8px;
+    padding-bottom:8px;
+    float:right;
+}
+
+.pm-sortable-header {
+    padding-top:8px;
+}

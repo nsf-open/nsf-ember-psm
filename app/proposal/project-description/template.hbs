@@ -1,0 +1,44 @@
+{{title breadCrumb}}
+
+
+<div class="panel-body">
+
+  {{screen-messages-service fileUploadForm=true}}
+
+  <div class="panel panel-gray right pappg-panel">
+    <div class="panel-body">
+      <a data-test-project-description-pappg-link href="{{props.pappgLinks.projectDescription}}" target="_blank" title="opens in a new window">{{breadCrumb}} (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <p class="bold" data-test-upload-instructions-title>Instructions to upload {{breadCrumb}}:</p>
+  <ul data-test-upload-instructions>
+    <li data-test-upload-instructions1>Only 1 document can be uploaded</li>
+    <li data-test-upload-instructions2>Accepted file types include: Adobe PDF</li>
+    <li data-test-upload-instructions3>Your file must include separate section headings for Intellectual Merit and Broader Impacts. If applicable, the section heading Results from Prior NSF Support must also be included. To be valid, a heading must be on its own line with no other text on that line.</li>
+    <li data-test-upload-instructions4>Guidance should be followed on when to include Results from Prior NSF Support - {{click-popover-icon-tooltip "Results from Prior NSF Support Guidance <button type=\"button\" class=\"close\" data-dismiss=\"popover\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" "If any PI or co-PI identified on the proposal has received NSF support through an award with an END date in the past five years or in the future (including any current funding and no cost extensions) information on the award is required for each PI and co-PI." "bottom" "View Guidance"}}</li>
+    <li data-test-upload-instructions5>Hyperlinks (URLs) must not be used in the Project Description</li>
+    <li data-test-upload-instructions6>Text cannot exceed 15 pages total, and the Results from Prior NSF Support section must be 5 pages or less. (Please note: Certain solicitations may provide different guidance to follow. In these cases, please follow the solicitation and use <a data-test-fast-lane-link href="{{props.fastLaneLinks.home}}" target="_blank" title="opens in a new window">FastLane</a> to prepare the proposal)</li>
+    <li data-test-upload-instructions7>
+      Please refer to the <a data-test-file-upload-pappg-link href="{{props.pappgLinks.documentUploadInstructions}}" target="_blank" title="opens in a new window">Format of the proposal (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      for all margin and spacing requirements and the <a data-test-file-upload-propprep-site-faq-link href="{{props.proposalPrepSiteFAQ.faq}}" target="_blank" title="opens in a new window">Proposal Preparation Site FAQs</a> for font type and size requirements.&nbsp;
+    </li>
+    <li data-test-upload-instructions8>{{{PROPOSAL_CONSTANTS.UPLOAD_DOCUMENT.SHOULD_NOT_PAGE_NUMBER}}}</li>
+    <li data-test-upload-instructions9>Max file size permitted is {{maxFileSizeDisplay}}</li>
+  </ul>
+
+  {{single-file-upload-with-messages-service
+    sectionInfo=sectionInfo
+    fileName=fileName
+    pendingFileName=pendingFileName
+    previewAccepted=previewAccepted
+    onDelete=(action 'deleteFile')
+    onFileChange=(action 'uploadFile')
+    onFileBrowseClick=(action 'fileBrowseClick')
+    onFileClick=(action 'fileLinkClick')
+    isLoading=isDocumentLoading
+    isError=isError
+    selectedFilePath=selectedDocumentPath
+    editPermission='proposal.data.modify'}}
+
+</div>

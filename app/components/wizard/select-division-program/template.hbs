@@ -1,0 +1,217 @@
+
+  <h3 data-test-division-program-title class="margin-btm-0">Select Where to Apply
+    {{#if readOnly}}
+      {{popover-icon-tooltip "" "\"Where to Apply\" refers to the NSF Unit of Consideration. This is the NSF organizational unit to which your proposal will be sent. For additional information, see the PAPPG section on Units of Consideration."}}
+    {{/if}}
+  </h3>
+
+  <div class="panel-body">
+    <p data-test-wta-instructions>
+      {{if readOnly 'Your proposal will be directed to the following NSF Unit of Consideration. C' 'Select where within NSF you would like to send your proposal.  Depending on the funding opportunity, you may make one or multiple selections.  When you have saved your selection(s), c'}}lick 'Next' to continue.
+    </p>
+
+    <dl>
+      <dt data-test-wta-fo-title>Funding Opportunity</dt>
+      <dd data-test-wta-fo>{{wizard.fundingOp.fundingOpportunityId}} - {{wizard.fundingOp.fundingOpportunityTitle}}</dd>
+      {{#if readOnly}}
+        <dt data-test-wta-dir-title>Directorate</dt>
+        <dd data-test-wta-dir>{{wizard.uocs.[0].directorate.directorateName}} ({{wizard.uocs.[0].directorate.directorateAbbrv}})</dd>
+        <dt data-test-wta-div-title>Division</dt>
+        <dd data-test-wta-div>{{wizard.uocs.[0].division.divisionName}} ({{wizard.uocs.[0].division.divisionAbbrv}})</dd>
+        <dt data-test-wta-pgm-title>Program</dt>
+        <dd data-test-wta-pgm>{{wizard.uocs.[0].programElement.programElementName}}</dd>
+      {{/if}}
+    </dl>
+
+    {{#unless readOnly}}
+      <div class="row">
+        <div class={{if readOnly 'col-xs-12' 'col-xs-6'}}>
+          <div class="panel-teal-header">
+            <div data-test-select-wta-panel-title class="panel-header">Select Where to Apply
+              {{popover-icon-tooltip "" "\"Where to Apply\" refers to the NSF Unit of Consideration. This is the NSF organizational unit to which your proposal will be sent. For additional information, see the PAPPG section on Units of Consideration."}}
+            </div>
+            <div class="panel-body">
+              <form>
+                {{#if (eq shownDirectorates.length 1)}}
+                  <dl>
+                    <dt>Directorate</dt>
+                    <dd>{{selectedDirectorate.directorateName}} ({{selectedDirectorate.directorateAbbrv}})</dd>
+                  </dl>
+                {{else if (eq shownDirectorates.length 0)}}
+                  <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                      <th class="sr-only">Possible NSF Unit(s) of Consideration</th>
+                    </thead>
+                    <tbody>
+                      <tr><td class="no-results"><h4>No further possible selections</h4></td></tr>
+                    </tbody>
+                  </table>
+
+                {{else}}
+                  <div class="form-group">
+                    <label class="width-perc-100">Select Directorate
+                    <select data-test-select-directorate
+                            class="form-control no-label-label"
+                            onchange={{action "selectDirectorate" value="target.value"}}>
+                      <option value="">--Select One--</option>
+                      {{#each shownDirectorates as |directorate|}}
+                        {{#if (eq selectedDirectorate.directorateCode directorate.directorateCode)}}
+                            <option value={{directorate.directorateCode}} selected>{{directorate.directorateName}} ({{directorate.directorateAbbrv}})</option>
+                        {{else}}
+                            <option value={{directorate.directorateCode}}>{{directorate.directorateName}} ({{directorate.directorateAbbrv}})</option>
+                        {{/if}}
+                      {{/each}}
+                    </select>
+                    </label>
+                  </div>
+                {{/if}}
+                {{#if (eq shownDivisions.length 1)}}
+                  <dl>
+                    <dt>Division</dt>
+                    <dd>{{selectedDivision.divisionName}} ({{selectedDivision.divisionAbbrv}})</dd>
+                  </dl>
+                {{else if (eq shownDirectorates.length 0)}}
+                {{else}}
+                  <div class="form-group select-divisions">
+                    <label class="width-perc-100 select-divisions__label">Select Division
+                    {{#if isDivisionsLoading}}
+                      <div class="select-divisions__spinner">
+                        <span class="fa fa-spinner fa-spin"></span> Loading...
+                      </div>
+                    {{/if}}
+                    <select data-test-select-division
+                            class="form-control no-label-label"
+                            disabled={{divisionSelectDisabled}}
+                            onchange={{action "selectDivision" value="target.value"}}>
+                      {{#if divisionSelectDisabled}}
+                          <option value="" selected>
+                            {{#if (not isDivisionsLoading)}}
+                              --Select Directorate first--
+                            {{/if}}
+                          </option>
+                      {{else}}
+                        <option value="" selected>--Select One--</option>
+                        {{#each shownDivisions as |division|}}
+                          {{#if (eq selectedDivision.divisionCode division.divisionCode)}}
+                              <option value={{division.divisionCode}} selected>{{division.divisionName}} ({{division.divisionAbbrv}})</option>
+                          {{else}}
+                              <option value={{division.divisionCode}}>{{division.divisionName}} ({{division.divisionAbbrv}})</option>
+                          {{/if}}
+                        {{/each}}
+                      {{/if}}
+                    </select>
+                    </label>
+                  </div>
+                {{/if}}
+                {{#if (eq shownPrograms.length 1)}}
+                  <dl>
+                    <dt>Program</dt>
+                    <dd>{{selectedProgram.programElementLongName}}</dd>
+                  </dl>
+                {{else if (eq shownDirectorates.length 0)}}
+                {{else}}
+                  <div class="form-group">
+                    <label class="width-perc-100">Select Program
+                    <select data-test-select-program class="form-control no-label-label" disabled={{programSelectDisabled}} onchange={{action "selectProgram" value="target.value"}}>
+                      {{#if programSelectDisabled}}
+                        <option value="" selected>--Select Division first--</option>
+                      {{else}}
+                        <option value="" selected>--Select One--</option>
+                        {{#each shownPrograms as |program|}}
+                          {{#if (eq selectedProgram.programElementCode program.programElementCode)}}
+                              <option value={{program.programElementCode}} selected>{{program.programElementLongName}}</option>
+                          {{else}}
+                              <option value={{program.programElementCode}}>{{program.programElementLongName}}</option>
+                          {{/if}}
+                        {{/each}}
+                      {{/if}}
+                    </select>
+                    </label>
+                  </div>
+                {{/if}}
+                {{#if (not-eq shownDivisions.length 0)}}
+                  <button data-test-save-selection class="btn btn-primary" title={{addUOCDisabledTitle}} disabled={{addUOCDisabled}} {{action 'addUOC'}}>Save Selection</button>
+                {{/if}}
+              </form>
+
+            </div>
+          </div>
+        </div>
+          <div class="col-xs-6">
+            <div class="panel-teal-header">
+              <div data-test-saved-selection-header class="panel-header">Saved Selections</div>
+              <div class="panel-body">
+                <p data-test-save-selection-instructions>
+                  {{#if (gt shownDirectorates.length 0)}}
+                    Select your {{if divisionSelectDisabled 'directorate, associated ' '' }}
+                    {{if (and programSelectDisabled divisionSelectDisabled) 'division and' '' }}
+                    {{if (and programSelectDisabled (not divisionSelectDisabled)) 'division and associated ' '' }}
+                    program on the left.
+                  {{/if}}
+                  Place selections in the order of importance.
+                </p>
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <th class="sr-only">Selected NSF Unit(s) of Consideration</th>
+                  </thead>
+                  <tbody>
+                    {{#each wizard.uocs as |uoc index|}}
+                      <tr data-test-selection>
+                        <td class="uoc" width="70%">
+                          <span>{{#if (gt directorates.length 1)}} {{uoc.directorate.directorateName}} ({{uoc.directorate.directorateAbbrv}}),{{/if}} {{#if (gt divisions.length 1)}}{{uoc.division.divisionName}} ({{uoc.division.divisionAbbrv}}),{{/if}} {{uoc.programElement.programElementName}}</span>
+                        </td>
+
+                        <td class="uoc td-button" width="30%">
+
+                          <a data-test-delete-selection title="Delete Selection" class="btn-icon right" data-toggle="modal" data-target="#uocDeleteModal" data-program-code={{uoc.programElement.programElementCode}} data-division-code={{uoc.division.divisionCode}} data-directorate-code={{uoc.directorate.directorateCode}}><i class="fa fa-trash" aria-hidden="true"></i></a>
+
+                          {{#if (not-eq index numUOCs)}}
+                            <a data-test-decrease-selection title="Decrease Priority of Selection" class="btn-icon right" {{action 'moveUOCDown' uoc}}><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></a>
+                          {{/if}}
+
+                          {{#if (not-eq index 0)}}
+                            <a data-test-increase-selection title="Increase Priority of Selection" class="btn-icon right" {{action 'moveUOCUp' uoc}}><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></a>
+                          {{/if}}
+
+                        </td>
+
+                      </tr>
+                    {{else}}
+                      <tr><td class="no-results"><h4 data-test-no-selections-text>No selections have been saved</h4></td></tr>
+                    {{/each}}
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+    {{/unless}}
+  </div>
+
+<div class="panel-footer">
+  <div class="right">
+    <button data-test-previous-button class="btn btn-default" {{action 'previous'}}>Previous</button>
+    <button data-test-next-button class="btn btn-primary" title={{nextDisabledTitle}} disabled={{nextDisabled}} {{action 'next'}}>Next</button>
+  </div>
+</div>
+
+
+<div data-test-delete-selection-modal class="modal" id="uocDeleteModal" tabindex="-1" role="dialog" aria-labelledby="uocDeleteModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="uocDeleteModalLabel">Delete Selection</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete {{modalDeleteUOC.division.divisionName}} ({{modalDeleteUOC.division.divisionAbbrv}}), {{modalDeleteUOC.programElement.programElementName}} ?
+      </div>
+      <div class="modal-footer">
+        <button data-test-wta-modal-delete type="button" class="btn btn-primary" data-dismiss="modal" {{action 'deleteUOC' modalDeleteUOC}}>Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{yield}}

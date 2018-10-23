@@ -1,0 +1,25 @@
+
+<div data-test-leave-wizard-modal class="modal" id="wizardExitModal" role="dialog" aria-labelledby="wizardExitModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 data-test-leave-wizard-modal-title class="modal-title" id="wizardExitModalLabel">Proposal Set Up Information May Be Lost</h3>
+      </div>
+      <div data-test-leave-wizard-modal-text class="modal-body">
+        <p data-test-leave-wizard-modal-text1>
+          You are about to leave the proposal set up screens, and will lose any previously entered data.
+        </p>
+        <p>
+          <strong data-test-leave-wizard-modal-text2>Do you wish to leave proposal set up?</strong>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button data-test-leave-wizard-modal-yes type="button" class="btn btn-primary" data-dismiss="modal" {{action 'exitWizard'}}>Yes, Leave Set Up</button>
+        <button data-test-leave-wizard-modal-cancel type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{yield}}

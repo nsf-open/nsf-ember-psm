@@ -1,0 +1,1301 @@
+{{title breadCrumb}}
+
+<div class="panel-body">
+  <div class="col-xs-3-amt">
+    <div class="panel-yellow">
+      <div class="panel-body-amt">
+        <div class="number word-wrap" data-test-budget-grand-total>
+          {{format-whole-dollar totalAmountRequestedGrandTotal}}
+        </div>
+        Total Requested Amount
+      </div>
+    </div>
+  </div>
+
+{{screen-messages-service formSubmission=isFormSubmission}}
+
+<div class="row" style="margin-right:0;margin-left:0;margin-bottom:-18px;">
+  <span class="vertical-align-text"><a {{action "expandAll"}} data-test-budget-expand-all-rows>Expand all rows</a> | <a {{action "collapseAll"}} data-test-budget-collapse-all-rows>Collapse all rows</a></span>
+    {{#if-permission 'proposal.budget.modify'}}
+      <span class="pull-right">
+        <button {{action "clearAddYearModal"}} data-toggle="modal" data-target="#addYearModal" disabled={{addYearDisabled}} class="btn btn-primary" title="{{addYearDisabledTitle}}" data-test-budget-add-year-button>Add Year</button>
+        <button {{action "clearDeleteYearModal"}} disabled={{deleteYearDisabled}} data-toggle="modal" data-target="#deleteYearModal" class="btn btn-primary" title="{{deleteYearDisabledTitle}}" data-test-budget-delete-year-button>Delete Year</button>
+      </span>
+    {{/if-permission}}
+    <span class="vertical-align-text pull-right margin-right-30" data-test-budget-years-info>Years in budget: <span class="bold" data-test-budget-years-info-count>{{years.length}}</span></span>
+</div>
+
+<table class="table table-no-border budget-table table-grouped year-count-{{yearsShown.length}} {{if slidersShown 'sliders-visible' ''}} {{if budgetDataLoading 'budget-data-loading' ''}}">
+    <thead>
+      <tr>
+        <th data-test-personnel-direct-cost-header colspan={{totalTableColspan}}>Personnel Direct Costs</th>
+      </tr>
+    </thead>
+
+    <col>
+    {{#each yearsShown as | year |}}
+      <colgroup span="3"></colgroup>
+    {{/each}}
+    <col>
+
+    <thead>
+      <tr class="rotated-sub-header">
+        <th rowspan="2" data-test-personnel-direct-costs-section-header>Section</th>
+
+        {{#if showLeftSlider}}
+          <th scope="col" rowspan="2" class="col-slider hand-cursor rectangle-slider" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" data-test-budget-left-slider><a class="enabled-slide"><i class="fa fa-angle-left fa-lg" aria-hidden="true" title="{{previousYearTitle}}"></i></a></th>
+        {{/if}}
+
+        {{#each yearsShown as | year yIndex |}}
+          <th data-test-direct-cost-year-header colspan="3" scope="colgroup" class="year multiyear-{{yearsShown.length}}-{{if multipleYearsShown yIndex ''}}"><div>Year {{year}}</div></th>
+        {{/each}}
+
+        {{#if showRightSlider}}
+          <th scope="col" rowspan="2" class="col-slider default-cursor rectangle-slider" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}" data-test-budget-right-slider><a disabled="true" class="disabled-slide"><i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></a></th>
+        {{/if}}
+
+        <th data-test-total-funds-requested-header rowspan="2" class="totals">Total Funds Requested</th>
+      </tr>
+      <tr class="rotated-sub-header taller">
+
+        {{#each yearsShown as | year |}}
+          <th scope="col" data-test-year-number-of-personnel-header class="rotate-45 col-budget-personnel"><div class="divider"></div><div class="personnel"># Personnel</div></th>
+          <th scope="col" data-test-year-months-header class="rotate-45 col-budget-months"><div class="divider"></div><div class="months">Months</div></th>
+          <th scope="col" data-test-year-funds-header class="rotate-45 col-budget-funds"><div class="divider"></div><div class="funds">Funds</div></th>
+        {{/each}}
+
+      </tr>
+    </thead>
+
+    <!-- Begin Senior Personnel -->
+    <tbody class="grey-tbody">
+      <tr class="seniorPersonnel-tr bold">
+        <td data-test-senior-personnel-collapse-link>
+          <a data-toggle="collapse" href="#seniorPersonnel" class="fa fa-minus-circle" {{action "toggleChevron" "#seniorPersonnel"}}><span class="sr-only">Collapse/expand senior personnel</span></a> <span class="table-lettering">A.</span> Senior Personnel{{#if-permission 'proposal.budget.modify'}} <span class="not-bold" {{action "managePersonnel"}} data-toggle="modal" data-target="#managePersonnelModal" data-test-budget-manage-personnel-link> [<a>Manage</a>]</span>{{/if-permission}}
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+
+
+        {{#each yearsShown as |year|}}
+          {{#each seniorPersonnelMonthTotalByYear as | yearMonthTotal index |}}
+            {{#if (eq (add index 1) year) }}
+              <td data-test-senior-personnel-personnel-total-by-year class="word-wrap text-align-right">{{seniorPersonnelCount}}</td>
+              <td data-test-senior-personnel-month-total-by-year class="word-wrap text-align-right">{{yearMonthTotal}}</td>
+            {{/if}}
+          {{/each}}
+
+          {{#each seniorPersonnelTotalByYear as | yearTotal index |}}
+            {{#if (eq (add index 1) year) }}
+              <td data-test-senior-personnel-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-senior-personnel-grand-total class="word-wrap text-align-right">{{format-whole-dollar seniorPersonnelGrandTotal}}</td> <!-- Senior Personnel Grand Total -->
+      </tr>
+    </tbody>
+    <tbody id="seniorPersonnel" class="collapse in grey-tbody" aria-expanded="true" >
+      {{#each seniorPersonnel as | item |}}
+      {{#if (eq item.hidden false)}}
+        <tr>
+            <td><span data-test-budget-senior-personnel>{{item.name}}</span></td>
+          {{#if showLeftSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+          {{#each item.prices as |price index|}}
+            {{#each yearsShown as |year|}}
+              {{#if (eq (add index 1) year) }}
+                <td></td>
+
+                <td data-test-senior-personnel-months class="text-align-right">
+                  <div class="input-symbol">
+                  <label for={{get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.seniorPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.months
+                              }} class="sr-only">
+                              {{get-budget-input-label
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.seniorPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.months
+                              }}
+                  </label>
+                  {{input id=(get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.seniorPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.months) type="text" value=price.months key-up=(action 'monthValidation' price 'senior personnel') focus-in=(action 'monthFocusIn' price) focus-out=(action 'monthFormat' price) size=5 disabled=viewOnly}}
+                  {{#if ( not (is-equal price.monthError null) ) }}
+                    {{error-tooltip price.monthError}}
+                  {{/if}}
+                  </div>
+                </td>
+                <td data-test-senior-personnel-funds class="col-budget-amounts text-align-right">
+                  <div class="input-symbol dollar symbol-left">
+                    <label for={{get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.seniorPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.funds
+                              }} class="sr-only">
+                                {{get-budget-input-label
+                                  yearNumber=year
+                                  sectionName=groupText.personnelDC.sections.seniorPersonnel
+                                  lineItemName=item.name
+                                  categoryName=groupText.personnelDC.categories.funds
+                                }}
+                              </label>
+                    {{input id=(get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.seniorPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.funds
+                              ) class=(if (gt years.length 3) 'sliders right' 'no-sliders') key-up=(action 'amountValidation' price 'senior personnel') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly}}
+                    {{#if ( not (is-equal price.valueError null) ) }}
+                      {{error-tooltip price.valueError}}
+                    {{/if}}
+                  </div>
+
+                </td>
+              {{/if}}
+            {{/each}}
+          {{/each}}
+          {{#if showRightSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+          <td class="col-budget-total text-align-right" data-test-senior-personnel-total>{{format-whole-dollar item.total}}
+            <div class="hidden">{{item.monthTotal}}</div>
+          </td>
+        </tr>
+      {{/if}}
+      {{/each}}
+    </tbody>
+    <!-- End Senior Personnel -->
+
+
+    <!-- Begin Other Personnel -->
+    <tbody>
+      <tr class="otherPersonnel-tr bold">
+        <td scope="row" data-test-other-personnel-collapse-link>
+          <a data-toggle="collapse" href="#otherPersonnel" class="fa fa-minus-circle" {{action "toggleChevron" "#otherPersonnel"}}><span class="sr-only">Collapse/expand other personnel</span></a> <span class="table-lettering">B. Other Personnel</span> {{popover-icon-tooltip "" "When there are multiple Postdoctoral Scholars or Other Professionals, months should show the sum of each person's months."}}
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+
+        {{#each yearsShown as |year|}}
+          {{#each otherPersonnelPersonnelTotalByYear as | yearPersonnelTotal index |}}
+            {{#if (eq (add index 1) year) }}
+              <td data-test-other-personnel-personnel-total-by-year class="word-wrap text-align-right">{{format-number yearPersonnelTotal}}</td>
+              <td></td>
+            {{/if}}
+          {{/each}}
+
+          {{#each otherPersonnelTotalByYear as | yearTotal index |}}
+            {{#if (eq (add index 1) year) }}
+              <td data-test-other-personnel-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-other-personnel-grand-total class="word-wrap text-align-right">{{format-whole-dollar otherPersonnelGrandTotal}}</td> <!-- Other Personnel Grand Total -->
+      </tr>
+    </tbody>
+    <tbody id="otherPersonnel" class="collapse in" aria-expanded="true">
+      {{#each otherPersonnel as | item |}}
+        <tr>
+          <td scope="row" data-test-other-personnel-name>
+            {{item.name}}
+              {{#if (eq item.name 'Postdoctoral Scholars')}}
+                {{popover-icon-tooltip postDoctInfo.infoTitle postDoctInfo.infoText }}
+              {{/if}}
+          </td>
+          {{#if showLeftSlider}}
+            <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+          {{/if}}
+
+          {{#each item.prices as |price index|}}
+            {{#each yearsShown as |year|}}
+              {{#if (eq (add index 1) year) }}
+                <td data-test-other-personnel-personnel class="text-align-right">
+                  <div class="position-relative">
+                    <label for={{get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.personnel
+                              }} class="sr-only">
+                      {{get-budget-input-label
+                      yearNumber=year
+                      sectionName=groupText.personnelDC.sections.otherPersonnel
+                      lineItemName=item.name
+                      categoryName=groupText.personnelDC.categories.personnel
+                      }}
+                    </label>
+                    {{input id=(get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.personnel
+                              ) type="text" key-up=(action 'personnelValidation' price 'other personnel') focus-out=(action 'personsFocusOut' price) focus-in=(action 'personsFocusIn' price) value=price.persons size=4 disabled=viewOnly}}
+                    {{#if ( not (is-equal price.personError null) ) }}
+                      {{error-tooltip price.personError}}
+                    {{/if}}
+                  </div>
+                </td>
+                {{#if  (or (eq item.name 'Postdoctoral Scholars') (eq item.name 'Other Professionals') )}}
+                  <td data-test-other-personnel-months class="word-wrap text-align-right other-personnel-months">
+                    <div class="position-relative">
+                      <label for={{get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.months
+                              }} class="sr-only">
+                        {{get-budget-input-label
+                        yearNumber=year
+                        sectionName=groupText.personnelDC.sections.otherPersonnel
+                        lineItemName=item.name
+                        categoryName=groupText.personnelDC.categories.months
+                        }}
+                      </label>
+                      {{input id=(get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.months) type="text" value=price.months key-up=(action 'monthValidationOtherPersonnel' price 'other personnel') focus-in=(action 'monthFocusIn' price) focus-out=(action 'monthFormat' price) size=5 disabled=viewOnly}}
+                      {{#if ( not (is-equal price.monthError null) ) }}
+                        {{error-tooltip price.monthError}}
+                      {{/if}}
+                    </div>
+                  </td>
+                {{else}}
+                  <td></td>
+                {{/if}}
+
+                <td data-test-other-personnel-funds class="col-budget-amounts">
+                  <div class="input-symbol dollar symbol-left">
+                    <label for={{get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.funds
+                              }} class="sr-only">
+                      {{get-budget-input-label
+                      yearNumber=year
+                      sectionName=groupText.personnelDC.sections.otherPersonnel
+                      lineItemName=item.name
+                      categoryName=groupText.personnelDC.categories.funds
+                      }}
+                    </label>
+                    {{input id=(get-budget-input-id
+                              yearNumber=year
+                              sectionName=groupText.personnelDC.sections.otherPersonnel
+                              lineItemName=item.name
+                              categoryName=groupText.personnelDC.categories.funds) class=(if (gt years.length 3) 'sliders' 'no-sliders') key-up=(action 'amountValidation' price 'other personnel') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly}}
+                    {{#if ( not (is-equal price.valueError null) ) }}
+                      {{error-tooltip price.valueError}}
+                    {{/if}}
+                  </div>
+                </td>
+              {{/if}}
+            {{/each}}
+          {{/each}}
+
+          {{#if showRightSlider}}
+            <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+          {{/if}}
+
+          <td data-test-other-personnel-total class="word-wrap text-align-right">{{format-whole-dollar item.total}}
+            <div class="hidden">{{item.personTotal}}</div>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  <!-- End Other Personnel -->
+
+  <!-- Begin Fringe Benefits -->
+  <tbody class="grey-tbody">
+    <tr class="bold">
+      <td scope="row" data-test-fringe-benefits-collapse-link>
+        <a data-toggle="collapse" href="#fringeBenefits" class="fa fa-minus-circle" {{action "toggleChevron" "#fringeBenefits"}}><span class="sr-only">Collapse/expand fringe benefits</span></a> <span class="table-lettering">C.</span> Fringe Benefits
+      </td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each fringeBenefitsTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+            <td></td>
+            <td data-test-fringe-benefits-total class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-fringe-benefits-grand-total class="word-wrap text-align-right">{{format-whole-dollar fringeBenefits.total}}</td>
+    </tr>
+  </tbody>
+  <tbody id="fringeBenefits" class="collapse in grey-tbody" aria-expanded="true">
+    <tr>
+      <td></td>
+      {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+      {{#each fringeBenefits.prices as |price index|}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+            <td></td>
+            <td scope="row" class="col-budget-amounts" data-test-fringe-benefits-funds>
+              <div class="input-symbol dollar symbol-left">
+                <label for={{get-budget-input-id
+                          yearNumber=year
+                          sectionName=groupText.personnelDC.sections.fringeBenefits
+                          lineItemName=item.name
+                          categoryName=groupText.personnelDC.categories.funds
+                          }} class="sr-only">
+                  {{get-budget-input-label
+                  yearNumber=year
+                  sectionName=groupText.personnelDC.sections.fringeBenefits
+                  lineItemName=item.name
+                  categoryName=groupText.personnelDC.categories.funds
+                  }}
+                </label>
+                {{input id=(get-budget-input-id
+                          yearNumber=year
+                          sectionName=groupText.personnelDC.sections.fringeBenefits
+                          lineItemName=item.name
+                          categoryName=groupText.personnelDC.categories.funds) class=(if (gt years.length 3) 'sliders' 'no-sliders') key-up=(action 'amountValidation' price 'fringe benefits') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly }}
+                {{#if ( not (is-equal price.valueError null) ) }}
+                  {{error-tooltip price.valueError}}
+                {{/if}}
+              </div>
+            </td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td></td>
+    </tr>
+  </tbody>
+  <!-- End Fringe Benefits -->
+
+  <tbody>
+    <tr class="subtotal bold no-lettering" id="table-no-lettering-subtotal">
+      <td class="table-no-lettering-subtotal-td" scope="row">Total Salaries, Wages &amp; Fringe Benefits (A-C)</td>
+      {{#if showLeftSlider}}
+          <td scope="row" class="col-slider hand-cursor rectangle-slider-adjusted" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" style="cursor: pointer"><a class="enabled-slide-adjusted" id="total-left-benefits"><i class="fa fa-angle-left fa-lg slider-adjustment" aria-hidden="true" title="{{previousYearTitle}}"></i></a></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each salariesWagesFringeBenefitsTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td class="no-border"></td>
+            <td class="no-border"></td>
+            <td data-test-budget-total-a-c-by-year class="word-wrap text-align-right">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+          <td scope="row" class="col-slider default-cursor rectangle-slider-adjusted" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}"><a class="disabled-slide-adjusted" disabled="true" id="total-right-benefits"><i class="fa fa-angle-right fa-lg slider-adjustment" aria-hidden="true"></i></a></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-budget-total-a-c-grand-total class="word-wrap text-align-right">{{format-whole-dollar salariesWagesFringeBenefitsGrandTotal}}</td>
+    </tr>
+  </tbody>
+
+  <tbody>
+    <tr class="spacer-row">
+      <td colspan={{totalTableColspan}}></td>
+    </tr>
+  </tbody>
+
+  <thead>
+    <tr>
+      <th data-test-additional-direct-cost-header colspan={{totalTableColspan}}>Additional Direct Costs</th>
+    </tr>
+  </thead>
+  <thead>
+    <tr class="rotated-sub-header">
+      <th data-test-additional-direct-costs-section-header rowspan="2">Section</th>
+
+      {{#if showLeftSlider}}
+        <th scope="col" rowspan="2" class="col-slider hand-cursor rectangle-slider" style="cursor: pointer" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" style="cursor: pointer"><a class="enabled-slide"><i class="fa fa-angle-left fa-lg" aria-hidden="true" title="{{previousYearTitle}}"></i></a></th>
+      {{/if}}
+
+      {{#each yearsShown as | year yIndex|}}
+        <th data-test-additional-direct-cost-year-header colspan="3" scope="colgroup" class="year multiyear-{{yearsShown.length}}-{{if multipleYearsShown yIndex ''}}"><div>Year {{year}}</div></th>
+      {{/each}}
+
+      {{#if showRightSlider}}
+        <th scope="col" rowspan="2" class="col-slider default-cursor rectangle-slider" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}"><a disabled="true" class="disabled-slide"><i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></a></th>
+      {{/if}}
+
+      <th data-test-additional-direct-costs-total-funds-requested-header rowspan="2" class="totals">Total Funds Requested</th>
+    </tr>
+    <tr class="rotated-sub-header taller">
+
+      {{#each yearsShown as | year |}}
+        <th scope="col" data-test-year-number-of-participants-header class="rotate-45 col-budget-personnel"><div class="divider"></div><div class="personnel"># Participants</div></th>
+        <th scope="col" colspan="2" data-test-additional-direct-costs-year-funds-header class="rotate-45"><div class="divider"></div><div class="funds-long">Funds</div></th>
+      {{/each}}
+
+    </tr>
+  </thead>
+
+  <!-- Begin Equipment -->
+  <tbody class="grey-tbody">
+    <tr class="equipment-tr bold">
+      <td scope="row" data-test-add-equipment-collapse-link>
+        <a data-toggle="collapse" href="#equipment" class="fa fa-minus-circle" {{action "toggleChevron" "#equipment"}}><span class="sr-only">Collapse/expand equipment</span></a> <span class="table-lettering">D.</span> Equipment {{popover-icon-tooltip "" "Equipment must be $5000 and above OR the amount set by the individual institution"}}
+        {{#if showEquipmentNameError}}
+        <br/> Name required for each equipment line item.
+        {{/if}}
+      </td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each equipmentTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+            <td class="no-border"></td>
+            <td data-test-budget-equipment-funds-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-budget-equipment-funds-total class="word-wrap text-align-right">{{format-whole-dollar equipmentGrandTotal}}</td> <!-- Equipment Grand Total -->
+    </tr>
+  </tbody>
+  <tbody id="equipment" class="collapse in grey-tbody" aria-expanded="true">
+    {{#each equipment as | item pIndex |}}
+      <tr>
+        <td scope="row" data-test-budget-equipment-text-box class="budget-text-box-entry">
+          <div class="position-relative">
+            <span class="vert-aligned-numbered-label">{{add pIndex 1}}.</span>
+            <label>
+              <span class="sr-only">
+                {{get-budget-input-label
+                  sectionName=(concat groupText.additionalDC.sections.equipment ' ' (add pIndex 1))
+                }}
+              </span>
+              {{input type="text"
+                      class="width-100"
+                      value=item.name
+                      key-up=(action 'nameCharacterValidation' 'equipment')
+                      focus-out=(action 'nameConflictValidation' 'equipment')
+                      size=10
+                      disabled=viewOnly}}
+            </label>
+            {{#if ( not (is-equal item.nameError null) ) }}
+              {{error-tooltip item.nameError}}
+            {{/if}}
+            {{#if-permission 'proposal.budget.modify'}}
+              <a tabindex="0" title="Delete Equipment" data-toggle="modal" data-target="#deleteItemModal" {{action "deleteLineItem" equipment item "equipment"}}  data-test-budget-delete-equipment-link><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            {{/if-permission}}
+          </div>
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        {{#each item.prices as |price index|}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td></td>
+              <td class="no-border"></td>
+              <td class="col-budget-amounts" data-test-budget-equipment-funds>
+                <div class="input-symbol dollar symbol-left">
+                  <label>
+                    <span class="sr-only">
+                      {{get-budget-input-label
+                        yearNumber=year
+                        sectionName=(concat groupText.additionalDC.sections.equipment ' ' (add pIndex 1))
+                        categoryName=groupText.additionalDC.categories.funds
+                      }}
+                    </span>
+                    {{input class=(if (gt years.length 3) 'width-100 sliders' 'width-100 no-sliders')
+                            key-up=(action 'amountValidation' price 'equipment')
+                            focus-in=(action 'valueFocusIn' price)
+                            focus-out=(action 'valueFocusOut' price)
+                            type="text"
+                            value=price.value
+                            size=10
+                            disabled=viewOnly }}
+                  </label>
+                  {{#if ( not (is-equal price.valueError null) ) }}
+                    {{error-tooltip price.valueError}}
+                  {{/if}}
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-budget-equipment-funds-total-by-item class="word-wrap text-align-right">{{format-whole-dollar item.total}}</td>
+      </tr>
+    {{/each}}
+    {{#if-permission 'proposal.budget.modify'}}
+      <tr>
+        <td scope="row"><a tabindex="0" {{action "addLineItem" equipment}} data-test-budget-add-equipment-link><i class="fa fa-plus"></i> Add Equipment</a></td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        {{#each yearsShown}}
+          <td></td>
+          <td class="no-border"></td>
+          <td class="col-budget-total"></td>
+        {{/each}}
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td></td>
+      </tr>
+    {{else}}
+      <tr>
+          <td scope="row"></td>
+        {{#if showLeftSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        {{#each yearsShown}}
+            <td></td>
+            <td class="no-border"></td>
+            <td class="col-budget-total"></td>
+        {{/each}}
+        {{#if showRightSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+          <td></td>
+      </tr>
+    {{/if-permission}}
+  </tbody>
+  <!-- End Equipment -->
+
+  <!-- Begin Travel -->
+  <tbody>
+    <tr class="travel-tr bold">
+      <td scope="row" data-test-travel-collapse-link>
+        <a data-toggle="collapse" href="#travel" class="fa fa-minus-circle" {{action "toggleChevron" "#travel"}}><span class="sr-only">Collapse/expand travel</span></a> <span class="table-lettering">E.</span> Travel
+      </td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each travelTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+            <td class="no-border"></td>
+            <td data-test-travel-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-travel-funds-grand-total class="word-wrap text-align-right">{{format-whole-dollar travelGrandTotal}}</td>
+    </tr>
+  </tbody>
+  <tbody id="travel" class="collapse in" aria-expanded="true">
+    {{#each travel as | item |}}
+      <tr>
+        <td scope="row">
+          {{item.name}}
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+
+        {{#each item.prices as |price index|}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td></td>
+              <td class="no-border"></td>
+              <td class="col-budget-amounts" data-test-travel-funds>
+                <div class="input-symbol dollar symbol-left">
+                  <label for={{get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.travel
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds
+                            }} class="sr-only">
+                    {{get-budget-input-label
+                    yearNumber=year
+                    sectionName=groupText.additionalDC.sections.travel
+                    lineItemName=item.name
+                    categoryName=groupText.additionalDC.categories.funds
+                    }}
+                  </label>
+                  {{input id=(get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.travel
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds
+                            ) class=(if (gt years.length 3) 'sliders right' 'no-sliders') key-up=(action 'amountValidation' price 'travel') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly }}
+                  {{#if ( not (is-equal price.valueError null) ) }}
+                    {{error-tooltip price.valueError}}
+                  {{/if}}
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+
+        <td data-test-travel-funds-total-by-item class="word-wrap text-align-right">{{format-whole-dollar item.total}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+  <!-- End Travel -->
+
+
+
+  <!-- Begin Participant Support Costs -->
+  <tbody class="grey-tbody">
+    <tr class="bold">
+      <td data-test-participant-support-costs-collapse-link scope="row">
+        <a data-toggle="collapse" href="#participantSupport" class="fa fa-minus-circle" {{action "toggleChevron" "#participantSupport"}}><span class="sr-only">Collapse/expand participant support costs</span></a> <span class="table-lettering">F.</span> Participant Support Costs
+      </td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each participantSupportCostsTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+            <td class="no-border"></td>
+            <td data-test-budget-participant-support-costs-funds-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-budget-participant-support-costs-grand-total class="word-wrap text-align-right">{{format-whole-dollar participantSupportCostsGrandTotal}}</td> <!-- Participant Support Costs Grand Total -->
+    </tr>
+  </tbody>
+  <tbody id="participantSupport" class="collapse in grey-tbody" aria-expanded="true">
+    <tr>
+      <td scope="row">Number of Participants</td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each pscNumParticipants.prices as | price index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+          <td class="text-align-right">
+            <div data-test-budget-number-of-participants class="position-relative">
+              <label for={{get-budget-input-id
+                        yearNumber=year
+                        sectionName=groupText.additionalDC.sections.participantSC
+                        lineItemName=item.name
+                        categoryName=groupText.additionalDC.categories.participants
+                        }} class="sr-only">
+                {{get-budget-input-label
+                yearNumber=year
+                sectionName=groupText.additionalDC.sections.participantSC
+                lineItemName=item.name
+                categoryName=groupText.additionalDC.categories.participants
+                }}
+              </label>
+              {{input id=(get-budget-input-id
+                          yearNumber=year
+                          sectionName=groupText.additionalDC.sections.participantSC
+                          lineItemName=item.name
+                          categoryName=groupText.additionalDC.categories.participants
+                          ) type="text" value=price.persons key-up=(action 'personnelValidation' price 'participants') focus-in=(action 'personsFocusIn' price) focus-out=(action 'personsFocusOut' price) size=4 disabled=viewOnly}}
+              {{#if ( not (is-equal price.personError null) ) }}
+                {{error-tooltip price.personError}}
+              {{/if}}
+            </div>
+          </td>
+          <td class="no-border"></td>
+          <td class="col-budget-total"></td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td></td>
+    </tr>
+    {{#each participantSupportCosts as | item |}}
+      <tr>
+        <td scope="row">
+          {{item.name}}
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+
+        {{#each item.prices as |price index|}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td></td>
+              <td class="no-border"></td>
+              <td class="col-budget-amounts" data-test-budget-participant-support-costs-funds>
+                <div class="input-symbol dollar symbol-left">
+                  <label for={{get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.participantSC
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds
+                            }} class="sr-only">
+                    {{get-budget-input-label
+                    yearNumber=year
+                    sectionName=groupText.additionalDC.sections.participantSC
+                    lineItemName=item.name
+                    categoryName=groupText.additionalDC.categories.funds
+                    }}
+                  </label>
+                  {{input id=(get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.participantSC
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds
+                          ) class=(if (gt years.length 3) 'sliders right' 'no-sliders') key-up=(action 'amountValidation' price 'participant support costs') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly }}
+                  {{#if ( not (is-equal price.valueError null) ) }}
+                    {{error-tooltip price.valueError}}
+                  {{/if}}
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-budget-participant-support-costs-funds-total-by-item class="word-wrap text-align-right">{{format-whole-dollar item.total}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+  <!-- End Participant Support Costs -->
+
+  <!-- Begin Other Direct Costs -->
+  <tbody>
+    <tr class="bold">
+      <td data-test-other-direct-costs-collapse-link scope="row">
+        <a data-toggle="collapse" href="#otherDirectCosts" class="fa fa-minus-circle" {{action "toggleChevron" "#otherDirectCosts"}}><span class="sr-only">Collapse/expand other direct costs</span></a> <span class="table-lettering">G.</span> Other Direct Costs
+      </td>
+      {{#if showLeftSlider}}
+        <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+      {{/if}}
+      {{#each otherDirectCostsTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td></td>
+              <td class="no-border"></td>
+            <td data-test-budget-other-direct-costs-funds-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-budget-other-direct-costs-grand-total class="word-wrap text-align-right">{{format-whole-dollar otherDirectCostsGrandTotal}}</td> <!-- Other Direct Costs Grand Total -->
+    </tr>
+  </tbody>
+  <tbody id="otherDirectCosts" class="collapse in" aria-expanded="true">
+    {{#each otherDirectCosts as | item |}}
+      <tr>
+        <td scope="row">{{item.name}}</td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+
+        {{#each item.prices as |price index|}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td></td>
+                <td class="no-border"></td>
+              <td class="col-budget-amounts" data-test-budget-other-direct-costs-funds>
+                <div class="input-symbol dollar symbol-left">
+                  <label for={{get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.otherDirectCosts
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds
+                            }} class="sr-only">
+                    {{get-budget-input-label
+                    yearNumber=year
+                    sectionName=groupText.additionalDC.sections.otherDirectCosts
+                    lineItemName=item.name
+                    categoryName=groupText.additionalDC.categories.funds
+                    }}
+                  </label>
+                  {{input id=(get-budget-input-id
+                            yearNumber=year
+                            sectionName=groupText.additionalDC.sections.otherDirectCosts
+                            lineItemName=item.name
+                            categoryName=groupText.additionalDC.categories.funds) class=(if (gt years.length 3) 'sliders right' 'no-sliders') key-up=(action 'amountValidation' price 'other direct costs') focus-out=(action 'valueFocusOut' price) focus-in=(action 'valueFocusIn' price) type="text" value=price.value size=10 disabled=viewOnly }}
+                  {{#if ( not (is-equal price.valueError null) ) }}
+                    {{error-tooltip price.valueError}}
+                  {{/if}}
+                </div>
+              </td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-budget-other-direct-costs-funds-total-by-item class="word-wrap text-align-right">{{format-whole-dollar item.total}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+  <!-- End Other Direct Costs -->
+
+  <tbody>
+    <tr class="subtotal bold" id="table-no-lettering-subtotal-bold">
+      <td class="table-no-lettering-subtotal-bold-td" scope="row"><span class="table-lettering">H.</span> Total Direct Costs (A-G)</td>
+      {{#if showLeftSlider}}
+        <td scope="row" class="col-slider hand-cursor rectangle-slider-adjusted" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" style="cursor: pointer"><a class="enabled-slide-adjusted" id="total-left-other"><i class="fa fa-angle-left fa-lg slider-adjustment" aria-hidden="true" title="{{previousYearTitle}}"></i></a></td> <!-- Year View Slider --> <!-- Year View Slider -->
+      {{/if}}
+      {{#each directCostsTotalByYear as | yearTotal index |}}
+        {{#each yearsShown as |year|}}
+          {{#if (eq (add index 1) year) }}
+            <td class="no-border"></td>
+              <td class="no-border"></td>
+            <td data-test-budget-total-a-g-by-year class="word-wrap text-align-right">{{format-whole-dollar yearTotal}}</td>
+          {{/if}}
+        {{/each}}
+      {{/each}}
+      {{#if showRightSlider}}
+        <td scope="row" class="col-slider default-cursor rectangle-slider-adjusted" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}"><a class="disabled-slide" disabled="true" id="total-right-other"><i class="fa fa-angle-right fa-lg slider-adjustment" aria-hidden="true"></i></a></td>  <!-- Year View Slider -->
+      {{/if}}
+      <td data-test-budget-total-a-g-grand-total class="word-wrap text-align-right">{{format-whole-dollar directCostsGrandTotal}}</td>
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <table class="table table-no-border budget-table table-grouped year-count-{{yearsShown.length}} {{if slidersShown 'sliders-visible' ''}} {{if budgetDataLoading 'budget-data-loading' ''}}">
+    <thead>
+      <tr>
+        <th data-test-indirect-cost-header colspan={{totalTableColspan}}>Indirect Costs</th>
+      </tr>
+    </thead>
+    <thead>
+      <tr class="rotated-sub-header rotated-sub-header-border">
+        <th data-test-indirect-cost-section scope="col" >Section</th>
+
+        {{#if showLeftSlider}}
+          <th scope="col" class="col-slider hand-cursor rectangle-slider" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" style="cursor: pointer"><a class="enabled-slide"><i class="fa fa-angle-left fa-lg" aria-hidden="true"></i></a></th>
+        {{/if}}
+
+        {{#each yearsShown as | year |}}
+          <th class="budget-section-header" scope="col" colspan="3" data-test-budget-indirect-costs-th-year-rate-base data-test-budget-indirect-costs-th-year-rate data-test-budget-indirect-costs-th-x-base>
+            Year {{year}} <br />
+            Rate x Base
+          </th>
+        {{/each}}
+
+        {{#if showRightSlider}}
+          <th scope="col" class="col-slider default-cursor rectangle-slider" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}"><a disabled="true" class="disabled-slide"><i class="fa fa-angle-right fa-lg" aria-hidden="true"></i></a></th>
+        {{/if}}
+
+        <th scope="col" data-test-budget-indirect-costs-th-total-funds-requested>Total Funds Requested</th>
+      </tr>
+    </thead>
+
+    <!-- Begin Indirect Costs -->
+    <tbody class="grey-tbody">
+      <tr class="indirectCosts-tr bold">
+        <td scope="row" data-test-indirect-costs-collapse-link>
+          <a data-toggle="collapse" href="#indirectCosts" class="fa fa-minus-circle" {{action "toggleChevron" "#indirectCosts"}}><span class="sr-only">Collapse/expand indirect costs</span></a> <span class="table-lettering">I.</span> Indirect Costs
+          {{#if showIndirectCostsNameError}}
+              <br/> Name required for each indirect cost line item.
+          {{/if}}
+        </td>
+        {{#if showLeftSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        {{#each indirectCostsTotalByYear as | yearTotal index |}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td class="no-border budget-indirect-cost-spacer"></td>
+              <td colspan="2" data-test-budget-indirect-cost-item-total-by-year class="word-wrap text-align-right col-budget-total">{{format-whole-dollar yearTotal}}</td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+        {{#if showRightSlider}}
+          <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-budget-indirect-cost-item-grand-total class="word-wrap text-align-right col-budget-total">{{format-whole-dollar indirectCostsTotal}}</td>
+      </tr>
+    </tbody>
+    <tbody id="indirectCosts" class="collapse in grey-tbody" aria-expanded="true">
+      {{#each indirectCosts as |item pIndex |}}
+        <tr>
+          <td scope="row" data-test-budget-indirect-cost-item-text-box class="budget-text-box-entry">
+            <div class="position-relative">
+              <span class="vert-aligned-numbered-label">{{add pIndex 1}}.</span>
+              <label>
+                <span class="sr-only">
+                  {{get-budget-input-label
+                  sectionName=(concat groupText.indirectCosts.sections.otherDirectCosts ' ' (add pIndex 1))
+                  }}
+                </span>
+                {{input type="text"
+                        class="width-100"
+                        value=item.name
+                        key-up=(action 'nameCharacterValidation' 'indirect cost')
+                        focus-out=(action 'nameConflictValidation' 'indirect cost')
+                        size=10
+                        disabled=viewOnly}}
+              </label>
+              {{#if ( not (is-equal item.nameError null) ) }}
+                {{error-tooltip item.nameError}}
+              {{/if}}
+              {{#if-permission 'proposal.budget.modify'}}
+                <a tabindex="0" title="Delete Indirect Cost" data-toggle="modal" data-target="#deleteItemModal" {{action "deleteLineItem" indirectCosts item "indirect cost"}} ><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+              {{/if-permission}}
+            </div>
+          </td>
+          {{#if showLeftSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+
+          {{#each item.prices as |price index|}}
+            {{#each yearsShown as |year|}}
+              {{#if (eq (add index 1) year) }}
+                <td class="td-budget-indirect-cost-rate no-border" data-test-budget-indirect-cost-item-year-rate>
+                    <label class="input-symbol percent symbol-right">
+                      <span class="sr-only">
+                        {{get-budget-input-label
+                          yearNumber=year
+                          sectionName=(concat groupText.indirectCosts.sections.indirect (add pIndex 1))
+                          categoryName=groupText.indirectCosts.categories.rates
+                          }}
+                      </span>
+                      {{input class="budget-indirect-cost-rate"
+                              type="text"
+                              value=price.rate
+                              key-up=(action "rateValidation" price)
+                              focus-out=(action "rateFormat" price)
+                              focus-in=(action 'rateFocusIn' price)
+                              disabled=viewOnly }}
+                              {{#if ( not (is-equal price.rateError null) ) }}
+                                {{error-tooltip price.rateError}}
+                              {{/if}}
+                    </label>
+
+                </td>
+                <td class="no-border dividing-character">x</td>
+                <td data-test-budget-indirect-cost-item-x-base class="col-budget-total td-budget-indirect-cost-base">
+                    <label  class="input-symbol dollar symbol-left">
+                      <span class="sr-only">{{get-budget-input-label
+                      yearNumber=year
+                      sectionName=(concat groupText.indirectCosts.sections.indirect (add pIndex 1))
+                      categoryName=groupText.indirectCosts.categories.base
+                      }}</span>
+
+                      {{input class=(if (gt years.length 3) 'budget-indirect-cost-sliders' 'budget-indirect-cost-no-sliders')
+                              key-up=(action 'amountValidation' price 'indirect cost base')
+                              focus-out=(action 'baseFocusOut' price)
+                              focus-in=(action 'baseFocusIn' price)
+                              type="text"
+                              value=price.base
+                              size=10
+                              disabled=viewOnly }}
+                      {{#if ( not (is-equal price.baseError null) ) }}
+                      {{error-tooltip price.baseError}}
+                    {{/if}}
+                    </label>
+
+
+                  <div class="right">{{format-whole-dollar price.value}} funds</div>
+                </td>
+              {{/if}}
+            {{/each}}
+          {{/each}}
+
+          {{#if showRightSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+
+          <td data-test-budget-indirect-cost-item-total-by-item class="word-wrap text-align-right">{{format-whole-dollar item.total}}</td>
+        </tr>
+      {{/each}}
+      {{#if-permission 'proposal.budget.modify'}}
+        <tr>
+          <td scope="row"><a tabindex="0" {{action "addLineItem" indirectCosts "rated"}} data-test-budget-add-indirect-cost-item-link><i class="fa fa-plus"></i> Add Indirect Cost Item</a></td>
+          {{#if showLeftSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+          {{#each yearsShown}}
+            <td class="no-border"></td>
+            <td colspan="2" class="col-budget-total"></td>
+          {{/each}}
+          {{#if showRightSlider}}
+            <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+          {{/if}}
+          <td></td>
+        </tr>
+      {{else}}
+          <tr>
+              <td scope="row"></td>
+            {{#if showLeftSlider}}
+                <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+            {{/if}}
+            {{#each yearsShown}}
+                <td class="no-border"></td>
+                <td colspan="2" class="col-budget-total"></td>
+            {{/each}}
+            {{#if showRightSlider}}
+                <td class="slider-col rectangle-cell-adjusted"></td> <!-- Year View Slider -->
+            {{/if}}
+              <td></td>
+          </tr>
+      {{/if-permission}}
+    </tbody>
+    <!-- End Indirect Costs -->
+
+    <tbody>
+      <tr class="total bold" id="table-lettering-total">
+        <td class="table-lettering-total-td" scope="row"><span class="table-lettering">J.</span><span class="table-lettering-text">Total Amount Requested (H + I)</span></td>
+        {{#if showLeftSlider}}
+          <td scope="row" class="col-slider hand-cursor rectangle-slider-adjusted-total" {{action "slideShownYearsLeft"}} title="{{previousYearTitle}}" style="cursor: pointer"><a class="enabled-slide-adjusted-total" id="total-left-total" title="{{previousYearTitle}}"><i class="fa fa-angle-left fa-lg slider-adjustment" aria-hidden="true" title="{{previousYearTitle}}"></i></a></td> <!-- Year View Slider --> <!-- Year View Slider -->
+        {{/if}}
+        {{#each totalAmountRequestedTotalByYear as | yearTotal index |}}
+          {{#each yearsShown as |year|}}
+            {{#if (eq (add index 1) year) }}
+              <td class="no-border"></td>
+              <td colspan="2" data-test-budget-total-h-i-by-year class="word-wrap text-align-right">{{format-whole-dollar yearTotal}}</td>
+            {{/if}}
+          {{/each}}
+        {{/each}}
+        {{#if showRightSlider}}
+          <td scope="row" class="col-slider default-cursor rectangle-slider-adjusted-total" {{action "slideShownYearsRight"}} title="{{lastYearSelectedTitle}}"><a class="disabled-slide" disabled="true" id="total-right-total"><i class="fa fa-angle-right fa-lg slider-adjustment" aria-hidden="true"></i></a></td>  <!-- Year View Slider -->
+        {{/if}}
+        <td data-test-budget-total-h-i-grand-total class="word-wrap text-align-right">{{format-whole-dollar totalAmountRequestedGrandTotal}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div> <!-- End Panel Body -->
+
+<div class="panel-footer">
+  {{#if-permission 'proposal.budget.modify'}}
+    {{#save-button btnClass="primary" onClick=(action 'saveBudget') isLoading=isSaving
+      data-test-budget-save-budget-button=""}}Save{{/save-button}}
+  {{/if-permission}}
+  <button class="btn btn-default" {{action "viewFile"}} data-test-budget-preview-print-button>Preview/Print</button>
+  {{#if-permission 'proposal.budget.modify'}}
+    {{link-to "Cancel" "proposal" trackNote='Cancel button_Budget page' class="btn btn-default not-active"}}
+  {{/if-permission}}
+</div>
+
+<div class="modal" id="managePersonnelModal" tabindex="-1" role="dialog" aria-labelledby="managePersonnelModalLabel" data-backdrop="static" data-test-budget-manage-personnel-modal>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'cancelBudgetPersonnel'}}><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addYearModalLabel" data-test-budget-manage-personnel-modal-title>Manage Senior Personnel Shown in Budget</h4>
+            </div>
+            <div class="modal-body">
+              {{#if managePersonnelModalMessage}}
+                <div data-test-budget-manage-personnel-modal-warning class="alert alert-warning" role="alert">
+                    {{managePersonnelModalMessage}}
+                </div>
+              {{/if}}
+                <p data-test-budget-manage-personnel-modal-text>
+                    <span>Any senior personnel with zero funds requested should be removed from the budget and instead noted in the Facilities, Equipment and Other Resources section.</span>
+                    <br><br>
+                    <span>Select personnel below, then use the >> button to remove the person from the budget. To select multiple personnel, hold the Ctrl key when selecting personnel.</span>
+                </p>
+                <div class="table-responsive">
+                  <table class="table-manage-personnel-modal">
+                    <tr>
+                        <td data-test-budget-manage-personnel-modal-shown-title>Shown in Budget</td>
+                        <td></td>
+                        <td data-test-budget-manage-personnel-modal-hidden-title>Removed from Budget</td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <label class="sr-only" for="managePersonnelShownList">Manage Personnel Shown List</label>
+                          <select id="managePersonnelShownList" {{action 'personnelShownChange' allowedKeys="any"}} multiple data-test-budget-manage-personnel-modal-shown>
+                            {{#each seniorPersonnel as | item |}}
+                              {{#if (eq item.shadowHidden false) }}
+                                  <option value={{item.propPersId}}>{{item.name}}</option>
+                              {{/if}}
+                            {{/each}}
+                          </select>
+                        </td>
+                        <td class="multi-select-buttons">
+                            <button id="managePersonnelDoubleRight" disabled class="btn btn-primary" {{action "managePersonnelHide"}} data-test-budget-manage-personnel-modal-right-arrow><i class="fa fa-angle-double-right" aria-hidden="true"></i></button><br>
+                            <button id="managePersonnelDoubleLeft" disabled class="btn btn-primary" {{action "managePersonnelShow"}} data-test-budget-manage-personnel-modal-left-arrow><i class="fa fa-angle-double-left" aria-hidden="true"></i></button>
+                        </td>
+                        <td>
+                            <label class="sr-only" for="managePersonnelHiddenList">Manage Personnel Hidden List</label>
+                            <select id="managePersonnelHiddenList" {{action 'personnelHiddenChange' allowedKeys="any"}} multiple data-test-budget-manage-personnel-modal-hidden>
+                              {{#each seniorPersonnel as | item |}}
+                                {{#if (eq item.shadowHidden true) }}
+                                    <option value={{item.propPersId}}>{{item.name}}</option>
+                                {{/if}}
+                              {{/each}}
+                            </select>
+                        </td>
+                    </tr>
+                  </table>
+                </div>
+                <br>
+                <p data-test-budget-manage-personnel-modal-text-footer>You can add additional senior personnel to your proposal, and make changes to personnel information by navigating to the Manage Personnel page from the left navigation.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" title={{manageBudgetUpdateModalDisabledTitle}} disabled={{manageBudgetUpdateModalDisabled}} {{action 'updateBudgetPersonnel'}} data-test-budget-modal-update-personnel-button>Update Budget Personnel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'cancelBudgetPersonnel'}} data-test-budget-modal-manage-personnel-close-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteItemModal" tabindex="-1" role="dialog" aria-labelledby="deleteItemModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteItemModalLabel" data-test-budget-delete-item-modal-title>Delete {{modalTypeUC}}</h4>
+      </div>
+      <div class="modal-body" data-test-budget-delete-item-modal-body>
+        Are you sure you want to delete this {{modalType}} item?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'confirmDeleteLineItem' modalDeleteItems modalDeleteLineItem modalType}} data-test-budget-delete-item-modal-delete-button>Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-budget-delete-item-modal-cancel-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="addYearModal" tabindex="-1" role="dialog" aria-labelledby="addYearModalLabel" data-test-budget-add-year-modal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addYearModalLabel" data-test-budget-add-year-modal-title>Add Year</h4>
+      </div>
+      <div class="modal-body" style="margin-bottom:80px;">
+        <span data-test-budget-add-year-modal-text>Add a new year to the budget by choosing a selection below.</span><br/><br/>
+        <p class="bold">Add New Year</p>
+        <ul class="response-radio">
+          <li data-test-budget-add-blank-year-button>
+              {{#radio-button groupValue=addType value="blank"}}Add Blank Year{{/radio-button}}
+          </li>
+          <li data-test-budget-existing-year-button id="copyYearRadio">
+            <div class="left" style="width:45%;">
+              {{#radio-button groupValue=addType value="copy" changed="setDefaultYear"}}Copy from an existing year{{/radio-button}}
+              <label class="indentLeft" id="copyYearRadioLabel">Select year to copy
+                <select id="copyYearRadioLabel" class="form-control no-label-label" onchange={{action "selectCopyYear" value="target.value"}} data-test-budget-existing-year-select>
+                  <option value="" data-test-budget-existing-year-option>--Select One--</option>
+                  {{#each years as |year|}}
+                      <option value={{year}} data-test-budget-existing-year-option>Year {{year}}</option>
+                  {{/each}}
+                </select>
+              </label>
+            </div>
+            {{#if addYearModalMessage}}
+              <div data-test-budget-existing-year-warning style="width:50%;" class="right alert alert-warning" role="alert">
+                  {{addYearModalMessage}}
+              </div>
+            {{/if}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" title={{addYearModalDisabledTitle}} disabled={{addYearModalButtonDisabled}} data-dismiss="modal" {{action 'addYearProxy'}} data-test-budget-modal-add-button>Add Year</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-budget-modal-add-close-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteYearModal" tabindex="-1" role="dialog" aria-labelledby="deleteYearModalLabel" data-test-budget-delete-year-modal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteYearModalLabel" data-test-budget-delete-year-modal-title>Delete Year</h4>
+      </div>
+      <div class="modal-body">
+        <p data-test-budget-delete-year-modal-text>Select a year to delete below.   If a year is deleted that has years following it, the remaining years will be renumbered so they stay in order.</p><br/>
+          <label>Select Year to Delete
+          <select class="form-control no-label-label" onchange={{action "selectDeleteYear" value="target.value"}} data-test-budget-delete-year-select>
+            <option value="" data-test-budget-modal-delete-year-option>--Select One--</option>
+            {{#each years as |year|}}
+              <option value={{year}} data-test-budget-modal-delete-year-option>Year {{year}}</option>
+            {{/each}}
+          </select>
+          </label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" disabled={{deleteYearModalButtonDisabled}} data-toggle="modal" title={{deleteYearModalButtonTitle}} data-target="#deleteYearConfirmationModal" {{action "deleteYearConfirmation"}} data-test-budget-modal-delete-button>Delete Year</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-budget-modal-delete-close-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteYearConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteYearConfirmationModalLabel" data-test-budget-delete-year-confirm-modal>
+  <div class="modal-dialog-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteYearConfirmationModalLabel" data-test-budget-delete-year-confirm-modal-title>Delete Year</h4>
+      </div>
+      <div class="modal-body">
+        <p data-test-budget-delete-year-confirm-modal-text>Are you sure you want to delete Year {{selectedDeleteYear}}?  This action cannot be undone.
+        <br/><br/>Please note: Any years in the budget after Year {{selectedDeleteYear}} will be renumbered so that the remaining years stay in order.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'deleteYearProxy'}} data-test-budget-modal-delete-confirm-button>Delete Year</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'cancelDeleteYearConfirmation'}} data-test-budget-modal-delete-confirm-close-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deletePostDocConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deletePostDocConfirmationModalLabel" data-test-budget-delete-postdoc-confirm-modal>
+    <div class="modal-dialog-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'saveBudgetCancelled'}}><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deletePostDocConfirmationModalLabel" data-test-budget-delete-postdoc-confirm-modal-title>Confirm Budget Change(s)</h4>
+            </div>
+            <div class="modal-body">
+                <p data-test-budget-delete-postdoc-confirm-modal-text-1>You have removed all funding from the Postdoctoral Scholars line item in Section B. Please note, a postdoctoral mentoring plan is only required if you have funding associated with Postdoctoral Scholars.</p>
+                <p data-test-budget-delete-postdoc-confirm-modal-text-2>Since you have removed this funding, you will lose access to the Postdoctoral Mentoring Plan section, and the uploaded postdoctoral mentoring plan file will be deleted.</p>
+                <p data-test-budget-delete-postdoc-confirm-modal-text-3>Do you wish to proceed with saving these change(s)?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'saveBudgetConfirmed'}} data-test-budget-modal-delete-postdoc-confirm-button>Save Change(s)</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'saveBudgetCancelled'}} data-test-budget-modal-delete-postdoc-confirm-close-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{unsaved-exit exitConfirmAction=(action 'exitBudgetConfirmed') exitCancelAction=(action 'exitBudgetCancelled')}}
+
+{{outlet}}

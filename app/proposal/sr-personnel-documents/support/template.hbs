@@ -1,0 +1,41 @@
+{{title breadCrumb}}
+
+
+<div class="panel-body">
+
+  {{screen-messages-service fileUploadForm=true}}
+
+  <div class="panel panel-gray right pappg-panel">
+    <div class="panel-body">
+      <a data-test-support-pappg-link href="{{props.pappgLinks.supportLink}}" target="_blank" title="opens in a new window">Current and Pending Support (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <p class="bold" data-test-upload-instructions-title>Instructions to upload Current and Pending Support:</p>
+  <ul data-test-upload-instructions>
+      <li data-test-upload-instructions1>Only 1 document can be uploaded</li>
+      <li data-test-upload-instructions2>Accepted file types include: Adobe PDF</li>
+      <li data-test-upload-instructions3>Current and pending support must include ongoing projects and proposals (including this project), and any subsequent funding in the case of continuing grants</li>
+      <li data-test-upload-instructions4>
+        Please refer to the <a data-test-file-upload-pappg-link href="{{props.pappgLinks.documentUploadInstructions}}" target="_blank" title="opens in a new window">Format of the proposal (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        for all margin and spacing requirements and the <a data-test-file-upload-propprep-site-faq-link href="{{props.proposalPrepSiteFAQ.faq}}" target="_blank" title="opens in a new window">Proposal Preparation Site FAQs</a> for font type and size requirements.&nbsp;
+      </li>
+      <li data-test-upload-instructions5>{{{PROPOSAL_CONSTANTS.UPLOAD_DOCUMENT.SHOULD_NOT_PAGE_NUMBER}}}</li>
+      <li data-test-upload-instructions6>Max file size permitted is {{maxFileSizeDisplay}}</li>
+  </ul>
+
+  {{single-file-upload-with-messages-service
+    sectionInfo=sectionInfo
+    fileName=fileName
+    pendingFileName=pendingFileName
+    previewAccepted=previewAccepted
+    onDelete=(action 'deleteFile')
+    onFileChange=(action 'uploadFile')
+    onFileBrowseClick=(action 'fileBrowseClick')
+    onFileClick=(action 'fileLinkClick')
+    isLoading=isDocumentLoading
+    isError=isError
+    selectedFilePath=selectedDocumentPath
+    editPermission='proposal.data.modify'}}
+
+</div>

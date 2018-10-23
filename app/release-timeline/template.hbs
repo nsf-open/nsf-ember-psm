@@ -1,0 +1,163 @@
+{{title breadCrumb}}
+
+<div class="row col-xs-12">
+  {{bread-crumbs}}
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel-prop">
+
+      <h1 class="panel-title h1" data-test-timeline-title>{{breadCrumb}}</h1>
+
+      <div aria-hidden="true" class="row">
+        <div class="col-xs-12">
+          <span class="right padding-btm-10"><i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i> = Not Available</span>
+          <span class="right padding-btm-10 padding-right-30"><i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i> = Available</span>
+        </div>
+      </div>
+
+      <table class="table table-grouped table-striped">
+        <thead>
+          <tr>
+            <th style="vertical-align:middle" data-test-release-timeline-supported-feature-header>Supported Types, Features, and Sections</th>
+            <th style="vertical-align:middle" data-test-release-timeline-initial-release-header>Initial Release<br/><span class="not-bold">(April 2018)</span></th>
+            <th style="vertical-align:middle" data-test-release-timeline-subsequent-release-header>Subsequent Releases</th>
+          </tr>
+        </thead>
+
+        <tbody class="bordered-tr">
+          <tr>
+            <th class="mid-table" colspan="4" data-test-compliance-subheading2>Proposal Features</th>
+          </tr>
+          {{#each featureTypeItems as |item| }}
+            <tr>
+              <td>{{{item.title}}}</td>
+              <td>
+                {{#if item.intialRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.intialReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.intialReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+              <td>
+                {{#if item.futureRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.futureReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.futureReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+
+        <tbody class="bordered-tr">
+          <tr>
+            <th class="mid-table" colspan="4" data-test-compliance-subheading2>Types of Proposals</th>
+          </tr>
+          {{#each proposalTypeItems as |item| }}
+            <tr>
+              <td>{{{item.title}}}</td>
+              <td>
+                {{#if item.intialRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.intialReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.intialReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+              <td>
+                {{#if item.futureRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.futureReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.futureReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+
+        <tbody class="bordered-tr">
+          <tr>
+            <th class="mid-table" colspan="4" data-test-compliance-subheading2>Proposal Sections</th>
+          </tr>
+          {{#each sectionTypeItems as |item| }}
+            <tr>
+              <td>{{{item.title}}}</td>
+              <td>
+                {{#if item.intialRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.intialReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.intialReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+              <td>
+                {{#if item.futureRelease}}
+                  <div class="left">
+                    <i class="fa fa-lg fa-check fa-green-check" aria-hidden="true"></i>
+                    <span class="sr-only">Available</span>
+                  </div>
+                  {{#if item.futureReleaseNote}}
+                    <div style="margin-left: 25px">({{{item.futureReleaseNote}}})</div>
+                  {{/if}}
+                {{else}}
+                <div class="left">
+                  <i class="fa fa-lg fa-times fa-red-x" aria-hidden="true"></i>
+                  <span class="sr-only">Not Available</span>
+                </div>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+
+
+    </div>
+  </div>
+</div>

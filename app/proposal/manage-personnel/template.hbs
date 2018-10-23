@@ -1,0 +1,853 @@
+{{title "Manage Personnel"}}
+
+
+<div class="panel-body">
+  {{screen-messages-service }}
+
+  <a class="pull-right margin-btm-10" data-toggle="modal" data-target="#rolesInfoModal" tabindex="0" onkeyup={{action "onEnter"}} data-test-manage-personnel-roles-help><i class="fa fa-info-circle" aria-hidden="true"></i> Senior Personnel Roles</a>
+
+  <table class="table table-fixed table-striped psm-manage-personnel">
+      <thead>
+      <tr>
+          <th colspan="{{colspanSeniorPersonnel}}">
+              <span class="pm-section-header">Senior Personnel</span>
+              {{#if-permission 'proposal.personnel.add'}}
+                <span class="pm-section-header-btn"><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addOtherSeniorPersonnelModal" data-backdrop="static" {{action "addPersonnelModal" "osp"}} data-test-manage-personnel-add-other-senior-personnel>Add Other Senior Personnel</button></span>
+              {{/if-permission}}
+              {{#if-permission 'proposal.personnel.add'}}
+                <span class="pm-section-header-btn"><button type="button" style="margin-right:10px !important;" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addCoPIModal" data-backdrop="static" disabled={{addCoPIDisabled}} title="{{addCoPIDisabledTitle}}" {{action "addPersonnelModal" "copi"}} data-test-manage-personnel-add-copi>Add co-Principal Investigator</button></span>
+              {{/if-permission}}
+          </th>
+      </tr>
+      </thead>
+      <thead>
+      <tr class="sub-header">
+          <th>
+              <span class="pm-table-col" data-test-mng-personnel-th1>Personnel Name</span>
+              <a tabindex="0" title="{{if isSortByName (if isSortDesc "Sorted descending by last name, click to change sort" "Sorted ascending by last name, click to change sort") "Click to sort column"}}" class="sort-by-name sortable-header fa {{if isSortByName (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "name"}} data-test-mng-personnel-sortby-name></a>
+          </th>
+          <th>
+              <span class="pm-table-col" data-test-mng-personnel-th2>Role</span>
+              <a tabindex="0" title="{{if isSortByRole (if isSortDesc "Sorted descending, click to change sort" "Sorted ascending, click to change sort") "Click to sort column"}}" class="sort-by-role sortable-header fa {{if isSortByRole (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "role"}} data-test-mng-personnel-sortby-role></a>
+          </th>
+          <th>
+              <span class="pm-table-col" data-test-mng-personnel-th3>Organization</span>
+              <a tabindex="0" title="{{if isSortByOrganization (if isSortDesc "Sorted descending, click to change sort" "Sorted ascending, click to change sort") "Click to sort column"}}" class="sort-by-organization sortable-header fa {{if isSortByOrganization (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "organization"}} data-test-mng-personnel-sortby-organization></a>
+          </th>
+          {{!--<th>--}}
+              {{!--<span class="pm-table-col" data-test-mng-personnel-th4>Permissions</span>--}}
+          {{!--</th>--}}
+          {{#if-permission 'proposal.personnel.remove'}}
+            <th>
+                <span class="pm-table-col" data-test-mng-personnel-th5>Actions</span>
+            </th>
+          {{/if-permission}}
+      </tr>
+      </thead>
+      <tbody>
+            {{#each personnelSortedFiltered as |person index|}}
+            <tr class="primary-row" data-test-primary-row="{{person.psmrole.code}}">
+                <td data-test-mng-personnel-name><span class="pm-table-col">{{person.displayName}}</span></td>
+                <td data-test-mng-personnel-role><span class="pm-table-col">{{person.displayRole}}</span></td>
+                <td data-test-mng-personnel-organization><span class="pm-table-col">{{person.institution.organizationName}}</span></td>
+              {{#if (eq person.psmrole.code "01")}}
+                  {{#if-permission 'proposal.personnel.remove'}}
+                    <td><span class="pm-table-col">
+                      {{#if (or (and (not model.isInPFUStatus) coPIExists) (and model.isInPFUStatus coPIsAvailableInPFU) )}}
+                        <a title="Remove from Proposal"
+                           data-toggle="modal"
+                           data-target="#removePIModal"
+                           data-backdrop="static"
+                           data-person-index={{index}}
+                           data-onenter-action="removePI"
+                           {{action "removePI" person}}
+                           onkeyup={{action "onEnterRemovePerson"}}
+                           tabindex="0"
+                           data-test-manage-personnel-remove-btn>Remove from Proposal</a>
+                      {{else if (and model.isInPFUStatus (not coPIsAvailableInPFU) )}}
+                        Remove from Proposal {{popover-icon-tooltip '' messageTexts.tooltip_removePI 'top'}}
+                      {{/if}}
+                    </span></td>
+                  {{/if-permission}}
+              {{else if (eq person.psmrole.code "02")}}
+                  {{#if-permission 'proposal.personnel.remove'}}
+                    <td>
+                      <span class="pm-table-col">
+                        <a title="Remove from Proposal"
+                           data-toggle="modal"
+                           data-target="#removePersonModal"
+                           data-backdrop="static"
+                           data-person-index={{index}}
+                           data-onenter-action="removePerson"
+                           {{action "removePerson" person}}
+                           onkeyup={{action "onEnterRemovePerson"}}
+                           tabindex="0"
+                           data-test-manage-personnel-remove-btn>Remove from Proposal</a>
+                      </span>
+                    </td>
+                  {{/if-permission}}
+              {{else}}
+                  {{#if-permission 'proposal.personnel.remove'}}
+                    <td><span class="pm-table-col">
+                        <a title="Remove from Proposal"
+                           data-toggle="modal"
+                           data-target="#removePersonModal"
+                           data-backdrop="static"
+                           data-person-index={{index}}
+                           data-onenter-action="removePerson"
+                           {{action "removePerson" person}}
+                           onkeyup={{action "onEnterRemovePerson"}}
+                           tabindex="0"
+                           data-test-manage-personnel-remove-btn>Remove from Proposal</a>
+                    </span></td>
+                  {{/if-permission}}
+              {{/if}}
+            </tr>
+          {{/each}}
+      </tbody>
+  </table>
+
+  <br><br>
+
+  <table class="table table-fixed table-striped">
+      <thead>
+      <tr>
+          <th colspan="{{colspanOtherPersonnel}}">
+              <span class="pm-section-header">Other Authorized User(s) - Data preparation only {{popover-icon-tooltip '' "An Other Authorized User (OAU) is an individual who assists in proposal preparation and is not identified as a member of senior personnel." "top"}}</span>
+              {{#if-permission 'proposal.personnel.add'}}
+                <span class="pm-section-header-btn"><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addOAUModal" data-backdrop="static" {{action "addPersonnelModal" "oau"}} data-test-manage-personnel-add-other-authorized-user>Add Other Authorized User</button></span>
+              {{/if-permission}}
+          </th>
+      </tr>
+      </thead>
+      <thead>
+      <tr class="sub-header">
+          <th>
+              <span class="pm-table-col" data-test-mng-asst-personnel-th1>Personnel Name</span>
+              <a tabindex="0" title="{{if isSortByNameOAU (if isSortDescOAU "Sorted descending by last name, click to change sort" "Sorted ascending by last name, click to change sort") "Click to sort column"}}" class="sort-by-name sortable-header fa {{if isSortByNameOAU (if isSortDescOAU "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortByOAU' "name"}} data-test-mng-asst-personnel-sortby-name></a>
+          </th>
+          <th>
+              <span class="pm-table-col" data-test-mng-asst-personnel-th2>Organization</span>
+              <a tabindex="0" title="{{if isSortByOrganizationOAU (if isSortDescOAU "Sorted descending, click to change sort" "Sorted ascending, click to change sort") "Click to sort column"}}" class="sort-by-role sortable-header fa {{if isSortByOrganizationOAU (if isSortDescOAU "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortByOAU' "organization"}} data-test-mng-asst-personnel-sortby-organization></a>
+          </th>
+          {{!--<th>--}}
+              {{!--<span class="pm-table-col" data-test-mng-asst-personnel-th3>Permissions</span>--}}
+          {{!--</th>--}}
+          {{#if-permission 'proposal.personnel.remove'}}
+            <th>
+                <span class="pm-table-col" data-test-mng-asst-personnel-th4>Actions</span>
+            </th>
+          {{/if-permission}}
+      </tr>
+      </thead>
+      <tbody>
+      {{#each personnelSortedOAUFiltered as |person index|}}
+        <tr>
+            <td data-test-mng-asst-personnel-name><span class="pm-table-col">{{person.displayName}}</span></td>
+            <td><span class="pm-table-col" data-test-mng-asst-personnel-organization>{{person.institution.organizationName}}</span></td>
+            {{!--<td><span class="pm-table-col" data-test-mng-asst-personnel-permissions>Edit - all sections</span></td>--}}
+            {{#if-permission 'proposal.personnel.remove'}}
+              <td><span class="pm-table-col">
+                  <a title="Remove from Proposal"
+                      data-toggle="modal"
+                      data-target="#removePersonModal"
+                      data-backdrop="static"
+                      data-person-index={{index}}
+                      data-onenter-action="removePerson"
+                      data-is-oau
+                      {{action "removePerson" person}}
+                      onkeyup={{action "onEnterRemovePerson"}}
+                      tabindex="0"
+                      data-test-manage-personnel-remove-oau-btn>Remove from Proposal</a>
+              </span></td>
+            {{/if-permission}}
+        </tr>
+      {{/each}}
+      {{#if noOAUs}}
+        <tr><td colspan="{{colspanOtherPersonnel}}" class="no-results" data-test-manage-personnel-no-oaus>There are currently no Other Authorized Users</td></tr>
+      {{/if}}
+      </tbody>
+  </table>
+
+</div>
+
+
+<div class="modal" id="rolesInfoModal" role="dialog" aria-labelledby="rolesInfoModalLabel" data-test-modal-manage-personnel-roles>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="rolesInfoModalLabel" data-test-modal-manage-personnel-roles-title>Senior Personnel Roles</h3>
+            </div>
+            <div class="modal-body" data-test-modal-manage-personnel-roles-body>
+                <p><strong><span>The following roles are considered Senior Personnel at NSF:</span></strong></p>
+                <p>
+                    <strong><span>PRINCIPAL INVESTIGATOR/PROJECT DIRECTOR (PI/PD)</span></strong>
+                    <span>means the individual(s) designated by the proposer, and approved by NSF, who will be responsible for the scientific or technical direction of the project. NSF does not infer any distinction in scientific stature among multiple PIs, whether referred to as PI or co-PI. If more than one, the first one listed will serve as the contact PI, with whom all communications between NSF program officials and the project relating to the scientific, technical, and budgetary aspects of the project should take place. The PI and any identified co-PIs, however, will be jointly responsible for submission of the requisite project reports. The term "Principal Investigator" generally is used in research projects, while the term "Project Director" generally is used in centers, large facilities, and other projects. PI/co-PI is interchangeable with PD/co-PD.</span>
+                </p>
+                <p>
+                    <strong><span>Faculty Associate (faculty member)</span></strong>
+                    <span>an individual other than the Principal Investigator(s) considered by the performing institution to be a member of its faculty or who holds an appointment as a faculty member at another institution, and who will participate in the project being supported.</span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-test-modal-manage-personnel-roles-close>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal psm-manage-personnel" id="addCoPIModal" role="dialog" aria-labelledby="addCoPIModalLabel" data-test-modal-add-copi>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetAddCoPI' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="addCoPIModalLabel" data-test-modal-add-copi-title>Add co-Principal Investigator (co-PI)</h3>
+            </div>
+            <div class="modal-body">
+              {{screen-messages messages=modalMessages}}
+                <p class="bold" data-test-modal-add-copi-subtitle>
+                    Search for co-PI:
+                </p>
+                <table class="modal-input-table">
+                    <thead>
+                      <tr>
+                          <th colspan="2"><label for="copiNSFID">NSF ID</label></th>
+                          <th colspan="2"><label for="copiEmail">Email</label></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                          <td data-test-modal-add-copi-nsfid class="nsf-id-input">
+                            {{input id="copiNSFID"
+                                    type="text"
+                                    value=searchCoPIbyID
+                                    min=0
+                                    max=12
+                                    class=idValidationError
+                                    input=(action 'runIdValidationErrors')
+                                    click=(action 'runIdValidationErrors')
+                                    autofocus="autofocus"
+                                    disabled=inputNSFIDDisabled
+                                    title=inputNSFIDDisabledText}}</td>
+                          <td class="or-text bold">OR</td>
+                          <td data-test-modal-add-copi-email>
+                            {{input id="copiEmail"
+                                    type="text"
+                                    value=searchCoPIbyEmail
+                                    min=0
+                                    max=40
+                                    class=emailValidationError
+                                    focus-out=(action 'showEmailValidationError' searchCoPIbyEmail)
+                                    keyUp=(action 'resetEmailValidationErrors')
+                                    disabled=inputEmailDisabled
+                                    title=inputEmailDisabledText}}</td>
+                          <td class="modal-inline-button">
+                            {{#save-button btnClass="primary"
+                              onClick=(action 'searchPersonnel' '02' 'searchCoPIbyID' 'searchCoPIbyEmail')
+                              isLoading=isSearching
+                              disabled=searchCoPIDisabled
+                              title=searchCoPIDisabledTitle
+                              loadingText="Searching"
+                              data-test-modal-add-copi-search-button=""}}Search{{/save-button}}
+                          </td>
+                      </tr>
+                      {{#if nsfIDValidationError}}
+                          <tr>
+                              <td class="validation-error-text"><span>This personnel has already been added to the proposal</span></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                      {{/if}}
+                      {{#if nsfEmailValidationError}}
+                          <tr>
+                              <td></td>
+                              <td></td>
+                              <td class="validation-error-text"><span>This email address is not valid</span></td>
+                              <td></td>
+                          </tr>
+                      {{/if}}
+                      {{#if nsfIDNumberValidationError}}
+                          <tr>
+                              <td class="validation-error-text"><span>NSF IDs must be 9 digits</span></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                      {{/if}}
+                      {{#if nsfIDNumberOnlyValidationError}}
+                          <tr>
+                              <td class="validation-error-text"><span>Letters and special characters are not valid</span></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                      {{/if}}
+                    </tbody>
+                </table>
+                {{#if personnelSearchResults.length}}
+                <div style="max-height:300px;overflow-y:auto;">
+                <table class="table table-striped" data-test-modal-add-copi-results>
+                    <thead>
+                      <tr data-test-modal-add-copi-table-headers>
+                        <th>Select</th>
+                        <th>Personnel Name</th>
+                        <th>NSF ID</th>
+                        <th>Email</th>
+                        <th>Organization</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {{#each personnelSearchResults as |person index|}}
+                      <tr>
+                          {{#if (eq index  0)}}
+                            <td data-test-search-personnel-select><input type="radio" name="personnel-search-copi" value="{{index}}" checked></td>
+                          {{else}}
+                            <td data-test-search-personnel-select><input type="radio" name="personnel-search-copi" value="{{index}}"></td>
+                          {{/if}}
+                          <td data-test-search-personnel-name>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
+                          <td data-test-search-personnel-nsfid>{{person.nsfId}}</td>
+                          <td data-test-search-personnel-email>{{person.email}}</td>
+                          <td data-test-search-personnel-organization>{{person.institution.organizationName}}</td>
+                      </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+                </div>
+                {{/if}}
+                {{#if personnelSearchResultsEmpty}}
+                  <p data-test-modal-add-copi-no-results>No personnel, able to be added as a co-PI, were found that match the search criteria. Please try your search again.</p>
+                {{/if}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmAddCoPI" data-dismiss="modal" disabled={{confirmCoPIDisabled}} title="{{confirmCoPIDisabledTitle}}" {{action 'addCoPI' preventDefault=false}} data-test-modal-add-personnel-copi>Add Personnel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'resetAddCoPI' preventDefault=false}} data-test-modal-add-personnel-copi-cancel>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal psm-manage-personnel" id="addOtherSeniorPersonnelModal" role="dialog" aria-labelledby="addOtherSeniorPersonnelModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetAddOtherSeniorPersonnel' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="addOtherSeniorPersonnelModalLabel" data-test-modal-add-other-senior-personnel-title>Add Other Senior Personnel</h3>
+            </div>
+            <div class="modal-body">
+              {{screen-messages messages=modalMessages}}
+                <div class="modal-divider" data-test-modal-add-osp-radios>
+                  <p>Choose to search or enter Other Senior Personnel information.</p>
+                  {{#radio-button groupValue=searchType name='searchType' value="registered" changed="updateSearchSelect"}}Search for personnel registered at NSF by NSF ID or email{{/radio-button}}
+                  <br>
+                  {{#radio-button groupValue=searchType name='searchType' value="freeform" changed="updateSearchSelect"}}Enter personnel name{{/radio-button}}
+                </div>
+          {{#if (eq searchType 'registered')}}
+            <div>
+                <p class="bold" data-test-modal-add-osp-nsf-id-search-text>Search for Other Senior Personnel:</p>
+                <table class="modal-input-table">
+                    <thead>
+                    <tr>
+                        <th colspan="2"><label for="ospNSFID">NSF ID</label></th>
+                        <th colspan="2"><label for="ospEmail">Email</label></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-test-modal-add-osp-nsfid class="nsf-id-input">
+                          {{input id="ospNSFID"
+                                  type="text"
+                                  value=searchOtherSeniorPersonnelbyID
+                                  min=0
+                                  max=12
+                                  class=idValidationError
+                                  input=(action 'runIdValidationErrors')
+                                  click=(action 'runIdValidationErrors')
+                                  autofocus="autofocus"
+                                  disabled=inputNSFIDDisabled
+                                  title=inputNSFIDDisabledText}}</td>
+                        <td class="or-text bold">OR</td>
+                        <td data-test-modal-add-osp-email>
+                          {{input id="ospEmail"
+                                  type="text"
+                                  value=searchOtherSeniorPersonnelbyEmail
+                                  min=0
+                                  max=40
+                                  class=emailValidationError
+                                  focus-out=(action 'showEmailValidationError' searchCoPIbyEmail)
+                                  keyUp=(action 'resetEmailValidationErrors')
+                                  disabled=inputEmailDisabled
+                                  title=inputEmailDisabledText}}
+                        </td>
+                        <td class="modal-inline-button">
+                          {{#save-button btnClass="primary"
+                            onClick=(action 'searchOtherSeniorPersonnel' 'searchOtherSeniorPersonnelbyID' 'searchOtherSeniorPersonnelbyEmail')
+                            isLoading=isSearching
+                            disabled=searchOtherSeniorPersonnelDisabled
+                            title=searchOtherSeniorPersonnelDisabledTitle
+                            loadingText="Searching"
+                            data-test-modal-add-osp-search-button=""}}Search{{/save-button}}
+                        </td>
+                    </tr>
+                    {{#if nsfIDValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>This personnel has already been added to the proposal</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfEmailValidationError}}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="validation-error-text"><span>This email address is not valid</span></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfIDNumberValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>NSF IDs must be 9 digits</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfIDNumberOnlyValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>Letters and special characters are not valid</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+              {{#if personnelSearchResults.length}}
+                <div style="max-height:250px;overflow-y:auto;">
+                  <table class="table table-striped" data-test-modal-add-osp-results>
+                      <thead>
+                      <tr>
+                          <th>Select</th>
+                          <th>Personnel Name</th>
+                          <th>NSF ID</th>
+                          <th>Email</th>
+                          <th>Organization</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {{#each personnelSearchResults as |person index|}}
+                          <tr>
+                            {{#if (eq index  0)}}
+                                <td data-test-search-personnel-select><input type="radio" name="personnel-search-otherseniorpersonnel" value="{{index}}" checked></td>
+                            {{else}}
+                                <td data-test-search-personnel-select><input type="radio" name="personnel-search-otherseniorpersonnel" value="{{index}}"></td>
+                            {{/if}}
+                              <td data-test-search-personnel-name>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
+                              <td data-test-search-personnel-nsfid>{{person.nsfId}}</td>
+                              <td data-test-search-personnel-email>{{person.email}}</td>
+                              <td data-test-search-personnel-organization>{{person.institution.organizationName}}</td>
+                          </tr>
+                      {{/each}}
+                      </tbody>
+                  </table>
+                </div>
+              {{/if}}
+              {{#if personnelSearchResultsEmpty}}
+                  <p data-test-modal-add-osp-no-results>No personnel, able to be added as an Other Senior Personnel, were found that match the search criteria. Please try your search again.</p>
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if (eq searchType 'freeform')}}
+          <div>
+              <p><i class="fa fa-asterisk"></i> Required</p>
+              <p class="bold">
+                  Enter Other Senior Personnel:
+              </p>
+              <table class="modal-input-table">
+                  <thead>
+                  <tr>
+                      <th data-test-modal-add-oau-name-th1><i class="fa fa-asterisk"></i> <label for="ospFirstName"> First Name</label></th>
+                      <th class="table-middle-initial" data-test-modal-add-oau-name-th2><label for="ospMiddleInitial">Middle Initial</label></th>
+                      <th data-test-modal-add-oau-name-th3><i class="fa fa-asterisk"></i><label for="ospLastName"> Last Name</label></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td data-test-modal-add-osp-first-name class="allow-spaces">
+                        {{input id="ospFirstName"
+                                type="text"
+                                value=addOtherSeniorPersonnelbyFirstName
+                                min=0
+                                max=13
+                                focus-out=(action 'trimWhiteSpace' 'addOtherSeniorPersonnelbyFirstName')
+                                keyUp=(action 'firstNameUpdate')
+                                class=firstNameValidationError
+                          }}</td>
+                      <td data-test-modal-add-osp-middle-initial>
+                        {{input id="ospMiddleInitial"
+                                type="text"
+                                value=addOtherSeniorPersonnelbyMiddleInitial
+                                min=0
+                                max=1
+                                class=middleInitialValidationError
+                                keyUp=(action 'middleInitialUpdate')
+                        }}</td>
+                      <td data-test-modal-add-osp-last-name class="allow-spaces">
+                        {{input id="ospLastName"
+                                type="text"
+                                value=addOtherSeniorPersonnelbyLastName
+                                min=0
+                                max=13
+                                focus-out=(action 'trimWhiteSpace' 'addOtherSeniorPersonnelbyLastName')
+                                keyUp=(action 'lastNameUpdate')
+                                class=lastNameValidationError
+                        }}</td>
+                  </tr>
+                  <tr>
+                  {{#if firstNameLengthValidationError}}
+                      <td class="validation-error-text"><span>First name must be 13 characters or less</span></td>
+                  {{else if firstNameNumberValidationError}}
+                      <td class="validation-error-text"><span>First name cannot include numbers</span></td>
+                  {{else if firstNameCharacterValidationError}}
+                      <td class="validation-error-text"><span>First name cannot include this special character</span></td>
+                  {{else}}
+                      <td></td>
+                  {{/if}}
+                  {{#if middleInitialLengthValidationError}}
+                      <td class="validation-error-text" data-test-modal-add-osp-validation-middle-initial><span>One letter allowed</span></td>
+                  {{else if middleInitialCharacterValidationError}}
+                      <td class="validation-error-text" data-test-modal-add-osp-validation-middle-initial><span>Character not allowed</span></td>
+                  {{else}}
+                      <td></td>
+                  {{/if}}
+                  {{#if lastNameLengthValidationError}}
+                      <td class="validation-error-text" data-test-modal-add-osp-validation-last-name><span>Last name must be 21 characters or less</span></td>
+                  {{else if lastNameNumberValidationError}}
+                      <td class="validation-error-text" data-test-modal-add-osp-validation-last-name><span>Last name cannot include numbers</span></td>
+                  {{else if lastNameCharacterValidationError}}
+                      <td class="validation-error-text" data-test-modal-add-osp-validation-last-name><span>Last name cannot include this special character</span></td>
+                  {{else}}
+                      <td></td>
+                  {{/if}}
+                  </tr>
+                  </tbody>
+              </table>
+            {{#if personnelSearchResults.length}}
+              <div style="max-height:250px;overflow-y:auto;">
+                <table class="table table-striped" data-test-modal-add-oau-results>
+                    <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Personnel Name</th>
+                        <th>NSF ID</th>
+                        <th>Email</th>
+                        <th>Organization</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each personnelSearchResults as |person index|}}
+                        <tr>
+                          {{#if (eq index  0)}}
+                              <td data-test-search-personnel-select><input type="radio" name="personnel-search-otherseniorpersonnel" value="{{index}}" checked></td>
+                          {{else}}
+                              <td data-test-search-personnel-select><input type="radio" name="personnel-search-otherseniorpersonnel" value="{{index}}"></td>
+                          {{/if}}
+                            <td data-test-search-personnel-name>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
+                            <td data-test-search-personnel-nsfid>{{person.nsfId}}</td>
+                            <td data-test-search-personnel-email>{{person.email}}</td>
+                            <td data-test-search-personnel-organization>{{person.institution.organizationName}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+              </div>
+            {{/if}}
+          </div>
+          {{/if}}
+        </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-primary"
+                        id="confirmAddOtherSeniorPersonnel"
+                        disabled={{confirmOtherSeniorPersonnelDisabled}}
+                        title="{{confirmOtherSeniorPersonnelDisabledTitle}}"
+                        {{action 'addOtherSeniorPersonnel' preventDefault=false}}
+                        data-test-modal-add-personnel-osp>Add Personnel
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'resetAddOtherSeniorPersonnel' preventDefault=false}} data-test-modal-add-personnel-osp-cancel>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal psm-manage-personnel" id="addOAUModal" role="dialog" aria-labelledby="addOAUModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content addPersonnel">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetAddOAU' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="addOAUModalLabel" data-test-modal-add-other-authorized-user-title>Add Other Authorized User (OAU)</h3>
+            </div>
+            <div class="modal-body">
+              {{screen-messages messages=modalMessages}}
+                <p class="bold" data-test-modal-add-oau-nsf-id-search-text>Search for Other Authorized User:</p>
+                <table class="modal-input-table">
+                    <thead>
+                    <tr>
+                        <th colspan="2"><label for="oauNSFID">NSF ID</label></th>
+                        <th colspan="2"><label for="oauEmail">Email</label></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-test-modal-add-oau-nsfid class="nsf-id-input">
+                          {{input id="oauNSFID"
+                                  type="text"
+                                  value=searchOAUbyID
+                                  min=0
+                                  max=12
+                                  class=idValidationError
+                                  input=(action 'runIdValidationErrors')
+                                  click=(action 'runIdValidationErrors')
+                                  autofocus="autofocus"
+                                  disabled=inputNSFIDDisabled
+                                  title=inputNSFIDDisabledText}}</td>
+                        <td class="or-text bold">OR</td>
+                        <td data-test-modal-add-oau-email>
+                          {{input id="oauEmail"
+                                  type="text"
+                                  value=searchOAUbyEmail
+                                  min=0
+                                  max=40
+                                  class=emailValidationError
+                                  focus-out=(action 'showEmailValidationError' searchCoPIbyEmail)
+                                  keyUp=(action 'resetEmailValidationErrors')
+                                  disabled=inputEmailDisabled title=inputEmailDisabledText}}</td>
+                        <td class="modal-inline-button">
+                          {{#save-button btnClass="primary"
+                            onClick=(action 'searchOtherAuthorizedUser' 'searchOAUbyID' 'searchOAUbyEmail')
+                            isLoading=isSearching
+                            disabled=searchOAUDisabled
+                            title=searchOAUDisabledTitle
+                            loadingText="Searching"
+                            data-test-modal-add-oau-search-button=""}}Search{{/save-button}}
+                        </td>
+                    </tr>
+                    {{#if nsfIDValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>This personnel has already been added to the proposal</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfEmailValidationError}}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="validation-error-text"><span>This email address is not valid</span></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfIDNumberValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>NSF IDs must be 9 digits</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    {{#if nsfIDNumberOnlyValidationError}}
+                        <tr>
+                            <td class="validation-error-text"><span>Letters and special characters are not valid</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+              {{#if personnelSearchResults.length}}
+                <div style="max-height:300px;overflow-y:auto;">
+                  <table class="table table-striped" data-test-modal-add-oau-results>
+                      <thead>
+                      <tr>
+                          <th>Select</th>
+                          <th>Personnel Name</th>
+                          <th>NSF ID</th>
+                          <th>Email</th>
+                          <th>Organization</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {{#each personnelSearchResults as |person index|}}
+                          <tr>
+                            {{#if (eq index  0)}}
+                                <td data-test-search-personnel-select><input type="radio" name="personnel-search-oau" value="{{index}}" checked></td>
+                            {{else}}
+                                <td data-test-search-personnel-select><input type="radio" name="personnel-search-oau" value="{{index}}"></td>
+                            {{/if}}
+                              <td data-test-search-personnel-name>{{person.firstName}} {{person.middleName}} {{person.lastName}}</td>
+                              <td data-test-search-personnel-nsfid>{{person.nsfId}}</td>
+                              <td data-test-search-personnel-email>{{person.email}}</td>
+                              <td data-test-search-personnel-organization>{{person.institution.organizationName}}</td>
+                          </tr>
+                      {{/each}}
+                      </tbody>
+                  </table>
+                </div>
+              {{/if}}
+              {{#if personnelSearchResultsEmpty}}
+                  <p data-test-modal-add-oau-no-results>No personnel, able to be added as an OAU, were found that match the search criteria. Please try your search again.</p>
+              {{/if}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmAddOAU" data-dismiss="modal" disabled={{confirmOAUDisabled}} title="{{confirmOAUDisabledTitle}}" {{action 'addOAU' preventDefault=false}} data-test-modal-add-personnel-oau>Add Personnel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'resetAddOAU' preventDefault=false}} data-test-modal-add-personnel-oau-cancel>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="changePIModal" role="dialog" aria-labelledby="changePIModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetChangePI' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="changePIModalLabel">Change PI</h3>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Please select a new Principal Investigator:
+                </p>
+                  {{#each personnel as |person|}}
+                    {{#if (eq person.role "co-Principal Investigator")}}
+                      <input name="radioPI" type="radio" style="margin-right: 10px;" {{action 'enableConfirmChangePI' preventDefault=false}}>{{person.firstName}} {{person.middleName}} {{person.lastName}} ({{person.role}})<br>
+                    {{/if}}
+                  {{/each}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmChangePI" data-dismiss="modal" disabled {{action 'resetChangePI' preventDefault=false}}>Change PI</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'resetChangePI' preventDefault=false}}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="changeRoleModal" role="dialog" aria-labelledby="changeRoleModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetChangeRole' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="changeRoleModalLabel">Change Role for {{modalChangeRole.displayName}}</h3>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Please select a new role.
+                </p>
+                  {{#if (eq modalChangeRole.role "co-Principal Investigator")}}
+                      <input id="otherSeniorPersonnelRadioSelection" name="radioRole" type="radio" style="margin-right: 10px;"
+                        value="Other Senior Personnel"
+                        {{action 'enableConfirmChangeRole' preventDefault=false}}>
+                      <label for="otherSeniorPersonnelRadioSelection">Other Senior Personnel</label><br>
+                  {{else}}
+                      <input id="coPrincipalInvestigatorRadioSelection" name="radioRole" type="radio" style="margin-right: 10px;"
+                        value="co-Principal Investigator"
+                        {{action 'enableConfirmChangeRole' preventDefault=false}}>
+                      <label for="coPrincipalInvestigatorRadioSelection">co-Principal Investigator</label><br>
+                  {{/if}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmChangeRole" data-dismiss="modal" disabled {{action 'resetChangeRole' preventDefault=false}}>Change Role</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'resetChangeRole' preventDefault=false}}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{#if (or (not model.isInPFUStatus) (and model.isInPFUStatus coPIsAvailableInPFU ) )}}
+<div class="modal" id="removePIModal" role="dialog" aria-labelledby="removePIModalLabel" data-test-modal-remove-pi>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="removePIModalLabel" data-test-modal-remove-pi-title>Remove from Proposal</h3>
+            </div>
+            <div class="modal-body" data-test-modal-remove-pi-body>
+              {{#if model.isInPFUStatus}}
+                <div data-test-budget-remove-pi-pfu-info-message class="alert alert-info" role="alert">
+                    {{messageTexts.info_removePI_PFU}}
+                </div>
+              {{/if}}
+              {{#if (eq currentUser.psmrole.code "01")}}
+                  <p>To remove yourself, <strong>{{modalRemovePI.displayName}}</strong>, from the proposal, a new Principal Investigator must be assigned.</p>
+              {{else}}
+                  <p>To remove <strong>{{modalRemovePI.displayName}}</strong> from the proposal, a new Principal Investigator must be assigned.</p>
+              {{/if}}
+                <p data-test-modal-remove-pi-radios>
+                    <p><i class="fa fa-asterisk"></i> <strong>Assign New Principal Investigator:</strong></p>
+                    {{#each coPIList as |copi index|}}
+                      {{#if (and model.isInPFUStatus (eq copi.institution.id modalRemovePI.institution.id)) }}
+                        {{#radio-button groupValue=newCoPISelection name='newCoPISelection' value=index}}{{copi.displayName}}{{/radio-button}}
+                        <br>
+                      {{else if (not model.isInPFUStatus)}}
+                        {{#radio-button groupValue=newCoPISelection name='newCoPISelection' value=index}}{{copi.displayName}}{{/radio-button}}
+                        <br>
+                      {{/if}}
+                    {{/each}}
+                </p>
+              {{#if (eq currentUser.psmrole.code "01")}}
+                  <p>By clicking 'Remove and Assign New PI', you will immediately lose access to this proposal. Additionally, all of your personnel documents and budget information will be removed from the proposal, which cannot be undone.</p>
+              {{else}}
+                  <p>By clicking 'Remove and Assign New PI', the current PI will lose access to the proposal. Additionally, all personnel documents and budget information associated with the current PI will be removed from the proposal, which cannot be undone.</p>
+              {{/if}}
+                <p>Please note: Any other uploaded proposal documents which may contain references to this Senior Personnel's name, for example, Budget Justification, must be manually updated.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmRemovePI" data-dismiss="modal" {{action 'confirmRemovePI' preventDefault=false}} data-test-modal-remove-pi-remove-button>Remove and Assign New PI</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'resetRemovePI' preventDefault=false}} data-test-modal-remove-pi-cancel-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}
+
+<div class="modal" id="removePersonModal" role="dialog" aria-labelledby="removePersonModalLabel" data-test-modal-remove-personnel>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="removePersonModalLabel" data-test-modal-remove-personnel-title>Remove from Proposal</h3>
+            </div>
+            <div class="modal-body" data-test-modal-remove-personnel-body>
+                {{#if modalRemovePersonSelf}}
+                    <p>Please confirm that you, <strong>{{modalRemovePerson.displayName}}</strong>, should be removed from the proposal.</p>
+                {{else}}
+                    <p>Please confirm that <strong>{{modalRemovePerson.displayName}}</strong> should be removed from the proposal.</p>
+                {{/if}}
+                {{#if (eq modalRemovePerson.psmrole.code "02")}}
+                    {{#if modalRemovePersonSelf}}
+                        <p>By clicking 'Remove', you will immediately lose access to this proposal. Additionally, all of your personnel documents and budget information will be removed from the proposal, which cannot be undone.</p><p>Please note: Any other uploaded proposal documents which may contain references to this Senior Personnel's name, for example, Budget Justification, must be manually updated.</p>
+                    {{else}}
+                        <p>By clicking 'Remove', the person will lose access to the proposal. Additionally, all personnel documents and budget information associated with the person will be removed from the proposal, which cannot be undone.</p>
+                    {{/if}}
+                {{else if (eq modalRemovePerson.psmrole.code "03")}}
+                    <p>By clicking 'Remove', all personnel documents and budget information associated with the person will be removed from the proposal, which cannot be undone.</p><p>Please note: Any other uploaded proposal documents which may contain references to this Senior Personnel's name, for example, Budget Justification, must be manually updated.</p>
+                {{else if (eq modalRemovePerson.psmrole.code "04")}}
+                    {{#if modalRemovePersonSelf}}
+                        <p>By clicking 'Remove', you will immediately lose access to this proposal.</p>
+                    {{else}}
+                        <p>By clicking 'Remove', the person will lose access to the proposal.</p>
+                    {{/if}}
+                {{/if}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmRemovePerson" data-dismiss="modal" {{action 'confirmRemovePerson' preventDefault=false}} data-test-modal-remove-personnel-remove-button>Remove</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-modal-remove-personnel-cancel-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!--outlet--}}

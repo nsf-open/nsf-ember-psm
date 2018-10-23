@@ -1,0 +1,313 @@
+
+.panel {
+  border-top: 3px solid $panel-border-top-color;
+  padding: $panel-vertical-padding $panel-horizontal-padding;
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.17);
+  &.disabled {
+    opacity: 0.4;
+  }
+}
+
+.panel-yellow {
+  background-color: #ffe2a5;
+  border-bottom: 2px solid #e2c686;
+  border-right: 2px solid #e2c686;
+  padding: 8px 24px;
+  > .panel-body {
+    text-align: center;
+    // vertical-align:middle;
+    > .number {
+      font-size: 26px;
+    }
+  }
+}
+
+.panel-blue {
+  background-color: #e9ecee;
+  box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.17), inset 0 3px 0 0 #008ba9;
+  &.panel-warning {
+    background-color: #fff9e3;
+    box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.17), inset 0 3px 0 0 #8e5300;
+    box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.17), inset 0 3px 0 0 $warm-brown;
+  }
+  &.panel-error {
+    background-color: #fff0f0;
+    box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.17), inset 0 3px 0 0 #e74c3c;
+    box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.17), inset 0 3px 0 0 $tomato;
+  }
+
+  border: none;
+  margin: 0 !important;
+
+  &.panel-fixed-263 {
+    padding-top: 12px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    width: 263px;
+    min-height: 80px;
+  }
+  &.panel-fixed-360 {
+    padding-top: 12px;
+    padding-bottom: 15px;
+    width: 345px;
+  }
+
+  > .panel-body {
+    line-height: 0.5;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    > h4 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    > select {
+      margin-bottom: 5px;
+    }
+    .date {
+      font-size: 18px;
+      padding-top: 5px;
+    }
+    .fa-asterisk {
+      padding-right: 0;
+    }
+    .btn-sm {
+      padding: 5px 9px !important;
+      margin: 0 !important;
+    }
+  }
+}
+
+.panel-cool-blue {
+  // border: solid 1px #ced6da;
+  padding-bottom: 20px;
+
+
+  .panel-header {
+    background-color: $sub-header-bg-color;
+    border: solid 1px $sub-header-bg-color;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+  }
+  .panel-body {
+    background-color: #ffffff;
+    padding: 20px;
+    border: solid 1px #ced6da;
+  }
+}
+
+.panel-teal {
+  // border: solid 1px #ced6da;
+  padding-bottom: 20px;
+
+
+  .panel-header {
+    background-color: #00748d;
+    border: solid 1px #3da4b6;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+  }
+  .panel-body {
+    background-color: #ffffff;
+    padding: 20px;
+    padding-bottom: 0;
+    border: solid 1px #ced6da;
+    > ul {
+      padding-left: 0;
+      margin-left: 0;
+    }
+  }
+}
+
+.panel-teal-header {
+  border: 1px solid #d4d4d4;
+  margin-bottom: 30px;
+  // margin-right: 15px;
+  // margin-left: 15px;
+
+  button.btn-align-left {
+    padding-left: 10px !important;
+    &.btn-icon-wrap {
+      white-space: normal;
+      height: auto;
+      padding-left: 25px !important;
+      padding-right: 25px !important;
+      i {
+        position: absolute;
+        margin-left: -18px;
+        margin-top: 2px;
+        &.icon-pad-right {
+          margin-left: -20px;
+        }
+        &.fa-file.file-arrow-overlap {
+          margin-left: -20px;
+          font-size: 12px;
+        }
+        &.fa-arrow-right.file-arrow-overlap {
+          margin-left: -11px;
+          margin-top: 3px;
+          font-size: 11px;
+          text-shadow: -1px 0 #313b52, 0 1px #313b52, 1px 0 #313b52, 0 -1px #313b52
+        }
+      }
+    }
+  }
+
+  // padding: 20px;
+  > .panel-header {
+    background: #00748d;
+    color: #ffffff;
+    height: 40px;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-top: 10px;
+    vertical-align:middle;
+    > a {
+      color: #fff;
+    }
+  }
+  > .panel-body {
+    padding: 10px 15px;
+  }
+  > .panel-body.big-button-body {
+    padding: 10px 10px;
+  }
+}
+
+.panel-gray {
+  // padding: 30px 20px 20px 20px;
+  padding-bottom: 20px;
+  background-color: #e9ecee;
+  > .panel-title {
+    color: #313b52;
+    text-align: center;
+  }
+  > .panel-body {
+    font-family: 'Arial';
+    font-size: 14px;
+    color: #333333;
+    text-align: center;
+  }
+}
+
+.panel-ocean-two {
+  border: solid 1px #ced6da;
+  border-top: none;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  > .panel-header {
+    background-color: #00748d;
+    border: solid 1px #3da4b6;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    padding: 10px;
+  }
+  >.panel-body{
+    padding: 20px;
+  }
+}
+
+.pappg-panel {
+  @media (min-width: $screen-lg-min) {
+    width: 270px;
+  }
+  width: 274px;
+  margin-right: inherit !important;
+  margin-bottom: 15px !important;
+  margin-left: 15px !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  > .panel-body {
+    text-align: left;
+  }
+}
+
+.panel-title {
+  // font-size: 28px;
+  color: $panel-title-color;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid $panel-title-bottom-border-color;
+
+  &.no-padding {
+    padding: 0px 0px;
+  }
+}
+.no-border {
+  border: none;
+}
+
+.panel-subtitle {
+  h3 {
+    font-size: 18px;
+  }
+  font-family: 'Arial';
+  font-weight: bold;
+  color: $panel-title-color;
+  // border-bottom: 1px solid $panel-title-bottom-border-color;
+}
+
+// sub title ex. on Budget(s) page: 'For Organization XYZ i'
+.panel-title i.sub-title {
+  display: block;
+  font-size: 16px;
+  font-family: 'Georgia';
+  color: #666666;
+  margin-top: 12px;
+}
+
+.panel-body {
+  padding: $panel-body-padding 0px;
+}
+
+.panel {
+  .panel-inline-link {
+    margin-top: -4px;
+    margin-bottom: 0;
+    > button {
+      margin: 0 !important;
+      &.btn-sm {
+        width: 96px;
+      }
+    }
+  }
+}
+
+.col-xs-3-amt {
+  @extend .col-xs-3-amt;
+  min-width: 0px;
+  //margin-top: -10px;
+  margin-bottom: 0px;
+  margin-right: 20px;
+  margin-left: auto;
+  float: right;
+  margin-left: -20px; // keep col-xs-9 to the left from causing a break to new line
+  position: absolute;
+  top: 25px;
+  right: 0px;
+}
+
+.panel-body-amt {
+    padding: 0px 0px 0px 0px;
+    height:50%;
+    text-align: center;
+    .number {
+      font-size: 26px;
+    }
+}
+
+.panel-footer {
+  padding-left: 0;
+  border-top: 1px solid $panel-title-bottom-border-color;
+  background-color: transparent;
+  margin-top: 20px;
+}

@@ -1,0 +1,85 @@
+<div class="panel panel-blue panel-fixed-263">
+  <div class="panel-body panel-body-deadline" id= {{concat componentId "-panel-body-deadline"}}>
+    <h4 data-test-deadline-date-title>
+        <span class={{if editing 'left' ''}}>
+            {{#if deadlineDateRequired}}
+              {{#if-permission editPermission}}
+                <i class="fa fa-asterisk"></i>
+              {{/if-permission}}
+            {{/if}}
+          Due Date:
+        </span>
+          {{#if editing}}
+            <select id= {{concat componentId "-deadlineDateSelect"}} class="form-control deadline-date-select display-inline" style="width: 180px;padding-left:3px;" onchange= {{action 'selectDeadlineDate' value='target.value'}} data-test-deadline-date-select>
+                    <option value="">Select Due Date</option>
+                    {{#each deadlineDateOptions as | item |}}
+                      {{#if (eq item.deadlineDate deadlineDate)}}
+                          <option value={{item.deadlineDate}} selected>{{format-unix-date item.deadlineDate}} ({{item.deadlineTypeDesc}})</option>
+                      {{else}}
+                          <option value={{item.deadlineDate}}>{{format-unix-date item.deadlineDate}} ({{item.deadlineTypeDesc}})</option>
+                      {{/if}}
+                    {{/each}}
+            </select>
+            <div class="right inline-btns">
+              <button id= {{concat componentId "-save"}} data-test-inline-save-button title= {{if saveIsDisabled saveButtonErrorTitle "Save" }} {{action 'save'}} disabled= {{saveIsDisabled}} class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+              <button id= {{concat componentId "-cancel"}} data-test-inline-cancel-button title="Cancel" {{action 'cancel'}} class="btn btn-default btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+          {{else}}
+            {{#if isAcceptedAnytime}}
+              <span class="deadline-date date">Accepted Anytime</span>
+            {{else if deadlineDateUnavailable}}
+              <span class="deadline-date date">{{deadlineDateUnavailable}}</span>
+            {{else if deadlineDateReadonly}}
+              <span class="deadline-date date">{{format-unix-date deadlineDate}}</span>
+            {{else}}
+              {{#if-permission editPermission}}
+                <span class="editable" onclick= {{action 'enterEdit'}} title='Select Due Date'>
+                  <span class="deadline-date date readonly" id= {{concat componentId "-edit-date"}}>{{format-unix-date deadlineDate}}</span>
+                  <a data-test-inline-edit-icon class="edit-icon" id= {{concat componentId "-edit"}}>
+                      {{if deadlineDate '' 'Select Due Date' }}<i id={{concat componentId "-edit-icon"}} style="padding-left:3px;" class="fa fa-pencil-square-o" aria-hidden="true" data-test-edit-icon></i>
+                  </a>
+                </span>
+              {{else}}
+                <span class="deadline-date date readonly" id= {{concat componentId "-edit-date"}}>
+                  {{#if deadlineDate}}
+                    {{format-unix-date deadlineDate}}
+                  {{else}}
+                    None Selected
+                  {{/if}}
+                </span>
+              {{/if-permission}}
+            {{/if}}
+          {{/if}}
+        </h4>
+
+        {{#unless deadlineDateUnavailable}}
+          <a data-toggle="modal" data-target="#dateTypesModal"><i class="fa fa-info-circle icon-pad-right" aria-hidden="true"></i>{{if isAcceptedAnytime 'Date Types' 'Date Type:'}}</a>
+          {{!popover-icon-tooltip deadlineTextNoteTitle deadlineTextNoteBody "top" (if isAcceptedAnytime 'Date Types' 'Date Type:')}}
+          {{#if (and deadlineType (not isAcceptedAnytime))}}
+           {{deadlineType}}
+          {{/if}}
+        {{/unless}}
+
+  </div>
+</div>
+
+<div class="modal" id="dateTypesModal" tabindex="-1" role="dialog" aria-labelledby="dateTypesModalLabel">
+  <div class="modal-dialog modal-md" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="dateTypesModalLabel" data-test-date-types-modal-title>Due Date Types</h4>
+      </div>
+      <div class="modal-body" data-test-delete-date-types-modal-body>
+        <p>The date definitions below can be used as a reference for their applicable deadline date.</p>
+        <p><b>Accepted anytime:</b> This proposal is being accepted at any time, as no deadline date has been provided by the program.</p>
+        <p><b>Target date:</b> The date after which the proposal will still be accepted, although it may miss a particular panel or committee meeting.</p>
+        <p><b>Deadline date:</b> The date after which the proposal will not be accepted or will be returned without review by NSF. The deadline date will be waived only in extenuating circumstances.</p>
+        <p><b>Submission window:</b> The end date of a designated period of time during which the proposal will be accepted for review by NSF. This end date is subject to the same policies as a deadline date.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-date-types-modal-close-button>Close</button>
+      </div>
+    </div>
+  </div>
+</div>

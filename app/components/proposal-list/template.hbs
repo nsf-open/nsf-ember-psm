@@ -1,0 +1,226 @@
+
+{{#if (eq proposalsType "submitted")}}
+    <div class="panel panel-gray right pappg-panel">
+        <div class="panel-body">
+          {{#each submittedLinks as |submittedLink index|}}
+            <div class="{{if (gt index 0) 'm-top-10'}}">
+              <a data-test-link={{submittedLink.dataAttribute}}
+                 tabindex="0"
+                 data-toggle="modal"
+                 data-target="#{{submittedLink.modalId}}"
+                 class="icon-link-flex"
+                 onkeyup={{action 'onEnterModal'}}>
+                 <i class="fa fa-info-circle icon-pad-right icon-link-flex__icon" aria-hidden="true"></i> {{submittedLink.text}}</a>
+            </div>
+          {{/each}}
+        </div>
+    </div>
+{{/if}}
+
+{{#if showPaginationControl}}
+
+  {{#if (eq proposalsType "inprogress")}}
+    {{pagination-control currentPage=currentPage totalPages=totalPages totalRecordsShown=liveFilterLength startRecord=startRecord endRecord=endRecord pageSizeSelected=pageSizeSelected changePageSize=(action 'changePageSize')}}
+    <div id="searchbar-div" class="input-group searchBar" data-test-searchbar>
+        <label class="no-label-label inline-edit">
+          {{input class="inline-input form-control" title="In Progress Proposals Search Bar" size=40 value=searchFilter placeholder=searchPlaceholder key-up=(action 'keyPressed')}}
+          {{#if (gt searchFilterChars 0)}}
+              <a data-test-proposal-title-clear-x onclick={{action 'clear'}} class="fa fa-times-circle edit-clear-x top-9" title="Clear"></a>
+          {{/if}}
+        </label>
+    </div>
+  {{else}}
+    <div class="row margin-left-0 proposal-search-box">
+      <div class="panel panel-gray panel-prop padding-top-20 padding-btm-15 col-xs-8 proposal-search-box__search-container">
+        <div data-test-searchbar>
+              <div class="display-inline-block m-right-5 vertical-top proposal-search-box__form-input">
+                <div class="bold padding-btm-5" data-test-submitted-input-title-1>Proposal/Temporary ID Number</div>
+                  <label class="no-label-label inline-edit" data-test-submitted-input-1>
+                    {{input class="inline-input form-control proposal-search-box__id-number-input" title="Submitted Proposals Search for Proposal or Temporary ID Number" size=25 value=searchFilterID}}
+                  </label>
+              </div><!--
+            --><div class="display-inline-block m-right-5 vertical-top proposal-search-box__form-input">
+                  <div class="bold padding-btm-5" data-test-submitted-input-title-2>PI Last Name</div>
+                    <label class="no-label-label inline-edit" data-test-submitted-input-2>
+                      {{input class="inline-input form-control proposal-search-box__last-name-input" title="Submitted Proposals Search for PI Last Name" size=20 value=searchFilterPI}}
+                    </label>
+                </div><!--
+            --><div class="display-inline-block vertical-top button-inline-block">
+                  <button type="button" class="btn btn-primary btn-inline-inputs" {{action 'searchPressed'}}>Search</button>
+               </div>
+        </div>
+      </div>
+    </div>
+    {{pagination-control currentPage=currentPage totalPages=totalPages totalRecordsShown=liveFilterLength startRecord=startRecord endRecord=endRecord pageSizeSelected=pageSizeSelected changePageSize=(action 'changePageSize') class='margin-btm-45'}}
+  {{/if}}
+
+{{/if}}
+
+{{#if (eq proposalsType "inprogress")}}
+
+  <table class="table table-fixed table-striped table-bordered margin-btm-0 margin-top-minus-5">
+      <thead data-test-in-progress-proposals-thead>
+      <tr>
+            <th class="col-width-20">Temporary ID Number<a tabindex="0" title="{{if isSortByPropPrepId (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByPropPrepId (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "propPrepIdNumeric"}}></a></th>
+            <th>Proposal Title<a tabindex="0" title="{{if isSortByProposalTitle (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByProposalTitle (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "title"}}></a></th>
+            <th class="col-width-20">PI Name<a tabindex="0" title="{{if isSortByPIName (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByPIName (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "piName"}}></a></th>
+            <th class="col-width-20">Due Date<a tabindex="0" title="{{if isSortByDeadlineDateSortIndex (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByDeadlineDateSortIndex (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "deadlineDateSortIndex"}}></a></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#if (eq originalList.length 0)}}
+          <tr><td class="no-results" colspan={{colspan}}><h4 data-test-in-progress-proposals-no-results>{{noResultsText}}</h4></td></tr>
+      {{/if}}
+      {{#each recordsShown as |proposalItem index|}}
+        <tr data-test-in-progress-proposals-columns>
+            <td><label for={{proposalItem.propPrepId}}>{{link-to proposalItem.propPrepId "proposal" proposalItem.propPrepId proposalItem.propRevId trackNote='Proposal link_Proposal List page'}}</label></td>
+            <td><label for={{proposalItem.proposalTitle}}>{{proposalItem.title}}</label></td>
+            <th><label for={{proposalItem.piName}}>{{proposalItem.piName}}</label></th>
+            {{#if (eq proposalItem.deadlineTypeCode "3")}}
+                <td><label>Accepted Anytime</label></td>
+            {{else if proposalItem.deadlineDate}}
+                <td><label for={{proposalItem.deadlineDate}}>{{proposalItem.deadlineDate}}</label></td>
+            {{else if (eq proposalItem.deadlineTypeText "No dates available (cannot submit)")}}
+                <td><label for={{proposalItem.deadlineDate}}>{{proposalItem.deadlineTypeText}}</label></td>
+            {{else}}
+                <td><label>None Selected</label></td>
+            {{/if}}
+        </tr>
+      {{else if (not (eq originalList.length 0))}}
+          <tr><td class="no-results" colspan={{colspan}}><h4 data-test-in-progress-proposals-no-results>{{noFilterResultsText}}</h4></td></tr>
+      {{/each}}
+      </tbody>
+  </table>
+
+{{else}}
+
+  <table class="table table-fixed margin-btm-0 submitted-table border-collapse-separate">
+      <thead data-test-in-progress-proposals-thead>
+      <tr>
+            <th class="col-width-30">Proposal Title<a tabindex="0" title="{{if isSortByProposalTitle (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByProposalTitle (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "title"}}></a></th>
+            <th class="col-width-10">Submit Date<a tabindex="0" title="{{if isSortBySubmitDate (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortBySubmitDate (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "submDateSortIndex"}}></a></th>
+            <th class="col-width-10">Proposal Number<a tabindex="0" title="{{if isSortByPropId (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByPropId (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "nsfPropIdNumeric"}}></a></th>
+            <th class="col-width-10">Temporary ID Number<a tabindex="0" title="{{if isSortByPropPrepId (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByPropPrepId (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "propPrepIdNumeric"}}></a></th>
+            <th class="col-width-15">PI Name<a tabindex="0" title="{{if isSortByPIName (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByPIName (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "piName"}}></a></th>
+            <th class="col-width-25">Proposal Status<a tabindex="0" title="{{if isSortByProposalStatus (if sortAscending "Sorted ascending, click to change sort" "Sorted descending, click to change sort") "Click to sort column"}}" class="sortable-header fa {{if isSortByProposalStatus (if sortAscending "fa-sort-asc" "fa-sort-desc") "fa-sort"}}" {{action 'sortBy' "proposalStatus"}}></a></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#if (eq originalList.length 0)}}
+          <tr><td class="no-results" colspan={{colspan}}><h4 data-test-in-progress-proposals-no-results>{{noResultsText}}</h4></td></tr>
+      {{/if}}
+      {{#each recordsShown as |proposalItem index|}}
+            <tr data-test-in-progress-proposals-columns class="primary-row row-expanded">
+                <th>
+                    {{#if proposalItem.pfuProposals}}
+                        <a data-toggle="collapse" href="#pfuSubTable{{index}}" class="fa fa-minus-circle expand-icon-adjust-pfu" {{action "toggleChevron" index}} data-test-submitted-expand-collapse-link><span class="sr-only">Collapse/expand PFU Information</span></a>
+                    {{/if}}
+                    <label for={{proposalItem.title}} class="margin-left-22">
+                        {{#if proposalItem.pfuProposals}}
+                            {{#if proposalItem.pfuChildHasError}}<i class="fa fa-exclamation-circle hide-if-expanded" aria-hidden="true" title="Error present"></i>{{/if}}
+                        {{/if}}
+                        {{#if proposalItem.isReadOnly}}
+                            {{proposalItem.title}}
+                        {{else}}
+                            {{link-to proposalItem.title "proposal" proposalItem.propPrepId proposalItem.origPropRevId trackNote='Proposal link_Proposal List page'}}
+                        {{/if}}
+                </label></th>
+                <th><label for={{proposalItem.submDate}}>{{proposalItem.submDate}}</label></th>
+            {{#if proposalItem.nsfPropId}}
+                <th><label for={{proposalItem.nsfPropId}}>{{proposalItem.nsfPropId}}</label></th>
+            {{else}}
+                <th>Pending</th>
+            {{/if}}
+                <th><label for={{proposalItem.propPrepId}}>{{proposalItem.propPrepId}}</label></th>
+                <th><label for={{proposalItem.piName}}>{{proposalItem.piName}}</label></th>
+                <th><label for={{proposalItem.proposalStatusDesc}}>{{proposalItem.proposalStatusDesc}}</label></th>
+            </tr>
+            {{#if proposalItem.pfuProposals}}
+            <tr class="contains-table secondary-row in" id="pfuSubTable{{index}}" aria-expanded="true">
+                <td colspan="6">
+                    <table class="table table-no-border nested-simple-table">
+                            <tr>
+                                <th class="col-width-25">Associated Action</th>
+                                <th class="col-width-15">Last Updated</th>
+                                <th>Action Status</th>
+                            </tr>
+                        <tbody>
+                            {{#each proposalItem.pfuProposals as |pfuItem index|}}
+                                <tr>
+                                    <td>{{link-to "Proposal File Update/Budget Revision" "proposal" proposalItem.propPrepId pfuItem.propRevId trackNote='Proposal link_Proposal List page'}}</td>
+                                    <td>{{pfuItem.lastUpdateDateFormatted}}</td>
+                                    <td>
+                                        {{#if pfuItem.statusError}}
+                                            <i class="fa fa-exclamation-circle" aria-hidden="true" title="Error"></i>
+                                        {{/if}}
+                                        {{pfuItem.proposalStatusDesc}}
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{/if}}
+
+      {{else if (not (eq originalList.length 0))}}
+          <tr><td class="no-results" colspan={{colspan}}><h4 data-test-in-progress-proposals-no-results>{{noFilterResultsText}}</h4></td></tr>
+
+      {{/each}}
+      </tbody>
+  </table>
+
+{{/if}}
+
+
+
+{{#if showPaginationControl}}
+  {{pagination-control currentPage=currentPage totalPages=totalPages totalRecordsShown=liveFilterLength startRecord=startRecord endRecord=endRecord pageSizeSelected=pageSizeSelected changePageSize=(action 'changePageSize')}}
+{{/if}}
+
+{{yield}}
+
+<div class="modal" id="pfuInfoModal" tabindex="-1" role="dialog" aria-labelledby="pfuInfoModalLabel">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="pfuInfoModalLabel">
+                  Proposal File Update/Budget Revision
+                </h4>
+            </div>
+            <div class="modal-body">
+              <p>Proposal File Update/Budget Revision functionality will be automatically accepted if submitted prior to:</p>
+                <ul>
+                    <li>the deadline date;</li>
+                    <li>initiation of external peer review in cases where a target date is utilized; and</li>
+                    <li>initiation of external peer review in the case of an unsolicited proposal.</li>
+                </ul>
+                <p>If the criteria are met, the option to prepare a PFU/Budget Revision will be displayed within the specific submitted proposal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="withdrawalsModal" tabindex="-1" role="dialog" aria-labelledby="withdrawalsModalLabel">
+    <div class="modal-dialog modal-md" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="withdrawalsModalLabel">
+                  {{TEXT.WITHDRAWALS.TITLE}}
+                </h4>
+            </div>
+            <div class="modal-body">
+              {{TEXT.WITHDRAWALS.MODAL_BODY}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

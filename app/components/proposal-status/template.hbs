@@ -1,0 +1,43 @@
+
+
+<h4>{{description}}</h4>
+
+<div class="row m-bottom-10">
+  <div class="col-xs-12 text-right">
+    <i class="fa fa-check text-success" />{{text.hasAccess}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+      {{#each proposalStatusGroups as |proposalStatusGroup|}}
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th class="vertical-top">{{text.title}}</th>
+              {{#each statusTypes as |statusType|}}
+                  <th class="vertical-top">{{statusType.statusTypeTitle}}</th>
+              {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+              {{#if proposalStatusGroup.title }}
+                <tr><th class="mid-table" colspan="4">{{proposalStatusGroup.title}}</th></tr>
+              {{/if}}
+              {{#each proposalStatusGroup.statuses as |proposalStatus|}}
+                  <tr>
+                    <td class="col-xs-3">{{proposalStatus.statusName}}</td>
+                    {{#each statusTypes as |statusType|}}
+                        <td class="col-xs-3">
+                          {{#if (proposal-status-exists proposalStatus statusType.statusKey)}}
+                              <i class="fa fa-check text-success" />
+                            {{proposal-status-display proposalStatus statusType.statusKey}}
+                          {{/if}}
+                        </td>
+                    {{/each}}
+                  </tr>
+              {{/each}}
+            </tbody>
+        </table>
+      {{/each}}
+  </div>
+</div>

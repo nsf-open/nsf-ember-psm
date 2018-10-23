@@ -1,0 +1,47 @@
+{{!-- <ul data-test-proposal-access-submission-notifications-body> --}}
+
+  {{#if hasComplianceErrors}}
+
+    <div class="alert alert-danger hard-stop" role="alert">
+      <span data-test-compliance-errors-subtitle>{{errorHeaderPFUBR}}</span>
+      {{#each orderedComplianceStatusErrors as |errorSection|}}
+        <ul class="alert-section">
+          {{#unless (eq errorSection.messages.length 0)}}
+            <li class="noBullet bold reverseIndentLeft">{{errorSection.section}}</li>
+            {{#each errorSection.messages as |message|}}
+                <li data-test-compliance-error>{{message}}</li>
+            {{/each}}
+          {{/unless}}
+        </ul>
+      {{/each}}
+    </div>
+
+  {{/if}}
+  {{#if hasComplianceWarnings}}
+
+    <div class="alert alert-warning" role="alert">
+      <span data-test-compliance-errors-subtitle>{{warningHeaderPFUBR}}</span>
+      {{#each orderedComplianceStatusWarnings as |warningSection|}}
+        <ul class="alert-section">
+          {{#unless (eq warningSection.messages.length 0)}}
+            <li class="noBullet bold reverseIndentLeft">{{warningSection.section}}</li>
+            {{#each warningSection.messages as |message|}}
+                <li data-test-compliance-error>{{message}}</li>
+            {{/each}}
+          {{/unless}}
+        </ul>
+      {{/each}}
+    </div>
+
+  {{/if}}
+
+  {{#if (and areComplianceMessagesSet noErrorsWarnings ) }}
+    {{#unless hideComponentOnPass}}
+      <div class="alert alert-success" role="alert">
+          <span data-test-compliance-success-subtitle>There are no errors or warnings for this proposal</span>
+      </div>
+    {{/unless}}
+  {{/if}}
+
+
+{{!-- </ul> --}}

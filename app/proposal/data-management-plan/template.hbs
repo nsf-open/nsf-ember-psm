@@ -1,0 +1,43 @@
+{{title breadCrumb}}
+
+<div class="panel-body">
+
+  {{screen-messages-service fileUploadForm=true}}
+
+  <div class="panel panel-gray right pappg-panel">
+    <div class="panel-body">
+      <a data-test-dmp-pappg-link href="{{props.pappgLinks.dataManagementPlan}}" target="_blank" title="opens in a new window">{{breadCrumb}} (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <p class="bold" data-test-upload-instructions-title>Instructions to upload {{breadCrumb}}:</p>
+  <ul data-test-upload-instructions>
+      <li data-test-upload-instructions1>Only 1 document can be uploaded</li>
+      <li data-test-upload-instructions2>Accepted file types include: Adobe PDF</li>
+      <li data-test-upload-instructions3>The plan should describe how the proposal will conform to <a data-test-dissemation-policy-link href="{{props.pappgLinks.dataManagementPlan_link2}}" target="_blank" title="opens in a new window">NSF policy on the dissemination and sharing of research results <i class="fa fa-external-link" aria-hidden="true"></i></a></li>
+      <li data-test-upload-instructions4>Data management requirements and plans <a data-test-dmp-specific-link href="https://www.nsf.gov/bfa/dias/policy/dmp.jsp" target="_blank" title="opens in a new window">specific to the Directorate, Office, Division, Program or Other NSF unit <i class="fa fa-external-link" aria-hidden="true"></i></a> must be followed. If guidance specific to the program is not available, the data management requirements established in the PAPPG apply.</li>
+      <li data-test-upload-instructions5>A valid Data Management Plan may include only the statement that no detailed plan is needed, as long as the statement is accompanied by a clear justification.</li>
+      <li data-test-upload-instructions6>
+        Please refer to the <a data-test-file-upload-pappg-link href="{{props.pappgLinks.documentUploadInstructions}}" target="_blank" title="opens in a new window">Format of the proposal (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        for all margin and spacing requirements and the <a data-test-file-upload-propprep-site-faq-link href="{{props.proposalPrepSiteFAQ.faq}}" target="_blank" title="opens in a new window">Proposal Preparation Site FAQs</a> for font type and size requirements.&nbsp;
+      </li>
+      <li data-test-upload-instructions7>{{{PROPOSAL_CONSTANTS.UPLOAD_DOCUMENT.SHOULD_NOT_PAGE_NUMBER}}}</li>
+      <li data-test-upload-instructions8>Files cannot exceed 2 pages, however, if more space is needed part of the Project Description can be used. Proposers are advised that the Data Management Plan must not be used to circumvent the 15-page Project Description limitation.</li>
+      <li data-test-upload-instructions9>Max file size permitted is {{maxFileSizeDisplay}}</li>
+  </ul>
+
+  {{single-file-upload-with-messages-service
+    sectionInfo=sectionInfo
+    fileName=fileName
+    pendingFileName=pendingFileName
+    previewAccepted=previewAccepted
+    onDelete=(action 'deleteFile')
+    onFileChange=(action 'uploadFile')
+    onFileBrowseClick=(action 'fileBrowseClick')
+    onFileClick=(action 'fileLinkClick')
+    isLoading=isDocumentLoading
+    isError=isError
+    selectedFilePath=selectedDocumentPath
+    editPermission='proposal.data.modify'}}
+
+</div>

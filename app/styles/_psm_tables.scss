@@ -1,0 +1,157 @@
+/* style logic for different header angles */
+
+th.rotate-45 > div {
+  &.personnel, &.months {
+    width: 100px;
+  }
+  &.funds, &.funds-long {
+    width: 85px;
+  }
+}
+.table.year-count-1 {
+  @media (min-width: $screen-md-min) {
+		th.rotate-45 > div {
+		  &.personnel {
+		    transform: translate(10px, -22px) rotate(315deg);
+		  }
+		  &.months {
+		    transform: translate(13px, -22px) rotate(315deg);
+		  }
+		  &.funds {
+		    transform: translate(14px, -17px) rotate(315deg);
+		  }
+		  &.funds-long {
+		    transform: translate(17px, -17px) rotate(315deg);
+		  }
+		}
+  }
+  @media (min-width: $screen-lg-min) {
+		th.rotate-45 > div {
+		  &.personnel {
+		    transform: translate(20px, -22px) rotate(315deg);
+		  }
+		  &.months {
+		    transform: translate(13px, -22px) rotate(315deg);
+		  }
+		  &.funds {
+		    transform: translate(14px, -17px) rotate(315deg);
+		  }
+		  &.funds-long {
+		    transform: translate(17px, -17px) rotate(315deg);
+		  }
+		}
+	}
+}
+.table.year-count-2 {
+	th.rotate-45 > div {
+	  &.personnel {
+	    transform: translate(10px, -22px) rotate(315deg);
+	  }
+	  &.months {
+	    transform: translate(13px, -22px) rotate(315deg);
+	  }
+	  &.funds {
+	    transform: translate(14px, -17px) rotate(315deg);
+	  }
+	  &.funds-long {
+	    transform: translate(17px, -17px) rotate(315deg);
+	  }
+	}
+  &.sliders-visible {
+		th.rotate-45 > div {
+		  &.personnel {
+		    transform: translate(4px, -22px) rotate(315deg);
+		  }
+		  &.funds {
+		    transform: translate(14px, -17px) rotate(315deg);
+		  }
+		  &.funds-long {
+		    transform: translate(17px, -17px) rotate(315deg);
+		  }
+		}
+  }
+}
+
+.proposal-menu-hidden {
+  // adjust menu angles for when proposal menu is hidden
+  @media (min-width: $screen-md-min) {
+		th.rotate-45 > div {
+		  &.personnel, &.months {
+		    transform: translate(14px, -22px) rotate(315deg);
+		  }
+		  &.funds {
+		    transform: translate(14px, -17px) rotate(315deg);
+		  }
+		  &.funds-long {
+		    transform: translate(17px, -17px) rotate(315deg);
+		  }
+		}
+  }
+  @media (min-width: $screen-lg-min) {
+		th.rotate-45 > div {
+		  &.personnel, &.months {
+		    transform: translate(14px, -22px) rotate(315deg);
+		  }
+		  &.funds {
+		    transform: translate(14px, -17px) rotate(315deg);
+		  }
+		  &.funds-long {
+		    transform: translate(17px, -17px) rotate(315deg);
+		  }
+		}
+  }
+  .table.year-count-2 {
+    @media (min-width: $screen-md-min) {
+			th.rotate-45 > div {
+			  &.personnel, &.months {
+			    transform: translate(10px, -22px) rotate(315deg);
+			  }
+			  &.funds {
+			    transform: translate(14px, -17px) rotate(315deg);
+			  }
+			  &.funds-long {
+			    transform: translate(17px, -17px) rotate(315deg);
+			  }
+			}
+      &.sliders-visible {
+				th.rotate-45 > div {
+				  &.personnel {
+				    transform: translate(6px, -22px) rotate(315deg);
+				  }
+				  &.funds, &.funds-long {
+				    transform: translate(14px, -17px) rotate(315deg);
+				  }
+				}
+      }
+    }
+    @media (min-width: $screen-lg-min) {
+			th.rotate-45 > div {
+			  &.personnel {
+			    transform: translate(13px, -22px) rotate(315deg);
+			  }
+			  &.months {
+			    transform: translate(14px, -22px) rotate(315deg);
+			  }
+			  &.funds {
+			    transform: translate(14px, -17px) rotate(315deg);
+			  }
+			  &.funds-long {
+			    transform: translate(17px, -17px) rotate(315deg);
+			  }
+			}
+      &.sliders-visible {
+				th.rotate-45 > div {
+				  &.personnel {
+				    transform: translate(10px, -22px) rotate(315deg);
+				  }
+				  &.funds {
+				    transform: translate(14px, -17px) rotate(315deg);
+				  }
+				  &.funds-long {
+				    transform: translate(17px, -17px) rotate(315deg);
+				  }
+				}
+      }
+    }
+  }
+}

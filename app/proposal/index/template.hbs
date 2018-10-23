@@ -1,0 +1,521 @@
+{{title "Forms"}}
+
+<div class="panel-body">
+  {{screen-messages-service }}
+
+    <div class="row">
+
+      <div class="{{if (and editingDeadline isTabletOrMobile ) 'col-lg-8 col-md-7 col-xs-7' (if editingDeadline 'col-lg-8 col-md-7 col-xs-7' 'col-lg-9 col-md-8 col-xs-8') }}">
+        <dl class="dl-horizontal descending-row-margins">
+          <dt class="title">Proposal Title: </dt>
+          <dd data-test-proposal-forms-title>{{inline-edit
+            'Proposal Title'
+            model
+            180
+            editPermission='proposal.data.modify'
+            contentError=contentTitleError
+            isEditing=isEditingTitle
+            originalValue=proposalTitle
+            onEditing=(action 'onProposalTitleEditing')
+            onSave=(action 'onProposalTitleSave')}}
+          </dd>
+          <dt>Funding Opportunity: </dt>
+          <dd><span onclick={{action 'trackFundingLink'}}><a href="https://nsf.gov/funding/pgm_list.jsp?org=NSF&ord=date" target="_blank">{{model.fundingOp.fundingOpportunityId}} <i class="fa fa-external-link" title="Opens new window" aria-hidden="true"></i></a></span> - {{model.fundingOp.fundingOpportunityTitle}}</dd>
+
+          <dt>Where to Apply: </dt>
+          {{#each orderedUocs as |uoc|}}
+              <dd>{{uoc.directorate.directorateName}} ({{uoc.directorate.directorateAbbrv}}) - {{uoc.division.divisionName}} ({{uoc.division.divisionAbbrv}}), {{uoc.programElement.programElementName}}</dd>
+          {{/each}}
+
+          <dt>Proposal Type: </dt>
+          <dd>{{model.proposalType}}</dd>
+
+          {{#if showSubmittedData}}
+              <div class="row">
+                  <div class="col-lg-5 col-md-12">
+                      <dt>Submission Type: </dt>
+                      <dd>{{model.submissionType}}</dd>
+                  </div>
+                  <div class="col-lg-4 col-md-12">
+                      <dt>Submit Date: </dt>
+                      <dd>{{format-unix-date model.submissionDate}}</dd>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-lg-5 col-md-12">
+                      <dt>Program Officer (PO): </dt>
+                      <dd>{{model.programOfficerName}}</dd>
+                  </div>
+                  <div class="col-lg-4 col-md-12">
+                      <dt>PO Email: </dt>
+                      <dd>{{model.programOfficerEmail}}</dd>
+                  </div>
+                  <div class="col-lg-3 col-md-12">
+                      <dt>PO Phone: </dt>
+                      <dd>{{model.programOfficerPhoneNumber}}</dd>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-lg-12 col-md-12">
+                      <dt>AOR Name: </dt>
+                      <dd>{{model.aorName}}</dd>
+                  </div>
+              </div>
+          {{else}}
+              <dt>Submission Type: </dt>
+              <dd>{{model.submissionType}}</dd>
+          {{/if}}
+
+        </dl>
+
+    </div>
+
+      <div class="{{if editingDeadline 'col-lg-4 col-md-4 col-xs-4' 'col-lg-3 col-md-3 col-xs-3' }}">
+        <div id={{componentId}} style="{{if (and editingDeadline isTabletOrMobile) 'width:356px !important;' ''}}" class="panel panel-blue {{if editingDeadline 'panel-fixed-360' 'panel-fixed-263' }}">
+          <div class="panel-body panel-body-deadline" id= {{concat componentId "-panel-body-deadline"}}>
+            <h4 data-test-deadline-date-title>
+                <span class={{if editingDeadline 'left' ''}}>
+                    {{#if deadlineDateRequired}}
+                      {{#if-permission 'proposal.data.modify'}}
+                        <i class="fa fa-asterisk"></i>
+                      {{/if-permission}}
+                    {{/if}}
+                  Due Date:
+                </span>
+                  {{#if editingDeadline}}
+                    <br/>
+                    <select id= {{concat componentId "-deadlineDateSelect"}} class="form-control display-inline" style="width: 230px;padding-left:3px; margin-left: -20px;" onchange= {{action 'selectDeadlineDate' value='target.value'}} data-test-deadline-date-select>
+                            <option value="">Select Due Date</option>
+                            {{#each deadlineDates as | item |}}
+                              {{#if (eq item.deadlineDate deadlineDate)}}
+                                  <option value={{item.deadlineDate}} selected>{{format-unix-date item.deadlineDate}} ({{item.deadlineTypeDesc}})</option>
+                              {{else}}
+                                  <option value={{item.deadlineDate}}>{{format-unix-date item.deadlineDate}} ({{item.deadlineTypeDesc}})</option>
+                              {{/if}}
+                            {{/each}}
+                    </select>
+                    <div class="right inline-btns">
+                      <button id= {{concat componentId "-save"}} data-test-inline-save-button title= {{if deadlineDateSaveIsDisabled deadlineSaveButtonErrorTitle "Save" }} {{action 'saveDeadline'}} disabled= {{deadlineDateSaveIsDisabled}} class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+                      <button id= {{concat componentId "-cancel"}} data-test-inline-cancel-button title="Cancel" {{action 'cancelDeadlineEdit'}} class="btn btn-default btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </div>
+                  {{else}}
+                    {{#if isAcceptedAnytime}}
+                      <span class="deadline-date date">Accepted Anytime</span>
+                    {{else if deadlineDateUnavailable}}
+                      <span class="deadline-date date">{{deadlineDateUnavailable}}</span>
+                    {{else if deadlineDateReadonly}}
+                      <span class="deadline-date date">{{format-unix-date deadlineDate}}</span>
+                    {{else}}
+                      {{#if-permission 'proposal.data.modify'}}
+                        <span class="editable" onclick={{action 'enterDeadlineEdit'}} onkeyup={{action "enterDeadlineEdit"}} title='Select Due Date'>
+                          <span class="deadline-date date readonly" id= {{concat componentId "-edit-date"}}>{{format-unix-date deadlineDate}}</span>
+                          <a tabindex="0" data-test-inline-edit-icon class="edit-icon"  id= {{concat componentId "-edit"}}>
+                              {{if deadlineDate '' 'Select Due Date' }}<i id={{concat componentId "-edit-icon"}} style="padding-left:3px;" class="fa fa-pencil-square-o" aria-hidden="true" data-test-edit-icon></i>
+                          </a>
+                        </span>
+                      {{else}}
+                        <span class="deadline-date date readonly" id= {{concat componentId "-edit-date"}}>
+                          {{#if deadlineDate}}
+                            {{format-unix-date deadlineDate}}
+                          {{else}}
+                            None Selected
+                          {{/if}}
+                        </span>
+                      {{/if-permission}}
+                    {{/if}}
+                  {{/if}}
+                </h4>
+                <br/>
+                {{#unless deadlineDateUnavailable}}
+                  <a data-toggle="modal" data-target="#dateTypesModal" tabindex="0" onkeyup={{action "onEnter"}}><i class="fa fa-info-circle icon-pad-right" aria-hidden="true"></i>{{if isAcceptedAnytime 'Date Types' 'Date Type:'}}</a>
+                  {{#if (and deadlineType (not isAcceptedAnytime))}}
+                   {{deadlineType}}
+                  {{/if}}
+                {{/unless}}
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  <div class="panel-title h1 margin-btm-20 no-padding"></div>
+
+  {{#if lastSubmittedVersion}}
+    <div align=right class="m-bottom-10">
+      {{#a-security-link
+          href=lastSubmittedProposal}}
+          <i class="fa fa-file-pdf-o" aria-hidden="true"></i> View last submitted version
+      {{/a-security-link}}
+    </div>
+  {{/if}}
+
+  <div class="row">
+    <div class="col-xs-3 padding-left-30">
+      <div class="row">
+        <div class="panel-teal-header">
+          <div class="panel-header">
+            Proposal Actions
+            {{#if-permission 'proposal.submit'}}
+              {{popover-icon-tooltip '' "When you begin the submission process, you will be able to review the proposal, correct errors, certify, and submit to NSF." }}
+            {{/if-permission}}
+
+          </div>
+          <div class="panel-body">
+            {{#if-permission 'proposal.submit'}}
+              {{#link-to 'proposal.submit' trackNote='Initiate Proposal Submission link_Proposal Forms page' disabled=notSubmittable title=(if notSubmittable "Not available" "") class='btn btn-primary form-control text-align-left  btn-align-left btn-icon-wrap' tagName='button'}}<i class="fa fa-file file-arrow-overlap" aria-hidden="true"></i><i class="fa fa-arrow-right file-arrow-overlap" aria-hidden="true"></i>Initiate Proposal Submission{{/link-to}}
+            {{/if-permission}}
+            {{#if-permission 'proposal.aorspo-access.enable'}}
+              {{#link-to 'proposal.proposal-access' trackNote='Proposal Access button left nav_Proposal Forms page' class='btn btn-primary form-control btn-align-left text-align-left btn-icon-wrap' tagName='button'}}<i class="fa fa-unlock-alt" aria-hidden="true"></i>Proposal Access for SPO/AOR{{/link-to}}
+            {{/if-permission}}
+            <!--<button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap"><i class="fa fa-list-ul" aria-hidden="true"></i>Check Proposal Compliance</button>-->
+            {{!-- <button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap" {{action "printProposal"}}></button> --}}
+            <div onclick={{action 'trackPrintProposal'}}>
+            {{#a-security-link
+              href=printProposalUrl
+              isButton=true
+              isLeftAlign=true }}
+              <i class="fa fa-print" aria-hidden="true"></i>Print Proposal
+            {{/a-security-link}} </div>
+            {{#if availableForRevision}}
+              <button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap"
+                {{action 'initiateRevision'}}
+                disabled={{updateBudgetRevLoading}}>
+                {{#if updateBudgetRevLoading}}
+                  <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>{{loadingUpdateBudgetRevisionText}}
+                {{else}}
+                  <i class="fa fa-pencil" aria-hidden="true"></i>{{updateBudgetRevisionText}}
+                {{/if}}
+              </button>
+            {{/if}}
+            {{!--<button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap"><i class="fa fa-trash" aria-hidden="true"></i>Delete Proposal</button>--}}
+            {{#if-permission 'proposal.return-pi'}}
+                <button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap" data-toggle="modal" data-target="#returnToPIModal"><i class="fa fa-reply" aria-hidden="true"></i>Return to PI</button>
+            {{/if-permission}}
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+          <div class="panel-teal-header">
+              <div class="panel-header" data-test-personnel-access-header>Personnel Access</div>
+              <div class="panel-body big-button-body">
+                <div data-test-personnel-access-subheader>
+                  <a data-toggle="modal" data-target="#proposalStatusModal" tabindex="0" onkeyup={{action "onEnter"}}><i class="fa fa-info-circle icon-pad-right" aria-hidden="true"></i><b>Proposal Status:</b></a>
+                </div>
+                <div class="m-bottom-10" data-test-personnel-access-status>{{model.proposalStatusDesc}}</div>
+
+                {{#link-to 'proposal.manage-personnel' trackNote='Manage Personnel button left nav_Proposal Forms page' class='btn btn-default form-control btn-align-left text-align-left btn-icon-wrap' tagName='button'}}<i class="fa fa-users icon-pad-right" aria-hidden="true"></i>Manage Personnel{{/link-to}}
+              </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="panel-teal-header">
+          <div class="panel-header">
+            Collaborative Status {{popover-icon-tooltip '' "Collaborative proposals are not yet available in Research.gov’s proposal preparation system. Please use FastLane to prepare any collaborative proposals." }}
+          </div>
+          <div class="panel-body">
+            <p>
+              Not Collaborative
+              {{!-- Lead proposal --}}
+            </p>
+            {{!-- <p>
+              Link(s): Not linked
+            </p>
+            <button class="btn btn-default form-control btn-align-left text-align-left btn-icon-wrap"><i class="fa fa-link" aria-hidden="true"></i>Link Collaborative Proposals</button> --}}
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <p class="side-paragraph">
+          <p><strong>Helpful Links</strong></p>
+          <p>{{link-to "View submitted proposals" "proposals" "submitted" trackNote='View Submitted Proposals link left nav_Proposal Forms page' class="" disabled=submittedProposalsDisabled title=submittedProposalsDisabledText}}</p>
+          <p><span onclick={{action 'trackPAPPGLink'}}><a href="{{props.pappgLinks.pappg}}" target="_blank" title="opens in a new window">Proposal and Award Policies and Procedures Guide (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a></span></p>
+        </p>
+
+      </div>
+    </div>
+    <div class="col-xs-9">
+
+
+
+      {{#if model.isInPFUStatus}}
+      <table class="table table-fixed table-striped table-bordered table-hover" data-test-proposal-forms-compliance-table>
+          <thead>
+          <tr>
+              <th class="col-prop-sec">Proposal File Update Form</th>
+              <th class="col-prop-sec-status">Last Updated</th>
+              <th class="col-prop-sec-status">Compliance Status <span class="underline-link">[<a data-toggle="modal" data-target="#complianceKeyModal">Key</a>]</span></th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each requiredPFUSections as |requiredPFUSection|}}
+              <tr>
+                  <td data-test-proposal-link="{{requiredPFUSection.sectionTitle}}">
+                    {{#if requiredPFUSection.enableAccess}}
+                      {{#link-to requiredPFUSection.sectionPath trackNote=requiredPFUSection.trackNote}}{{requiredPFUSection.sectionTitle}}{{/link-to}}
+                    {{else}}
+                        <span>{{requiredPFUSection.sectionTitle}}</span>
+                    {{/if}}
+                    {{#if requiredPFUSection.note}}
+                      {{#if (eq requiredPFUSection.requirement 'conditionalPFU')}}
+                        {{click-popover-icon-tooltip (concat requiredPFUSection.noteTitle " <button type=\"button\" class=\"close\" data-dismiss=\"popover\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>") requiredPFUSection.note "right" "<i>Conditionally required</i>" hasLineBreak=true}}
+                      {{else if requiredPFUSection.note}}
+                        {{popover-icon-tooltip "" requiredPFUSection.note}}
+                      {{/if}}
+                    {{else if (eq requiredPFUSection.requirement 'conditionalPFU')}}
+                        (conditionally required)
+                    {{/if}}
+
+
+                  </td>
+                  <td data-test-proposal-last-updated="{{requiredPFUSection.sectionTitle}}">{{requiredPFUSection.lastUpdateDate}}</td>
+                  <td data-test-proposal-compliance-status="{{requiredPFUSection.sectionTitle}}">
+                    {{#if (gt requiredPFUSection.sectionCompliance.noOfErrors 0)}}
+                        <div><i class="fa fa-exclamation-circle" aria-hidden="true" title="Error(s) present"></i> Error(s) will prevent submission</div>
+                    {{/if}}
+                    {{#if (gt requiredPFUSection.sectionCompliance.noOfWarnings 0)}}
+                        <div><i class="fa fa-exclamation-triangle" aria-hidden="true" title="Warning(s) present"></i> Warning(s)</div>
+                    {{/if}}
+                    {{#if (gt requiredPFUSection.sectionCompliance.noOfDocsUnavailable 0)}}
+                        <div>Document unavailable for check</div>
+                    {{/if}}
+                    {{#if (eq requiredPFUSection.formChecked false)}}
+                        <div>Form not checked{{#if requiredPFUSection.complianceHover}} {{popover-icon-tooltip "" requiredPFUSection.complianceHover "top"}}{{/if}}</div>
+                    {{/if}}
+                    {{#if requiredPFUSection.sectionIsCompliant}}
+                        <div><i class="fa fa-check-circle" aria-hidden="true"></i> No issue(s) found</div>
+                    {{/if}}
+                  </td>
+              </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+
+
+
+      <table class="table table-fixed table-striped table-bordered table-hover" data-test-proposal-forms-compliance-table>
+        <thead>
+          <tr>
+            <th class="col-prop-sec">Proposal Sections</th>
+            <th class="col-prop-sec-status">Last Updated</th>
+            <th class="col-prop-sec-status">Compliance Status <span class="underline-link">[<a data-toggle="modal" data-target="#complianceKeyModal">Key</a>]</span></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr><th class="mid-table" colspan="3" data-test-compliance-subheading1>Required</th></tr>
+          {{#each requiredSections as |requiredSection|}}
+            {{#if (or model.isInPFUStatus (not requiredSection.pfuOnly))}}
+            <tr>
+                <td data-test-proposal-link="{{requiredSection.sectionTitle}}">
+                  {{#if requiredSection.enableAccess}}
+                    {{#link-to requiredSection.sectionPath trackNote=requiredSection.trackNote}}{{requiredSection.sectionTitle}}{{/link-to}}
+                  {{else}}
+                    <span>{{requiredSection.sectionTitle}}</span>
+                  {{/if}}
+                  {{#if requiredSection.note}}
+                    {{#if (eq requiredSection.requirement 'conditional')}}
+                        {{click-popover-icon-tooltip (concat requiredSection.noteTitle " <button type=\"button\" class=\"close\" data-dismiss=\"popover\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>") requiredSection.note "right" "<i>Conditionally required</i>" hasLineBreak=true}}
+                    {{else if requiredSection.note}}
+                      {{popover-icon-tooltip "" requiredSection.note}}
+                    {{/if}}
+                  {{else if (eq requiredSection.requirement 'conditional')}}
+                      (conditionally required)
+                  {{/if}}
+                  {{#if (and requiredSection.sectionUpdated allowIndicatorLabels) }}
+                    {{#indicator-label class="m-left-10" type=requiredSection.indicatorType}}{{/indicator-label}}
+                  {{/if}}
+
+              </td>
+              <td data-test-proposal-last-updated="{{requiredSection.sectionTitle}}">{{requiredSection.lastUpdateDate}}</td>
+              <td data-test-proposal-compliance-status="{{requiredSection.sectionTitle}}">
+                {{#if (eq requiredSection.enableAccess true)}}
+
+                  {{#if (gt requiredSection.sectionCompliance.noOfErrors 0 )}}
+                    <div><i class="fa fa-exclamation-circle" aria-hidden="true" title="Error(s) present"></i> Error(s) will prevent submission</div>
+                  {{/if}}
+                  {{#if (gt requiredSection.sectionCompliance.noOfWarnings 0 )}}
+                      <div><i class="fa fa-exclamation-triangle" aria-hidden="true" title="Warning(s) present"></i> Warning(s)</div>
+                  {{/if}}
+                  {{#if (gt requiredSection.sectionCompliance.noOfDocsUnavailable 0)}}
+                    {{#if (eq requiredSection.sectionTitle "Senior Personnel Documents")}}
+                        <div>Document(s) unavailable for check</div>
+                    {{else}}
+                        <div>Document unavailable for check</div>
+                    {{/if}}
+                  {{/if}}
+                  {{#if (eq requiredSection.formChecked false)}}
+                      <div>Form not checked{{#if requiredSection.complianceHover}} {{popover-icon-tooltip "" requiredSection.complianceHover "top"}}{{/if}}</div>
+                  {{/if}}
+                  {{#if requiredSection.sectionIsCompliant}}
+                      <div><i class="fa fa-check-circle" aria-hidden="true"></i> No issue(s) found</div>
+                  {{/if}}
+
+                {{else}}
+
+                  <div></div>
+
+                {{/if}}
+
+              </td>
+            </tr>
+            {{/if}}
+          {{/each}}
+          <tr><th class="mid-table" colspan="3" data-test-compliance-subheading2>Optional</th></tr>
+          {{#each optionalSections as |optionalSection|}}
+            <tr>
+              <td data-test-proposal-link="{{optionalSection.sectionTitle}}">
+                {{#if optionalSection.enableAccess}}
+                  {{#link-to optionalSection.sectionPath trackNote=optionalSection.trackNote}}{{optionalSection.sectionTitle}}{{/link-to}}
+                {{else}}
+                    <span>{{optionalSection.sectionTitle}}</span>
+                {{/if}}
+
+                {{#if optionalSection.note}}
+                  {{popover-icon-tooltip "" optionalSection.note}}
+                {{/if}}
+
+                {{#if optionalSection.singleCopy}}
+                      <br />
+                      &#40;{{ messageTexts.single_copy_title }}{{popover-icon-tooltip '' messageTexts.single_copy_info}}&#41;
+                {{/if}}
+                {{#if (and optionalSection.sectionUpdated allowIndicatorLabels) }}
+                  {{#indicator-label class="m-left-10" type=optionalSection.indicatorType}}{{/indicator-label}}
+                {{/if}}
+
+              </td>
+              <td data-test-proposal-last-updated="{{optionalSection.sectionTitle}}">{{optionalSection.lastUpdateDate}}</td>
+              <td data-test-proposal-compliance-status="{{optionalSection.sectionTitle}}">
+                {{#if (gt optionalSection.sectionCompliance.noOfErrors 0 )}}
+                  <div><i class="fa fa-exclamation-circle" aria-hidden="true" title="Error(s) present"></i> Error(s) will prevent submission</div>
+                {{/if}}
+                {{#if (gt optionalSection.sectionCompliance.noOfWarnings 0 )}}
+                  <div><i class="fa fa-exclamation-triangle" aria-hidden="true" title="Warning(s) present"></i> Warning(s)</div>
+                {{/if}}
+                {{#if (gt optionalSection.sectionCompliance.noOfDocsUnavailable 0)}}
+                    <div>Document unavailable for check</div>
+                {{/if}}
+                {{#if optionalSection.sectionIsCompliant}}
+                    <div><i class="fa fa-check-circle" aria-hidden="true"></i> No issue(s) found</div>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<div class="modal" id="returnToPIModal" tabindex="-1" role="dialog" aria-labelledby="returnToPIModalLabel" data-backdrop="static" data-test-return-to-pi-modal>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="returnToPIModalLabel" data-test-return-to-pi-modal-title>Return to PI</h4>
+            </div>
+            <div class="modal-body">
+                <p data-test-return-to-pi-modal-text-1>
+                    Are you sure you want to return this proposal to the PI?
+                </p>
+                <p data-test-return-to-pi-modal-text-2>
+                    Once returned, the Sponsored Projects Office (SPO) and Authorized Organizational Representative (AOR), will immediately lose access to the proposal.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" {{action 'returnToPI'}} data-dismiss="modal" data-test-return-to-pi-return-button>Return to PI</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-return-to-pi-close-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="complianceKeyModal" tabindex="-1" role="dialog" aria-labelledby="complianceKeyModalLabel" data-backdrop="static" data-test-compliance-key-modal>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="complianceKeyModalLabel" data-test-compliance-key-modal-title>Compliance Status Key</h4>
+            </div>
+            <div class="modal-body">
+                <p data-test-compliance-key-modal-text-1>
+                    The following statuses may appear as your proposal is updated.  View the specific proposal section to see specific errors and warning messages.
+                </p>
+                <p data-test-compliance-key-modal-text-2>
+                    <strong>Form not checked:</strong> Initial status before any validation occurs on a data entry form
+                </p>
+                <p data-test-compliance-key-modal-text-3>
+                    <strong>Document unavailable for check:</strong> A document has not been uploaded into the section
+                </p>
+                <p data-test-compliance-key-modal-text-4>
+                    <strong>Error(s) will prevent submission:</strong> These errors can be forwarded to the SPO/AOR but will stop the submission of the proposal if not fixed
+                </p>
+                <p data-test-compliance-key-modal-text-5>
+                    <strong>Warning(s):</strong> Items that should be manually checked before submission
+                </p>
+                <p data-test-compliance-key-modal-text-6>
+                    <strong>No issues found:</strong> All compliance checks have been successfully met
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-compliance-key-close-button>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ <div class="modal" id="proposalStatusModal" tabindex="-1" role="dialog" aria-labelledby="proposalStatusModalLabel">
+  <div class="modal-dialog modal-lg" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="proposalStatusModalLabel">
+            {{proposalStatusModalTitle}}
+        </h4>
+      </div>
+      <div class="modal-body {{if model.isSubmittedProposal 'modal-body-scroll-450'}}">
+        {{#proposal-status
+          proposalStatusGroups=model.proposalStatusGroups
+          description=proposalStatusModalDescription
+          inSubmittedStatus=model.isSubmittedProposal
+          currentProposalStatus=model.proposalStatus}}{{/proposal-status}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="dateTypesModal" tabindex="-1" role="dialog" aria-labelledby="dateTypesModalLabel">
+  <div class="modal-dialog modal-md" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="dateTypesModalLabel" data-test-date-types-modal-title>Due Date Types</h4>
+      </div>
+      <div class="modal-body" data-test-delete-date-types-modal-body>
+        <p>The date definitions below can be used as a reference for their applicable deadline date.</p>
+        <p><b>Accepted anytime:</b> This proposal is being accepted at any time, as no deadline date has been provided by the program.</p>
+        <p><b>Target date:</b> The date after which the proposal will still be accepted, although it may miss a particular panel or committee meeting.</p>
+        <p><b>Deadline date:</b> The date after which the proposal will not be accepted or will be returned without review by NSF. The deadline date will be waived only in extenuating circumstances.</p>
+        <p><b>Submission window:</b> The end date of a designated period of time during which the proposal will be accepted for review by NSF. This end date is subject to the same policies as a deadline date.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-test-date-types-modal-close-button>Close</button>
+      </div>
+    </div>
+  </div>
+</div>

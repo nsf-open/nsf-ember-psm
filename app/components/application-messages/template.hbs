@@ -1,0 +1,11 @@
+<a title="Application Message Display Anchor" id="appMessageAnchor"></a>
+{{#each messageService.appLevelMessages as |am|}}
+  <div class="advisory">
+    <div class="advisory-title-background">
+      <span class="advisory-title"><b>Attention:</b></span>
+    </div>
+    <div class="advisory-content">
+      {{am.message}}
+    </div>
+  </div>
+{{/each}}

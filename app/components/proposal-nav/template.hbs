@@ -1,0 +1,36 @@
+<ul class="nav rgov-left-nav">
+
+  <li class="header"><a id="mainMenu" {{action "toggleMenu"}} data-test-proposal-nav-toggle-link><i class="fa fa-minus-square" aria-hidden="true"></i><span data-test-proposal-nav-hide>Hide Menu</span></a>
+
+    <ul id="allItems" class="collapse in" aria-expanded="true">
+
+      {{#each proposalNavLinks as | navLink index | }}
+        {{#if (and (not navLink.subLinks) (not navLink.hide))}}
+          <li data-test-nav={{navLink.link}} role="presentation"
+            class="{{if (eq routeName navLink.link) 'activated' ''}}"
+            {{action "clickNavLink" navLink.link navLink.trackNote}}
+            ><a>{{navLink.name}}</a>
+          </li>
+        {{else if navLink.subLinks}}
+          <li class="header" data-nav-link-index={{index}}><a id="{{navLink.id}}Link" {{action "toggleSubMenu" (concat '#' navLink.id)}}>{{navLink.name}}
+            <i class="fa fa-angle-{{ if navLink.toggleOpen 'down' 'right'}}" aria-hidden="true"></i></a>
+            <ul id={{navLink.id}} class="collapse in" aria-expanded="true">
+              {{#each navLink.subLinks as | subLink | }}
+                {{#if (not subLink.hide)}}
+                  <li data-test-nav={{subLink.link}} role="presentation"
+                    class="{{if (eq routeName subLink.link) 'activated' ''}}"
+                    {{action "clickNavLink" subLink.link subLink.trackNote}}
+                    ><a>{{subLink.name}}</a>
+                  </li>
+                {{/if}}
+              {{/each}}
+            </ul>
+          </li>
+        {{/if}}
+      {{/each}}
+
+    </ul>
+
+  </li>
+
+</ul>

@@ -1,0 +1,204 @@
+/* Header styles -------------------------------------- */
+/* .theme-header{margin: 0 auto;width: 940px;} */
+
+.theme-header {
+  margin: 0 auto;
+  // width: 940px;
+  @media (min-width: $screen-md-min) {
+    width: $container-md;
+  }
+  @media (min-width: $screen-lg-min) {
+    width: $container-lg;
+  }
+}
+
+#masthead {
+  position: relative;
+  top: 0;
+  left: 0;
+  .logo {
+    background: url("../assets/images/logo.png") 0 0 no-repeat;
+    height: 83px;
+    width: 308px;
+    margin: 33px 0 10px;
+    display: block;
+    float: left;
+  }
+  .portlet {
+    border: 0;
+    margin: 0;
+    .content {
+      padding: 0;
+    }
+  }
+}
+
+/* #globalNavWelcomeContainer {position: relative;z-index: 100;width: 940px;right: 0px;top: 43px;margin: 0 auto;display: block;} */
+
+#globalNavWelcomeContainer {
+  position: relative;
+  z-index: 100;
+  // width: 940px;
+  right: 0px;
+  top: 43px;
+  margin: 0 auto;
+  display: block;
+  #globalNav ul {
+    list-style: none;
+    margin: 5px 0 0 0px;
+    width: 100%;
+    text-align: right;
+    li {
+      display: inline;
+      margin: 0;
+      padding: 0 0 0 2px;
+      border-left: solid 1px #333;
+      font-weight: bold;
+      &:first-child {
+        border: 0;
+      }
+      a, span {
+        padding: 4px;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.searchContainer {
+  width: 400px;
+  position: absolute;
+  top: 80px;
+  right: 0px;
+  text-align: right;
+  input {
+    vertical-align: middle;
+  }
+  .searchField {
+    width: 242px;
+    padding: 4px;
+  }
+}
+
+#masthead .searchContainer {
+  form {
+    display: inline;
+  }
+  span {
+    *position: relative;
+    *top: 9px;
+    /* modified - need to be tested */
+    /* IE Fix */
+  }
+}
+
+/* Primary Navigation styles -------------------------------------- */
+/* #primary_nav_wrap{margin:0 auto;position: relative;display: block;width: 940px;} */
+
+#primary_nav_wrap {
+  margin: 0 auto;
+  position: relative;
+  display: block;
+  // width: 940px;
+
+  @media (min-width: $screen-md-min) {
+    width: $container-md;
+  }
+  @media (min-width: $screen-lg-min) {
+    width: $container-lg;
+  }
+
+  ul {
+    list-style: none;
+    position: relative;
+    float: left;
+    padding: 0;
+    background-color: #303b53 !important;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    a {
+      display: table-cell;
+      vertical-align: middle;
+      color: #fff;
+      text-decoration: none;
+      font-weight: normal;
+      text-align: center;
+      font-size: 17px;
+      height: 53px;
+      width: 20%;
+      font-family: Georgia, serif;
+    }
+    li {
+      position: relative;
+      float: left;
+      margin: 0;
+      padding: 0;
+      top: 0;
+      left: 0;
+      border-right: 1px solid #616b85;
+      width: 20%;
+      &.current-menu-item {
+        background: #ddd;
+      }
+      &:hover {
+        background: #00748d;
+      }
+    }
+    ul {
+      display: none;
+      position: absolute;
+      top: 53px;
+      left: 0;
+      padding: 0;
+      width: 100%;
+      z-index: 9999 !important;
+      background-color: #00748d !important;
+      li {
+        float: none;
+        border-top: 1px solid #2e92ab;
+        border-right: 0px solid #616b85;
+        width: 100%;
+      }
+      a {
+        font-family: Arial, sans-serif !important;
+        font-size: 14px;
+        text-align: left;
+        padding: 11px 14px;
+        height: auto;
+        text-transform: none !important;
+        &:hover {
+          background-color: #b13900;
+        }
+      }
+      ul {
+        top: 0;
+        left: 100%;
+      }
+    }
+    li:hover > ul {
+      display: block;
+      z-index: 10;
+    }
+  }
+  a.fl {
+    background: url('../assets/images/icon_listFastlane.png') 14px 13px no-repeat;
+    padding-left: 34px;
+  }
+}
+
+/* #primary_nav_wrap ul{list-style:none;position:relative;float:left;padding:0;background-color: #303b53 !important;margin:0 auto 20px auto;width:940px;} */
+
+#headerPorletDiv.content {
+  padding: 0;
+}
+
+#mainSearchBtn {
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  padding: 7px;
+}
+
+// .glyphicon-search:before {
+//   content: "\e003";
+// }

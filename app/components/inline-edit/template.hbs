@@ -1,0 +1,36 @@
+
+
+<div data-test-inline-edit-component class="inline-input{{if isEditing ' editing' ''}}">
+
+  {{#unless isEditing}}
+    {{#unless-permission editPermission}}
+      <div data-test-inline-read-only-value id={{concat componentId "-readonly"}} class="inline-edit-readonly">{{displayValue}}</div>
+    {{else}}
+    <div class="readonly" title={{editIconInstruction}}>
+        <div tabindex="0" data-test-inline-read-only-value onclick={{action 'enterEdit'}} onkeyup={{action 'enterEdit'}} id={{concat componentId "-readonly"}}>{{displayValue}}</div>
+
+        <a tabindex="0" data-test-inline-edit-icon onclick={{action 'enterEdit'}} onkeyup={{action 'enterEdit'}} class="edit-icon"><i id={{concat componentId "-edit-icon"}} class="fa fa-pencil-square-o" title={{editIconInstruction}} aria-hidden="true" data-test-edit-icon></i></a>
+    </div>
+    {{/unless-permission}}
+  {{/unless}}
+
+  {{#if isEditing}}
+    {{input class=(if contentError 'inline-input error' 'inline-input')
+            value=displayValue
+            focus-out=(action 'trimInput')
+            input=(action 'valueChange')}}
+    {{#if (gt characterCount 0)}}
+      <a data-test-inline-clear-x onclick={{action 'clear'}} id={{concat componentId "-clear-icon"}} class="fa fa-times-circle edit-clear-x" title="Clear"></a>
+    {{/if}}
+    <br/>
+    <span data-test-inline-error-message class="{{if contentError 'contentError left error-text' 'contentError left'}}">{{contentError}}</span>
+    <span data-test-inline-character-count class="{{if (gt characterCount maxCharLength) 'characterError right error-text' 'characterError right'}}">{{characterCount}} of {{maxCharLength}} characters</span>
+  {{/if}}
+</div>
+
+{{#if isEditing}}
+  <div class="right inline-btns">
+    <button data-test-inline-save-button title={{if saveIsDisabled saveButtonErrorTitle "Save" }} {{action 'save'}} disabled={{saveIsDisabled}} class="btn inline-btn btn-primary"><i class="fa fa-check" aria-hidden="true"></i></button>
+    <button data-test-inline-cancel-button title="Cancel" {{action 'cancel'}} class="btn inline-btn btn-default"><i class="fa fa-times" aria-hidden="true"></i></button>
+  </div>
+{{/if}}

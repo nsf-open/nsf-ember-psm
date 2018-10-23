@@ -1,0 +1,14 @@
+.popover {
+  border-radius: $popover-border-radius;
+}
+
+.popover-content {
+  min-width: $popover-min-width;
+}
+
+.popover-title {
+  font-weight: bold;
+  .close {
+    margin-top: -3px;
+  }
+}

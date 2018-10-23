@@ -1,0 +1,82 @@
+{
+  "name": "psm",
+  "version": "0.0.0",
+  "description": "Proposal Submission",
+  "private": true,
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "ember server",
+    "build-dev": "ember build --environment=development",
+    "build": "ember build --environment=production",
+    "test": "ember exam --split=8 --parallel",
+    "coverage": "COVERAGE=true npm test && ember coverage-merge && rm -rf ./coverage_*",
+    "clean-slate": "rimraf -rf ./node_modules ./dist ./tmp && npm install"
+  },
+  "repository": "",
+  "engines": {
+    "node": "6.9.2"
+  },
+  "dependencies": {
+    "ember-cli-ic-ajax": "1.0.0",
+    "eslint": "^4.18.2",
+    "ic-ajax": "^2.0.2"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "bootstrap-sass": "3.3.7",
+    "broccoli-asset-rev": "2.7.0",
+    "cross-env": "5.1.5",
+    "datetime-picker": "0.6.0",
+    "ember-ajax": "3.1.0",
+    "ember-cli": "^2.18.0",
+    "ember-cli-app-version": "3.2.0",
+    "ember-cli-babel": "6.12.0",
+    "ember-cli-code-coverage": "0.4.2",
+    "ember-cli-dependency-checker": "2.1.0",
+    "ember-cli-eslint": "4.2.3",
+    "ember-cli-htmlbars": "2.0.3",
+    "ember-cli-htmlbars-inline-precompile": "1.0.2",
+    "ember-cli-inject-live-reload": "1.7.0",
+    "ember-cli-mirage": "0.4.6",
+    "ember-cli-moment-shim": "3.7.1",
+    "ember-cli-qunit": "4.3.2",
+    "ember-cli-release": "0.2.9",
+    "ember-cli-sass": "5.3.1",
+    "ember-cli-shims": "1.2.0",
+    "ember-cli-sri": "2.1.1",
+    "ember-cli-test-loader": "2.2.0",
+    "ember-cli-uglify": "2.1.0",
+    "ember-data": "2.18.2",
+    "ember-exam": "1.0.0",
+    "ember-export-application-global": "2.0.0",
+    "ember-load-initializers": "1.1.0",
+    "ember-math-helpers": "2.2.3",
+    "ember-oauth-iam": "1.2.x",
+    "ember-page-title": "3.2.2",
+    "ember-radio-button": "1.2.3",
+    "ember-resolver": "4.5.5",
+    "ember-rgov-asset": "1.x.x",
+    "ember-simple-auth": "1.6.0",
+    "ember-source": "2.18.2",
+    "ember-truth-helpers": "2.0.0",
+    "ember-webtrend-analytics": "1.0.1",
+    "eonasdan-bootstrap-datetimepicker": "4.17.47",
+    "eslint-config-es6": "1.10.3",
+    "eslint-plugin-ember": "5.1.0",
+    "eslint-plugin-import": "2.11.0",
+    "font-awesome": "4.7.0",
+    "loader.js": "4.7.0",
+    "moment": "2.22.1",
+    "moment-timezone": "0.5.16",
+    "phantomjs-prebuilt": "2.1.16"
+  },
+  "ember-addon": {
+    "paths": [
+      "lib/datetime-picker"
+    ]
+  }
+}

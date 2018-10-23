@@ -1,0 +1,161 @@
+{{title breadCrumbForTitle}}
+
+
+<div class="panel-body psm-personnel psm-sr-personnel-documents">
+    {{screen-messages-service }}
+
+    {{#unless-permission 'proposal.data.modify'}}
+      {{#if (or (eq proposalStatus "01") (eq proposalStatus "08"))}}
+        {{screen-messages messages=viewOnlyMessage}}
+      {{/if}}
+    {{/unless-permission}}
+
+    <div class="row">
+      <div class="col-xs-12 psm-sr-personnel-documents__toggle-bar">
+        <span class="vertical-align-text"><a {{action "expandAll"}} data-test-sr-personnel-expand-all-rows>Expand all</a> | <a {{action "collapseAll"}} data-test-sr-personnel-collapse-all-rows>Collapse all</a></span>
+        <span class="pull-right">
+            <button type="button" class="btn btn-default" {{action "gotoManagePersonnel"}} data-test-sr-personnel-manage-personnel-button>Manage Personnel</button>
+        </span>
+      </div>
+    </div>
+    <table class="table table-fixed sr-docs-table">
+        <thead>
+        <tr>
+            <th>
+                <span data-test-sr-personnel-th1>Personnel Name</span>
+                <a tabindex="0" title="{{if isSortByName (if isSortDesc "Sorted descending by last name, click to change sort" "Sorted ascending by last name, click to change sort") "Click to sort column"}}" class="sort-by-name sortable-header fa {{if isSortByName (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "name"}} data-test-sr-personnel-sortby-name></a>
+            </th>
+            <th>
+                <span data-test-sr-personnel-th2>Role</span>
+                <a tabindex="0" title="{{if isSortByRole (if isSortDesc "Sorted descending, click to change sort" "Sorted ascending, click to change sort") "Click to sort column"}}" class="sort-by-role sortable-header fa {{if isSortByRole (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "role"}} data-test-sr-personnel-sortby-role></a>
+            </th>
+            <th>
+                <span data-test-sr-personnel-th3>Organization</span>
+                <a tabindex="0" title="{{if isSortByOrganization (if isSortDesc "Sorted descending, click to change sort" "Sorted ascending, click to change sort") "Click to sort column"}}" class="sort-by-organization sortable-header fa {{if isSortByOrganization (if isSortDesc "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "organization"}} data-test-sr-personnel-sortby-organization></a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each srDocumentPersonnel as |person index|}}
+            <tr class="primary-row {{if person.toggleOpen "row-expanded" "row-collapsed" }}" data-test-primary-row="{{person.displayRole}}">
+                <th id="personnelHeader" scope="row"><a data-toggle="collapse" class="fa {{if person.toggleOpen "fa-minus-circle" "fa-plus-circle" }} margin-right-4" {{action "toggleChevron" index}} data-test-sr-personnel-expand-collapse-link><span class="sr-only">Collapse/expand personnel documents</span></a> {{#if person.hasWarnings}}<i class="fa fa-exclamation-triangle hide-if-expanded" aria-hidden="true" title="Warning(s) present"></i>{{/if}} {{#if person.hasErrors}}<i class="fa fa-exclamation-circle hide-if-expanded" aria-hidden="true" title="Error(s) present"></i>{{/if}} <span data-test-sr-personnel-name>{{person.displayName}}</span></th>
+                <td data-test-sr-personnel-role>{{person.displayRole}}</td>
+                <td data-test-sr-personnel-organization>{{person.institution.organizationName}}</td>
+            </tr>
+            {{#if person.toggleOpen }}
+              <tr class="secondary-row" aria-expanded="true" data-test-sr-personnel-documents-panel="{{person.displayRole}}">
+                <td colspan="3" class="doc-table" headers="personnelHeader">
+                <table class="table table-striped leader nested-data-table">
+                    <thead>
+                      <tr class="sub-header">
+                          <th data-test-sr-personnel-documents-th1>Documents</th>
+                          <th data-test-sr-personnel-documents-th2>Last Updated</th>
+                          <th data-test-sr-personnel-documents-th3>Compliance Status <span class="underline-link">[<a data-toggle="modal" data-target="#complianceKeyModal" data-test-sr-personnel-docs-key-link>Key</a>]</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each person.documentStatus as |document|}}
+                        <tr>
+                          <td data-test-sr-personnel-document1>
+                            {{#if (eq document.name 'Biographical Sketch')}}
+                              {{#link-to 'proposal.sr-personnel-documents.bio-sketch' person.propPersId trackNote='Biographical Sketch link_Senior Personnel Documents page'}}{{document.name}}{{/link-to}}
+
+                            {{else if (eq document.name 'Current and Pending Support')}}
+                              {{#link-to 'proposal.sr-personnel-documents.support' person.propPersId trackNote='Current and Pending Support link_Senior Personnel Documents page'}}{{document.name}}{{/link-to}}
+
+                            {{else if (eq document.name 'Collaborators and Other Affiliations')}}
+                              {{#link-to 'proposal.sr-personnel-documents.collaborators' person.propPersId trackNote='Collaborators and Other Affiliations link_Senior Personnel Documents page'}}{{document.name}}{{/link-to}}<br/>
+                              &#40;{{ messageTexts.single_copy_title }}{{popover-icon-tooltip '' messageTexts.single_copy_info}}&#41;
+                            {{else}}
+                              <a title="Document Modal" data-toggle="modal" data-target="#editDocumentModal" {{action "editDocument" document}}>{{document.name}}</a>
+                            {{/if}}
+                            {{#if document.sectionUpdated }}
+                              {{#indicator-label class="m-left-10" type=document.indicatorType}}{{/indicator-label}}
+                            {{/if}}
+
+                          </td>
+                            <td data-test-sr-personnel-document2>
+                              {{document.lastUpdated}}</td>
+                            <td data-test-sr-personnel-document3>
+                              {{#if (gt document.sectionCompliance.noOfErrors 0 )}}
+                                  <div><i class="fa fa-exclamation-circle" aria-hidden="true" title="Error(s) present"></i> Error(s) will prevent submission</div>
+                              {{/if}}
+                              {{#if (gt document.sectionCompliance.noOfWarnings 0 )}}
+                                  <div><i class="fa fa-exclamation-triangle" aria-hidden="true" title="Warning(s) present"></i> Warning(s)</div>
+                              {{/if}}
+                              {{#if (gt document.sectionCompliance.noOfDocsUnavailable 0)}}
+                                  <div>Document unavailable for check</div>
+                              {{/if}}
+                              {{#if document.isCompliant}}
+                                  <div><i class="fa fa-check-circle" aria-hidden="true"></i> No issue(s) found</div>
+                              {{/if}}
+                            </td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                </table>
+                </td>
+              </tr>
+            {{/if}}
+        {{/each}}
+        </tbody>
+    </table>
+
+</div>
+
+<div class="panel-footer">
+    <!-- <button class="btn btn-default" data-test-sr-personnel-check-compliance-button>Check Compliance</button> -->
+    <!-- <button class="btn btn-default" data-test-sr-personnel-preview-print-button>Preview/Print</button>  -->
+</div>
+
+<div class="modal" id="editDocumentModal" role="dialog" aria-labelledby="editDocumentModalLabel">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'resetDocumentModal' preventDefault=false}}><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="proposalInfoModalLabel">Upload Senior Personnel Document</h3>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Upload Document: {{modalEditDocument.name}}
+                </p>
+                <a data-toggle="collapse" class="fa fa-plus-plus" aria-hidden="true" {{action "browseForDocument"}}>Browse</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmEditDocument" data-dismiss="modal" disabled {{action 'resetDocumentModal' preventDefault=false}}>Update</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'resetDocumentModal' preventDefault=false}}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="complianceKeyModal" tabindex="-1" role="dialog" aria-labelledby="complianceKeyModalLabel" data-backdrop="static" data-test-compliance-key-modal>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-test-compliance-key-modal-title>Compliance Status Key</h4>
+            </div>
+            <div class="modal-body">
+                <p data-test-compliance-key-modal-text-1>
+                    The following statuses may appear as your proposal is updated. View the specific proposal section to see specific warning messages.
+                </p>
+                <p data-test-compliance-key-modal-text-4>
+                    <strong>Document unavailable for check:</strong>  A document has not been uploaded into the section
+                </p>
+                <p data-test-compliance-key-modal-text-3>
+                    <strong>Warning(s):</strong> Items that should be manually checked before submission
+                </p>
+                <p data-test-compliance-key-modal-text-5>
+                    <strong>No issues found:</strong> All compliance checks have been successfully met
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-compliance-key-close-button>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!--outlet--}}

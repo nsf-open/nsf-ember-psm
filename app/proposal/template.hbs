@@ -1,0 +1,71 @@
+{{#if model.isInPFUStatus}}
+  {{title "NSF PFU/Budget Revision" separator=": " replace=true}}
+{{/if}}
+
+{{#if showMenu}}
+<div class="row psm-proposal-container">
+  <div class="col-xs-3 menu-fixed">
+    {{proposal-nav
+      model.nsfPropId
+      model.propPrepId
+      model.pfuProposals
+      model.proposalStatus
+      model.propPrepRevnTypeCode
+      model.isInPFUStatus
+      routeName=currentRouteName
+      proposal=model
+      hidePostDoc=hidePostDoc
+      hideBudgetImpact=hideBudgetImpact
+      onNavLinkClick=(action 'updatePageInfo') }}
+  </div>
+  <div class="col-xs-9 padding-right-30">
+    <div>
+      <div id="breadcrumbsWithMenu">
+        <div class="row">
+          {{bread-crumbs onNavLinkClick=(action 'updatePageInfo')}}
+        </div>
+      </div>
+
+      <div id="pageMenuShown">
+        <!-- id:contents/outlet here when menu is SHOWN -->
+
+        <div id="contents">
+          <div class="row">
+            <div class="col-xs-12">
+              {{#page-container title=pageInfo.sectionTitle
+                                description=pageInfo.description
+                                institutionInfo=pageInfo.institutionInfo
+                                institutionName=model.institution.organizationName
+                                subTitle=pageInfo.subTitle}}
+                {{outlet }}
+              {{/page-container}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="pageMenuHidden" class="col-xs-12">
+  <!-- id:contents/outlet here when menu is HIDDEN -->
+</div>
+
+<div id="pageMenuRemoved" class="col-xs-12">
+    <div id="breadcrumbsNoMenu"></div>
+    <div id="contentsNoMenu"></div>
+</div>
+{{else}}
+
+  <div class="row psm-proposal-container">
+
+    <div class="col-xs-12">
+        <div id="breadcrumbsWithMenu">
+          {{bread-crumbs onNavLinkClick=(action 'updatePageInfo')}}
+        </div>
+    {{outlet 'noMenu'}}
+    </div>
+  </div>
+
+{{/if}}

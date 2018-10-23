@@ -1,0 +1,82 @@
+
+<h3 data-test-funding-op-title class="margin-btm-0">Select Funding Opportunity</h3>
+
+<div class="panel-body">
+
+  {{screen-messages-service}}
+
+  {{pagination-control currentPage=currentPage totalPages=totalPages totalRecordsShown=liveFilter.length startRecord=startRecord endRecord=endRecord pageSizeSelected=pageSizeSelected changePageSize=(action 'changePageSize')}}
+
+    <div id="searchbar-div" class="input-group searchBar" data-test-searchbar>
+        <label class="no-label-label">{{input title="Funding Opportunity Search Bar" class="form-control" size=40 value=searchFilter placeholder='Filter by number or keyword'}}</label>
+    </div>
+
+    <table class="table table-fixed table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="col-select" data-test-fo-th-0>Select</th>
+            <th class="col-fon" data-test-fo-th-1>Funding Opportunity Number
+              {{popover-icon-tooltip fundingOpp.infoTitle (concat fundingOpp.infoText "<a target=\"_blank\" href=\"http://www.nsf.gov/funding/pgm_list.jsp?org=NSF&ord=date\" data-test-fo-popover-text-link>the NSF website. <i class=\"fa fa-external-link\" title=\"Opens new window\" aria-hidden=\"true\"></i> </a>") }}
+                <a tabindex="0" title="Sort by Funding Opportunity Number" class="sortable-header fa {{if isSortById (if sortAscending "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "fundingOpportunityId"}}></a>
+            </th>
+            <th class="col-fot" data-test-fo-th-2>Funding Opportunity Title
+                <a tabindex="0" title="Sort by Funding Opportunity Title" class="sortable-header fa {{if isSortByTitle (if sortAscending "fa-sort-desc" "fa-sort-asc") "fa-sort"}}" {{action 'sortBy' "fundingOpportunityTitle"}}></a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each recordsShown as |fundingOp|}}
+            <tr>
+                <td class="td-select">
+                  {{!#radio-button radioId=fundingOp.fundingOpportunityId groupValue=fundingOpChoice value=fundingOp}}{{!/radio-button}}
+                  {{#radio-button role="radio" radioId=fundingOp.fundingOpportunityId groupValue=wizard.fundingOpChoice value=fundingOp}}{{/radio-button}}
+                </td>
+                <td><label for={{fundingOp.fundingOpportunityId}}>{{fundingOp.fundingOpportunityId}}</label></td>
+                <td><label for={{fundingOp.fundingOpportunityId}}>{{fundingOp.fundingOpportunityTitle}}</label></td>
+            </tr>
+        {{else}}
+            <tr><td class="no-results" colspan="3"><h4>No funding opportunities match the filter criteria</h4></td></tr>
+
+        {{/each}}
+        </tbody>
+    </table>
+
+  {{pagination-control currentPage=currentPage totalPages=totalPages totalRecordsShown=liveFilter.length startRecord=startRecord endRecord=endRecord pageSizeSelected=pageSizeSelected changePageSize=(action 'changePageSize')}}
+
+</div>
+
+<div class="panel-footer">
+    <div class="right">
+        <button data-test-previous-button class="btn btn-default" {{action 'previous'}}>Previous</button>
+        <button data-test-next-button class="btn btn-primary" disabled={{nextDisabled}} {{action 'next'}} title={{if nextDisabled nextDisabledTitleText ""}}>Next</button>
+    </div>
+</div>
+
+<div class="modal" id="changeFOModal" tabindex="-1" role="dialog" aria-labelledby="changeFOModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="changeFOModalLabel">Confirm Funding Opportunity Change</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You selected a new funding opportunity, which requires you to re-complete the proposal setup workflow. Please confirm you would like to proceed with the new funding opportunity.
+                </p>
+                <dl>
+                    <dt>New funding opportunity</dt>
+                    <dd>{{wizard.fundingOpChoice.fundingOpportunityId}} - {{wizard.fundingOpChoice.fundingOpportunityTitle}}</dd>
+                    <dt>Original funding opportunity</dt>
+                    <dd>{{wizard.fundingOp.fundingOpportunityId}} - {{wizard.fundingOp.fundingOpportunityTitle}}</dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'changeFO'}} data-test-change-fo-continue-new>Continue with New</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'revertFO'}} data-test-change-fo-revert>Revert to Original &amp; Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-change-fo-cancel>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{yield}}

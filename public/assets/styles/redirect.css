@@ -1,0 +1,17 @@
+.heading {
+  font-family: Verdana;
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+#nsf-logo {
+  height: 70px;
+  : 414px;
+}
+
+.redirect-body {
+  font-family: Verdana;
+  font-size: 70%;
+  margin-top: 10px;
+}

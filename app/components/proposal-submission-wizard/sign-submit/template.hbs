@@ -1,0 +1,58 @@
+<h3 data-test-sign-and-submit-text class="margin-btm-10">Sign and Submit</h3>
+{{screen-messages-service}}
+
+<p>
+  By clicking the 'Sign and Submit' button you are electronically signing, as well as, submitting your proposal.
+</p>
+
+<p data-test-organization-information-title>
+  <b>Organization Information</b>
+</p>
+
+<div class="row">
+  <div class="col-xs-3">
+    <dl>
+      <dt>Awardee Organization</dt>
+      <dd data-test-awardee-organization-text>{{coverSheet.awdOrganization.organizationName}}</dd>
+    </dl>
+  </div>
+  <div class="col-xs-3">
+    <dl>
+      <dt>DUNS Number {{popover-icon-tooltip "DUNS Number" "The DUNS Number is associated with your Awardee Organization. The Awardee Organization can be changed from the Cover Sheet." "top"}}</dt>
+      <dd data-test-duns-number-text>{{coverSheet.dunsNumber}}</dd>
+    </dl>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <p data-test-aor-information-title><b>Authorized Organizational Representative (AOR) Information</b></p>
+    <p data-test-following-information-text>The following information will be added to the proposal once signed and submitted:</p>
+    <div class="row">
+      <div class="col-xs-4">
+        <dl>
+          <dt>AOR Name</dt>
+          <dd data-test-aor-name-text>{{proposalPackageData.aorName}}</dd>
+          <dt>Phone</dt>
+          <dd data-test-aor-phone-text>{{proposalPackageData.aorPhoneNumber}}</dd>
+        </dl>
+      </div>
+      <div class="col-xs-8">
+        <dl>
+          <dt>Email</dt>
+          <dd data-test-aor-email-text>{{proposalPackageData.aorEmail}}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <div class="alert alert-info" role="alert">
+      <span data-test-submit-sign-info>
+        <p>The following AOR information will be printed on the proposal coversheet after the proposal is electronically signed by the AOR. If the information is incorrect, please modify it before signing and submitting the proposal.</p>
+        <br/>
+        <p style="padding-left: 17px !important;">Changes to your information can be made by using the My Profile link in Research.gov.</p>
+      </span>
+    </div>
+
+  </div>
+</div>

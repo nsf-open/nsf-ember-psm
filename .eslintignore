@@ -1,0 +1,7 @@
+# /node_modules/* and /bower_components/* ignored by default
+
+mirage/*
+tests/helpers/*
+tests/phantom-runner.js
+tests/taptime-reporter.js
+/lib/*

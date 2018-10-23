@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ol data-test-breadcrumbs class="breadcrumb-psm-nav">
+        {{#each breadCrumbs as |crumb|}}
+            {{#if crumb.isCurrent}}
+                <li class="active">{{crumb.label}}</li>
+            {{else}}
+                <li>
+                    {{#if crumb.linkable}}
+                        {{#if crumb.model}}{{! to avoid null/undefined model in link-to }}
+
+                          <a {{action "clickBreadCrumb" crumb.path crumb.model}}>{{crumb.label}}</a>
+                        {{else if crumb.action}}
+                            <a tabindex="0" {{action 'passAction' crumb.action}}>{{crumb.label}}</a>
+                        {{else}}
+                            {{#link-to crumb.path}}{{crumb.label}}{{/link-to}}
+                        {{/if}}
+                    {{else}}
+                        {{crumb.label}}
+                    {{/if}}
+                </li>
+            {{/if}}
+            {{#if (not-eq crumb breadCrumbs.lastObject)}}
+            &rsaquo;
+            {{/if}}
+        {{/each}}
+    </ol>
+  </div>
+</div>

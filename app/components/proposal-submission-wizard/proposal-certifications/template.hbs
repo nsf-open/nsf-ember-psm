@@ -1,0 +1,50 @@
+<h3 class="margin-btm-0" data-test-proposal-certifications-text>Proposal Certifications</h3>
+{{screen-messages-service}}
+
+<div class="row">
+  <div class="col-xs-12 padding-top-10 padding-btm-10">
+    <i class="fa fa-asterisk" aria-hidden="true"></i><b data-test-budget-required-text>Required</b>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="padding-btm-10" style="overflow-x:hidden; overflow-y:scroll; border: solid 1px #cccccc; height:330px">
+      {{{proposalCertText}}}
+    </div>
+
+  </div>
+</div>
+
+<p class="padding-top-20" data-test-submission-text-question>
+  <i class="fa fa-asterisk" aria-hidden="true"></i><b>Is the organization or its principals presently debarred, suspended, proposed for debarment, declared ineligible or voluntarily excluded from covered transactions by any Federal department or agency?</b>
+</p>
+
+<ul class="response-radio">
+  <li data-test-submission-cert-no>
+    {{#radio-button groupValue=ineligible value=false changed="screenChange"}}
+    <span data-test-radio-text>No</span>
+    {{/radio-button}}
+  </li>
+  <li data-test-submission-cert-yes>
+    {{#radio-button groupValue=ineligible value=true changed="screenChange"}}
+      <span data-test-radio-text>Yes</span>
+    {{/radio-button}}
+
+      <label data-test-explanation class="width-perc-100 padding-left-20">
+        <p>
+          {{#if ineligible}}
+            <i class="fa fa-asterisk" aria-hidden="true"></i>
+          {{/if}}
+          <b style={{if ineligible 'margin-left: -7px;' ''}}>Explanation</b> (required if yes selected)
+        </p>
+        {{input class=(if explanationContentError 'no-label-label inline-input input-width-540 error' 'no-label-label inline-input input-width-540')  type="text" value=explanation key-up=(action 'screenChange') focus-out=(action 'trimInput')}}
+        <span data-test-explanation-error-message class="{{if explanationContentError 'contentError left error-text' 'contentError left'}}">{{explanationContentError}}</span>
+      </label>
+
+  </li>
+</ul>
+
+<p class="padding-left-20 padding-top-10">
+  <label class="checkbox" data-test-agree-cert>{{input type="checkbox" name="agreeCert" checked=agreeCert change=(action 'changeCert')}}<i class="fa fa-asterisk" aria-hidden="true"></i>I have read and agree to the certifications listed above</label>
+</p>

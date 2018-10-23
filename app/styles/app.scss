@@ -1,0 +1,39 @@
+/*app.scss is compiled into /assets/application-name.css
+ *all additional SASS files must be imported into app.scss and all further SASS rules must
+ *follow the imports */
+
+@import "_customVariables";
+
+@import "_rgov_general";
+
+@import "bootstrap";
+
+@import "_rgov_type";
+@import "_rgov_tables";
+@import "_rgov_pagination";
+@import "_rgov_buttons";
+
+@import "_rgov_navs";
+@import "_rgov_navbar";
+@import "_rgov_breadcrumbs";
+
+@import "_rgov_panels";
+@import "_rgov_popovers";
+
+@import "_rgov_alerts";
+@import "_rgov_header";
+@import "_rgov_footer";
+@import "_rgov_modal";
+@import "_rgov_loading_overlay";
+
+@import "_psm";
+
+@import "_psm_personnel";
+@import "_psm_tables";
+
+
+@import "fileinput.min";
+@import "_rgov_fileinput";
+@import "_rgov_inline_edit";
+
+@import "ember-oauth-iam/styles";

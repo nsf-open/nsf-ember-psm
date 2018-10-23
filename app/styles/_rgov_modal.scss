@@ -1,0 +1,77 @@
+.modal-content {
+   //top: 205px;
+  margin-top: 20%;
+  right: 8px;
+}
+
+.modal-lg {
+  .modal-content {
+    margin-top: 10%;
+  }
+}
+
+.modal-dialog-sm {
+    @extend .modal-dialog;
+    min-width: 500px;
+    width: 500px;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 8px;
+}
+
+.modal-divider {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.modal-body-scroll-350 {
+  height: 350px;
+  overflow: auto;
+}
+.modal-body-scroll-450 {
+  height: 450px;
+  overflow: auto;
+}
+
+.modal-footer {
+  padding: 9px 0;
+  // text-align: right;
+  // border-top: 1px solid #e5e5e5;
+  margin: 0 15px;
+}
+
+.modal {
+  label {
+    font-weight: normal;
+  }
+}
+
+label.disabled, span.disabled {
+  opacity: 0.65;
+}
+
+// styles to set an rgov background on the session expiration modal instead of the default all white
+.iam-modal {
+  .iam-modal-backdrop {
+    background: url('../assets/images/bodybg.png') 0 0 repeat-x !important;
+  }
+  .iam-modal-wrapper {
+    background-color: rgba(0,0,0,0.3);
+  }
+  .iam-modal-dialog {
+    background-color: #ffffff !important;
+  }
+  .iam-modal-content {
+    hr {
+      margin-top: 10px;
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{{title breadCrumb}}
+
+<div class="row wrapper width-perc-100">
+  <div class="col-xs-12">
+    <div class="panel">
+      <h1 class="panel-title" data-test-proposal-submission-page-title>{{breadCrumb}}</h1>
+      <div class="panel-body">
+
+
+        {{#if (eq stateIndex 0)}}
+          {{check-compliance-errors-warnings
+            propPrepId=model.propPrepId propRevId=model.propRevId isPFUStatus=model.isPFUStatus hideComponentOnPass=true
+            setPassedComplianceCheck=(action 'setPassedComplianceCheck')
+            setHasComplianceErrors=(action 'setHasComplianceErrors')
+            setHasComplianceWarnings=(action 'setHasComplianceWarnings')}}
+        {{/if}}
+
+        {{#if isLoading}}
+          <div class="row app-loading">
+              <div class="col-xs-12">
+                  <div class="logo bottom-m"></div>
+                  <p class="text-center">Loading...</p>
+                  <p class="text-center"><span class="fa fa-spinner fa-pulse fa-spin fa-3x"></span></p>
+              </div>
+          </div>
+        {{/if}}
+
+        {{#if (gt stateIndex 0)}}
+
+
+        {{!-- TODO: Preview Release --}}
+        {{#if props.uiFeatureToggles.disableProposalSignSubmit}}
+          <div data-test-screen-messages-warning class="alert alert-warning" role="alert">
+            <ul class="noBullet">
+              <li>Proposal submission is not enabled at this time, but we welcome your feedback on the submit proposal screens.</li>
+            </ul>
+          </div>
+        {{/if}}
+
+
+
+          <ol class="breadcrumb-progress decimal">
+            <li class={{if (eq stateIndex 1) 'active' ''}} style="width:33.3%;">
+              <span>
+                {{#if (and (not isSubmitted) (gt stateIndex 1))}}
+                   <a tabindex="0" {{action 'toState' 1 "Review Proposal Information"}} data-test-breadbrumb-progress-link-0>Review Proposal Information</a>
+                {{else}}
+                   Review Proposal Information
+                {{/if}}
+                {{#if (or (gt stateIndex 1) reviewedProposalInformation)}}
+                 <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-0></i>
+                {{/if}}
+              </span>
+            </li>
+            <li class={{if (eq stateIndex 2) 'active' ''}} style="width:33.3%;">
+              <span>
+                {{#if (and (not isSubmitted) (and (not-eq stateIndex 2) (or (gt stateIndex 1) reviewedProposalInformation)))}}
+                {{!-- if first screen is complete/acknowleged --}}
+                   <a tabindex="0" {{action 'toState' 2 "Proposal Certifications"}} data-test-breadbrumb-progress-link-1>Proposal Certifications</a>
+                {{else}}
+                   Proposal Certifications
+                {{/if}}
+                {{#if (or (gt stateIndex 2) proposalCertificationsComplete)}}
+                 <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-1></i>
+                {{/if}}
+              </span>
+            </li>
+            <li class={{if (eq stateIndex 3) 'active' ''}} style="width:33.3%;">
+              <span>
+                {{#if (and (not-eq stateIndex 3) proposalCertificationsComplete)}}
+                {{!-- if second screen is complete --}}
+                   <a tabindex="0" {{action 'toState' 3 "Sign and Submit"}} data-test-breadbrumb-progress-link-1>Sign and Submit</a>
+                {{else}}
+                   Sign and Submit
+                   {{#if isSubmitted}}
+                    <i class="fa fa-check" aria-hidden="true" data-test-breadbrumb-progress-check-1></i>
+                   {{/if}}
+                {{/if}}
+              </span>
+            </li>
+          </ol>
+
+          {{!-- 1. Review Proposal Information --}}
+          {{#if (eq stateIndex 1)}}
+            {{proposal-submission-wizard/review-proposal-information proposalPackageData=model.proposalPackageData coverSheet=model.coverSheetData piData=piData orderedUocs=orderedUocs}}
+
+          {{!-- 2. Proposal Certifications --}}
+          {{else if (eq stateIndex 2)}}
+            {{proposal-submission-wizard/proposal-certifications proposalCertText=proposalCertText explanation=explanation ineligible=ineligible agreeCert=agreeCert setProposalCertificationsComplete=(action 'setProposalCertificationsComplete')}}
+
+          {{!-- 3. Sign and Submit --}}
+          {{else}}
+            {{!proposal-submission-wizard/sign-submit messages=messages proposalPackageData=model.proposalPackageData coverSheet=model.coverSheetData}}
+            {{proposal-submission-wizard/sign-submit proposalPackageData=model.proposalPackageData coverSheet=model.coverSheetData}}
+          {{/if}}
+
+        {{/if}}
+
+        {{!-- {{/if}} --}}
+      </div>
+
+      {{#if (not isLoading)}}
+      <div class="panel-footer padding-btm-0">
+        <div class="row" style="padding-right:5px; padding-left:15px;">
+            {{#if (and (eq stateIndex 0) (or hasComplianceErrors hasComplianceWarnings))}}
+              {{#if (not hasComplianceErrors)}}
+                <button class="btn btn-primary margin-right-11" {{action "toState" (add stateIndex 1) "Continue"}} {{!action "continueSubmission"}} data-test-proposal-submission-continue-button>Continue</button>
+              {{/if}}
+
+              {{link-to "Back to Proposal" "proposal" trackNote='Back to Proposal button_Review Proposal Information_Submission' class="btn btn-default not-active"}}
+            {{else}}
+              <div class="right">
+                {{#if (eq stateIndex 1)}}
+                  {{#if hasComplianceWarnings}}
+                    <button class="btn btn-default margin-right-11" data-test-proposal-submission-previous-button title {{action "toState" (sub stateIndex 1) "Previous"}}>Previous</button>
+                  {{else}}
+                    {{link-to "Back to Proposal" "proposal" trackNote='Back to Proposal button_Review Proposal Information_Submission' class="btn btn-default not-active"}}
+                  {{/if}}
+                {{else}}
+                  {{#unless isSubmitted}}
+                    <button class="btn btn-default margin-right-11" data-test-proposal-submission-previous-button title {{action "toState" (sub stateIndex 1) "Previous"}}>Previous</button>
+                  {{/unless}}
+                {{/if}}
+                {{#if (lt stateIndex maxStates)}}
+                  <button class="btn btn-primary" disabled={{nextDisabled}} title={{if nextDisabled nextDisabledText ''}} {{action "toState" (add stateIndex 1) "Next"}} data-test-proposal-submission-next-button>Next</button>
+                {{else}}
+                  {{#if isSubmitted}}
+                    {{link-to "View Proposal" "proposal" class="btn btn-default not-active margin-right-11"}}
+                    {{link-to "View Submitted Proposals" "proposals" "submitted" class="btn btn-primary"}}
+                  {{else}}
+                    {{!-- TODO: Preview Release --}}
+                    {{!-- <button class="btn btn-primary" disabled title="Not yet available" data-test-proposal-submission-sign-submit-button>Sign and Submit</button> --}}
+
+                    {{#save-button btnClass="primary"
+                        onClick=(action 'signSubmit')
+                        isLoading=isSubmitting
+                        disabled=props.uiFeatureToggles.disableProposalSignSubmit
+                        title=(if props.uiFeatureToggles.disableProposalSignSubmit props.uiFeatureToggles.disabledTextDefault '')
+                        loadingText="Submitting"
+                        data-test-proposal-submission-sign-submit-button=""}}Sign and Submit
+                    {{/save-button}}
+                  {{/if}}
+
+                {{/if}}
+              </div>
+            {{/if}}
+        </div>
+      </div>
+      {{/if}}
+
+
+    </div>
+  </div>
+</div>

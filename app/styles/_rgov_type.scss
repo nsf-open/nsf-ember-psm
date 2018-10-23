@@ -1,0 +1,33 @@
+
+h1, .h1 {
+	font-size: 28px !important;
+	font-family: Georgia, serif !important;
+	color: #34495e !important;
+}
+
+h2, .h2 {
+	font-size: 22px !important;
+	font-family: Georgia, serif !important;
+	color: #34495e !important;
+}
+
+h5, .h5 {
+	text-transform: uppercase;
+	font-weight: bold !important;
+}
+
+h6, .h6 {
+	font-weight: bold !important;
+}
+
+.response-radio {
+	@extend .list-unstyled;
+	label {
+		font-weight: normal;
+    display: inherit;
+  }
+  li.proposal-type {
+    float: left;
+    clear: left;
+  }
+}

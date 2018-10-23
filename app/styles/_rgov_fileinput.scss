@@ -1,0 +1,104 @@
+
+
+// File input / Drag an drop upload files window
+
+.single-file-upload {
+  margin-bottom: 40px;
+
+  .a-security-container {
+    display: flex;
+  }
+
+
+  .file-preview {
+    background-color: ghostwhite !important;
+    border: 1px solid #ddd;
+  }
+
+  .file-drop-zone {
+    background-color: white !important;
+  }
+
+  .form-control.file-caption.kv-fileinput-caption {
+    margin-top: 7px;
+  }
+
+  .btn.btn-xs {
+    padding: 1px 5px !important;
+  }
+
+  .inputfile-row {
+    //width: 100%;
+    height: 50px;
+    margin-top: 15px;
+    padding-left: 20px;
+    background: linear-gradient(to bottom, #00748d 0%, #01697f 100%);
+    border-color: #01697f;
+    color: #ffffff;
+
+    label {
+      display: inline-block;
+      margin-bottom: 0;
+      margin-top: 14px;
+    }
+
+  }
+
+  .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    //opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .btn {
+    margin-left: 15px !important;
+  }
+
+  .inputfile:focus + label,
+  .inputfile + label:hover {
+
+  }
+
+  .inputfile-saved {
+    margin-left: 5px;
+    margin-top: 15px;
+    .filename-saved-delete {
+      margin-left: 10px;
+    }
+  }
+
+
+  .a-security__link, .single-file-upload__pending-file-message {
+    display: flex;
+  }
+
+  .single-file-upload__link-icon {
+    padding-top: 2px;
+    margin-right: 5px;
+  }
+
+}
+
+.uploaded-file {
+  display: flex;
+  > a, span {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  > span:first-child {
+    min-width: 154px;
+  }
+    
+}
+
+
+.file-delete {
+  vertical-align:top;
+  width: 300px;
+  margin-left: 20px;
+  a.fa:hover, a > i:hover {
+    color: #b13900;
+  }
+}

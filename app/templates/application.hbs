@@ -1,0 +1,31 @@
+{{title "NSF Proposal" separator=": "}}
+
+{{#if session.isAuthenticated}}
+  {{#rgov-header session.accessToken session.user as |html|}}
+      <div class="psm-container">
+        {{{html.content}}}
+      </div>
+  {{/rgov-header}}
+
+  {{#rgov-navigation session.accessToken as |html|}}
+      <div class="psm-container">
+          <div class="primary-nav">{{{html.content}}}</div>
+      </div>
+  {{/rgov-navigation}}
+{{/if}}
+
+{{!--{{rgov-navigation session.accessToken}}--}}
+
+
+
+<div class="psm-container">
+    {{application-messages}}
+    {{oauth-iam}} {{!-- handles session expiration on screen message and modal --}}
+    {{outlet}}
+</div>
+
+{{rgov-footer session.accessToken}}
+
+{{#if (and session.isAuthenticated props.uiFeatureToggles._initialRelease2018)}}
+  {{welcome-modal}}
+{{/if}}

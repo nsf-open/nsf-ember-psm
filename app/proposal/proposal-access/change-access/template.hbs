@@ -1,0 +1,44 @@
+{{title breadCrumb }}
+
+<div class="panel-body">
+    {{screen-messages-service }}
+    <p data-test-change-access-instruction>Select the level of proposal access you would like to give to the Sponsored Projects Office (SPO) and Authorized Organizational Representative (AOR). Other personnel's access to the proposal can be updated from {{#link-to 'proposal.manage-personnel'}}Manage Personnel{{/link-to}}.</p>
+    <br>
+
+    <table class="table table-fixed table-bordered">
+        <thead>
+        <tr>
+            <th colspan="3" data-test-change-access-heading1>SPO/AOR Proposal Access</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th class="mid-table" data-test-change-access-subheading1>Personnel Type</th>
+            <th class="mid-table" data-test-change-access-subheading2>Proposal Access</th>
+            <th class="mid-table" data-test-change-access-subheading3>Actions</th>
+        </tr>
+        <tr>
+            <td data-test-change-access-personnel-type>Sponsored Projects Office (SPO) & Authorized Organizational Representative (AOR)</td>
+            <td data-test-change-access-inputs>
+              <div>
+                {{#radio-button groupValue=accessLevel name='accessLevel' value=accessLevelNoAccess changed="accessLevelChange"}}No access{{/radio-button}}
+                {{#radio-button groupValue=accessLevel name='accessLevel' value=accessLevelViewOnly changed="accessLevelChange"}}View only access{{/radio-button}}
+                {{#radio-button groupValue=accessLevel name='accessLevel' value=accessLevelEdit changed="accessLevelChange"}}Edit access{{/radio-button}}
+                <label class="not-bold indentLeft" title={{allowSubmissionDisabledText}}>
+                  {{input type="checkbox" id="allowSubmission" disabled=allowSubmissionDisabled name="allowSubmission" checked=accessLevelSubmission click=(action "allowSubmissionChange")}} Allow proposal submission (AOR only)
+                </label>
+              </div>
+            </td>
+            <td data-test-change-access-personnel-actions>
+              <span style="color: #666666;" title={{props.uiFeatureToggles.disabledTextDefault}}>View SPO/AOR Personnel</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div class="panel-footer">
+    <button class="btn btn-primary" {{action 'saveAccess'}} data-test-change-access-save-button>Save Proposal Access</button>
+  {{link-to "Cancel" "proposal.proposal-access" class="btn btn-default not-active"}}
+</div>

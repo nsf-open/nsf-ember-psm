@@ -1,0 +1,72 @@
+
+<h3 class="margin-btm-0">{{ proposalCollaborativeTitle }}</h3>
+
+<div class="panel-body">
+
+  <div class="form-group">
+    <p>
+      <strong>Are you preparing a collaborative proposal involving multiple organizations?</strong>
+      {{click-popover-icon-tooltip collaborativeProposal.titleText collaborativeProposal.infoText 'bottom' whatIsCollab.linkText}}
+    </p>
+    <ul class="response-radio">
+      <li data-test-collab-info-no class="proposal-type">
+        {{#radio-button value="02" name="02" groupValue=wizard.collaborationType}}
+        <span data-test-radio-text>No</span>
+        {{/radio-button}}
+      </li>
+      <li data-test-collab-info-yes-separately class="proposal-type">
+        {{#radio-button value="separately" name="separately" groupValue=wizard.collaborationType}}
+          <span data-test-radio-text>Yes. Proposals will be submitted separately</span> {{popover-icon-tooltip "" "Separately submitted collaborative proposals would result in separate awards for the project."}}
+        {{/radio-button}}
+      </li>
+      <li data-test-collab-info-yes-collaborative class="proposal-type">
+        {{#radio-button value="01" name="01" groupValue=wizard.collaborationType}}
+        <span data-test-radio-text>Yes. This proposal will be submitted by one organization and funds associated with collaboration will be treated as subawards</span> {{popover-icon-tooltip "" "A singularly submitted collaborative proposal would result in a single award." "bottom" }}
+        {{/radio-button}}
+      </li>
+    </ul>
+  </div>
+
+  {{#if showLeadPrompt}}
+    <div class="form-group">
+      <p class="bold">What type of collaborative proposal are you preparing?</p>
+      <ul class="response-radio">
+        <li>
+          {{#radio-button groupValue=wizard.leadProposal value="03"}}
+            This is a lead proposal
+          {{/radio-button}}
+        </li>
+        <li>
+          {{#radio-button groupValue=wizard.leadProposal value="04"}}
+            This is a non-lead proposal
+          {{/radio-button}}
+        </li>
+      </ul>
+    </div>
+  {{/if}}
+
+  <div class="form-group row">
+    <div class="col-xs-6">
+      <label data-test-proposal-title class="width-perc-100"><p>Proposal Title</p>
+        <span class="text-input-wrapper">
+          {{input class=(if proposalTitleContentError 'no-label-label inline-input error' 'no-label-label inline-input') type="text" value=wizard.proposalTitle focus-out=(action 'trimInput')}}
+          {{#if (gt characterCount 0)}}
+            <a data-test-proposal-title-clear-x onclick={{action 'clear'}} class="fa fa-times-circle" title="Clear"></a>
+          {{/if}}
+        </span>
+        <span data-test-proposal-title-error-message class="{{if proposalTitleContentError 'contentError left error-text' 'contentError left'}}">{{proposalTitleContentError}}</span>
+        <span data-test-proposal-title-character-count class="{{if (gt characterCount maxCharLength)'characterError right error-text' 'characterError right'}}">{{characterCount}} of {{maxCharLength}} characters</span>
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<div class="panel-footer">
+  <div class="right">
+    <button class="btn btn-default" {{action 'previous'}}>Previous</button>
+    <button data-test-prepare-proposal-button class="btn btn-primary" title="{{if prepareProposalDisabled prepareProposalDisabledTitleText '' }}" disabled={{prepareProposalDisabled}} {{action 'prepare'}}>Prepare Proposal</button>
+  </div>
+</div>
+
+{{yield}}

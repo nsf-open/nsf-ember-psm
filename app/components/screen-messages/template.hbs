@@ -1,0 +1,140 @@
+
+<!-- Consolidated Messages -->
+
+{{#if (gt notDismissableErrorMessages.length 0) }}
+  <div class="alert alert-danger" role="alert">
+    {{#if (not genericErrorMessagePresent)}}
+      {{#if fileUpload }}
+        {{fileErrorText}}
+      {{/if}}
+
+      {{#if formSub}}
+        {{formErrorText}}
+      {{/if}}
+    {{/if}}
+
+    {{#if genericErrorMessagePresent}}
+      <span data-test-screen-message-generic-error>{{notDismissableErrorMessages.[0].message}}</span>
+    {{else}}
+      <ul class="{{if (or (or formSub fileUpload) (gt notDismissableErrorMessages.length 1)) '' 'noBullet'}}" >
+        {{#each notDismissableErrorMessages as |em|}}
+          <li data-test-screen-messages-error>{{{em.message}}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if (gt dismissableErrorMessages.length 0) }}
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+    <!-- <div> -->
+
+    {{#if (not genericErrorMessagePresent)}}
+      {{#if fileUpload }}
+        {{fileErrorText}}
+      {{/if}}
+
+      {{#if formSub}}
+        {{formErrorText}}
+      {{/if}}
+    {{/if}}
+
+    {{#if genericErrorMessagePresent}}
+      <span data-test-screen-message-generic-error>{{dismissableErrorMessages.[0].message}}</span>
+    {{else}}
+      <ul class="{{if (or (or formSub fileUpload) (gt dismissableErrorMessages.length 1)) '' 'noBullet'}}">
+        {{#each dismissableErrorMessages as |em|}}
+          <li data-test-screen-messages-error>{{em.message}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    <!-- </div> -->
+  </div>
+{{/if}}
+
+<!-- {{!#each warningMessages as |wm|}}
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    {{!#if wm.dismissable}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" data-test-screen-messages-warning-x><span aria-hidden="true">&times;</span></button>
+    {{!/if}}
+      <span data-test-screen-messages-warning>{{!wm.message}}</span>
+  </div>
+{{!/each}} -->
+
+{{#if (gt notDismissableWarningMessages.length 0) }}
+  <div data-test-screen-messages-warning class="alert alert-warning" role="alert">
+    {{#if fileUpload }}
+      {{fileWarningText}}
+    {{/if}}
+
+    {{#if formSub}}
+      {{formWarningText}}
+    {{/if}}
+    <ul class="{{if (or (or formSub fileUpload) (gt notDismissableWarningMessages.length 1)) '' 'noBullet'}}">
+      {{#each notDismissableWarningMessages as |wm|}}
+        <li>{{wm.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+{{#if (gt dismissableWarningMessages.length 0) }}
+  <div data-test-screen-messages-warning class="alert alert-warning alert-dismissible" role="alert">
+    {{#if fileUpload }}
+      {{fileWarningText}}
+    {{/if}}
+
+    {{#if formSub}}
+      {{formWarningText}}
+    {{/if}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <ul class="{{if (or (or formSub fileUpload) (gt dismissableWarningMessages.length 1)) '' 'noBullet'}}">
+      {{#each dismissableWarningMessages as |wm|}}
+        <li>{{wm.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+
+
+{{#each successMessages as |sm|}}
+    <div class="alert alert-success alert-dismissible" role="alert">
+      {{#if sm.dismissable}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" data-test-screen-messages-success-x><span aria-hidden="true">&times;</span></button>
+      {{/if}}
+        <span data-test-screen-messages-success>{{sm.message}}</span>
+    </div>
+{{/each}}
+
+{{!-- {{#each infoMessages as |im|}}
+    <div class="alert alert-info alert-dismissible" role="alert">
+      {{#if im.dismissable}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" data-test-screen-messages-info-x><span aria-hidden="true">&times;</span></button>
+      {{/if}}
+        <span data-test-screen-messages-info>{{im.message}}</span>
+    </div>
+{{/each}} --}}
+
+{{#if (gt notDismissableInfoMessages.length 0) }}
+  <div data-test-screen-messages-info class="alert alert-info" role="alert">
+    <ul class="{{if (gt notDismissableInfoMessages.length 1) '' 'noBullet'}}">
+      {{#each notDismissableInfoMessages as |im|}}
+        <li>{{im.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}
+
+{{#if (gt dismissableInfoMessages.length 0) }}
+  <div data-test-screen-messages-info class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <ul class="{{if (gt dismissableInfoMessages.length 1) '' 'noBullet'}}">
+      {{#each dismissableInfoMessages as |im|}}
+        <li>{{im.message}}</li>
+      {{/each}}
+    </ul>
+  </div>
+{{/if}}

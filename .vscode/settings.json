@@ -1,0 +1,18 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/dist": true,
+        "**/temp": true
+    },
+    // Is git enabled
+    "git.enabled": false,
+
+    // Whether auto fetching is enabled.
+    "git.autofetch": false
+}
+
+

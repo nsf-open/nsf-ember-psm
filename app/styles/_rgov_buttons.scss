@@ -1,0 +1,63 @@
+button {
+	&:hover {
+		text-decoration: none !important;
+	}
+}
+
+.btn-info {
+	font-family: 'Georgia', serif;
+	font-style: italic;
+	font-size: 16px;
+}
+.btn {
+	padding: 7px 36px !important;
+	margin: 6px 0 !important;
+	display: inline-block;
+	// white-space: normal;
+}
+.btn-primary {
+	padding: 7px 36px !important;
+	margin: 6px 0 !important;
+	display: inline-block;
+}
+.btn-default {
+	background-color: #e4e4e4;
+	border: 1px solid #c9c9c9;
+	&:hover {
+		background-color: #dddddd;
+	}
+  &.disabled, &.btn[disabled] {
+    opacity: 1.0 !important;
+    color: #666666;
+    &:hover {
+      background-color: #e6e6e6;
+    }
+  }
+}
+.btn-sm {
+  padding: 2px 12px !important;
+  font-size: 14px;
+}
+
+.btn-icon {
+	padding: 5px 5px;
+	font-size: 18px;
+	line-height: 1.5;
+	border-radius: 0px;
+	margin-right: 3px;
+}
+
+/* buttons that are inline with .form-control inputs */
+.btn-inline-inputs {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  margin-top: 2px !important;
+}
+
+.input-group.disabled {
+  cursor: not-allowed;
+  .input-group-addon {
+    cursor: not-allowed;
+  }
+}
+

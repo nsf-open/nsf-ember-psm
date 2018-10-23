@@ -1,0 +1,38 @@
+.navbar {
+	font-family: Georgia;
+	font-size: 17px !important;
+	text-align: center;
+	border: 1px solid blue;
+	.dropdown-menu {
+		font-family: Arial;
+		padding: 0 !important;
+		ul {
+			margin: 0 !important;
+		}
+		li {
+			a {
+				background-color: #00748d;
+				padding: 10px 14px 8px 14px !important;
+				color: #fff !important;
+				&:hover {
+					background-color: #34495e !important;
+				}
+			}
+		}
+	}
+	.container {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+}
+.navbar-default {
+	.navbar-nav {
+		li {
+			padding: 0;
+		}
+	}
+}
+.navbar-collapse {
+	margin: 0 !important;
+	padding: 0 !important;
+}

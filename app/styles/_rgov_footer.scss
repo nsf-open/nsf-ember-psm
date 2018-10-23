@@ -1,0 +1,223 @@
+/* ---------- FOOTER ---------- */
+
+#footer {
+  background: url("../assets/images/footerbg.png") repeat;
+  width: 100% !important;
+  color: #333;
+  margin-top: 0px;
+  padding: 30px 0 44px 0;
+  margin: 0 auto;
+  clear: both;
+  font-size: 12px;
+  .portlet {
+    margin: 0;
+    border: none;
+  }
+  .content {
+    padding: 0px;
+    min-width: $screen-md-min;
+    @media (min-width: $screen-md-min) {
+      width: $container-md !important;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $container-lg !important;
+    }
+    .col-sm-2 {
+      width: 16.66667%;
+      float: left;
+    }
+    .col-sm-4 {
+      width: 33.33333%;
+      float: left;
+    }
+    .col-sm-8 {
+      width: 66.66667%;
+      float: left;
+    }
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  ul#footerLinks {
+    border-bottom: 1px solid #666;
+    list-style: none;
+    margin: 0 0 8px 0;
+    padding: 8px 0;
+  }
+  .collinks ul {
+    list-style: none;
+    margin: 0 0 6px 0;
+    padding: 0px 30px 0px 0;
+    li {
+      padding: 6px 0 0 0 !important;
+    }
+  }
+  h3 {
+    font-family: 'georgia', Serif;
+    font-size: 18px !important;
+    color: #303b53;
+    font-weight: normal;
+    background: none;
+    padding: 8px 30px 0 0;
+    margin: 0;
+  }
+  .row {
+    &.footerbuttons, &.anchoredfooter {
+      padding-top: 30px !important;
+    }
+  }
+  ul#footerLinks {
+    .externalLink {
+      display: inline;
+      padding: 0 0 0 0 !important;
+      padding-right: 1px;
+      /* IE fix */
+    }
+    li {
+      border-right: 1px solid #999;
+      display: inline;
+      margin-right: 3px;
+      padding: 0 3px 0 0;
+      &.last {
+        border: 0 !important;
+      }
+    }
+  }
+  .col-sm-12 {
+    padding-left: 0;
+    ul {
+      padding-left: 0;
+    }
+}
+}
+
+/* #footer .content {padding: 0px;margin: 0 auto;} */
+
+.last {
+  border: 0 !important;
+}
+
+#footer ul#footerLinks li a {
+  color: #333;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* SOCIAL ICONS */
+
+ul.socialicons {
+  list-style: none;
+  overflow: auto;
+  margin: 0;
+  float: left;
+  li {
+    width: 40px;
+    height: 40px;
+    padding: 0 5px 0 0;
+    float: left;
+    a {
+      width: 40px;
+      height: 40px;
+      display: block;
+      background: url('../assets/images/sprite.png') no-repeat;
+      text-indent: -9999px;
+      &.facebook {
+        background-position: 0 -50px;
+        &:hover {
+          background-position: 0px -100px;
+        }
+      }
+      &.twitter {
+        background-position: -50px -50px;
+        &:hover {
+          background-position: -50px -100px;
+        }
+      }
+      &.linkedin {
+        background-position: -100px -50px;
+        &:hover {
+          background-position: -100px -100px;
+        }
+      }
+      &.youtube {
+        background-position: -150px -50px;
+        &:hover {
+          background-position: -150px -100px;
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  a {
+    &.primarybtn {
+      float: left;
+      padding: 11px;
+      border-radius: 20px;
+      background-color: #e66722;
+      color: #fff;
+      font: bold 13px Arial, sans-serif;
+      &:hover {
+        background-color: #c34b19;
+        color: #fff;
+      }
+    }
+    &.secondarybtn {
+      float: left;
+      padding: 11px;
+      border-radius: 20px;
+      background-color: #e0e0e0;
+      color: #34495e;
+      font: bold 13px Arial, sans-serif;
+      &:hover {
+        background-color: #d1d1d1;
+        color: #34495e;
+      }
+    }
+    &.seeall {
+      position: relative;
+      top: 12px;
+      left: 0;
+    }
+  }
+  .anchoredfooter {
+    line-height: 175%;
+    ul {
+      list-style: none;
+      margin: 0;
+      li {
+        display: inline;
+        margin: 0;
+        padding: 0px 4px 0 6px;
+        border-left: solid 1px #333;
+        &:first-child {
+          border: 0;
+          padding: 0 4px 0 0;
+        }
+      }
+    }
+  }
+  .logo {
+    &.research, &.nsf {
+      height: 50px;
+      display: block;
+      background: url('../assets/images/sprite.png') no-repeat;
+      text-indent: -9999px;
+    }
+    &.research {
+      background-position: 0px 0px;
+      width: 200px;
+    }
+    &.nsf {
+      background-position: -200px 0px;
+      width: 350px;
+    }
+  }
+}
+
+#footer .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11 {
+  padding: 0px !important;
+}

@@ -1,0 +1,136 @@
+
+<div class="row margin-right-0 margin-left-0">
+
+  <div class="col-xs-12 container-contents single-file-upload">
+
+      <form id="form" method="POST" enctype="multipart/form-data" name="fileUploadForm" data-test-single-upload-form>
+          <div class="row inputfile-row">
+            <input type="file"
+              id="fileInput"
+              name="uploadedFile"
+              accept={{allowableFileTypes}}
+              class="inputfile"
+              onchange={{action 'browseForFileChange' value="target.files"}}
+              tabindex="-1"
+              data-test-single-upload-file-input>
+            {{#if-permission editPermission}}
+              <label for="btn-browse"
+                class="label-text"
+                data-test-single-upload-label-text>Browse for file to upload</label>
+              <button id="btn-browse"
+                title={{browseTitleText}}
+                class="btn btn-default btn-sm"
+                {{action "browseForFile"}}
+                disabled={{if currentFileName true null}}
+                data-test-single-upload-browse-button>
+                <span data-test-single-upload-browse-button-text>Browse ...</span>
+              </button>
+            {{else}}
+              <label class="label-text" data-test-single-upload-label-text>Uploaded File</label>
+            {{/if-permission}}
+          </div>
+
+          {{#if (and currentFileName (not isPreviewMode))}}
+            <div class="row inputfile-saved">
+              <div class="uploaded-file">
+
+                {{#a-security-link onClick=(action 'fileLinkClick') }}
+                  <i class="fa {{fileIcon}} single-file-upload__link-icon" aria-hidden="true"></i>
+                  <span data-test-single-upload-current-file>{{currentFileName}}</span>
+
+                {{/a-security-link}}
+                {{#if-permission editPermission}}
+                  <div class="file-delete">
+                      <a tabindex="0" title="Delete File" data-toggle="modal" data-target="#deleteFileModal" class="filename-saved-delete" data-test-single-upload-delete-file>
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        <span data-test-single-upload-delete-text>Delete</span>
+                        {{#if isLoading}}
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                        {{/if}}
+                      </a>
+                  </div>
+                {{/if-permission}}
+              </div>
+
+            </div>
+          {{else if (or (and pendingFileName (not previewRequired)) (and previewRequired previewAccepted))}}
+            <div class="row inputfile-saved">
+              <div class="uploaded-file">
+                <span class="single-file-upload__pending-file-message filename-saved-delete">
+                  <span style="min-width:154px;">
+                    <i class="fa {{pendingFileIcon}} single-file-upload__link-icon" aria-hidden="true"></i>
+                    <span data-test-single-upload-pending-file>{{pendingFileName}}</span>
+                  </span>
+                  <span class="file-delete">
+                    {{#if isLoading}}
+                    <span>
+                      <i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{uploadingText}}
+                    </span>
+                    {{/if}}
+                  </span>
+                </span>
+              </div>
+
+            </div>
+          {{else if (and pendingFileName (and previewRequired (not previewAccepted)))}}
+              <div class="row inputfile-saved">
+                  <div class="uploaded-file">
+                    {{#if isLoading}}
+                    <span>
+                      <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                      <span data-test-single-upload-generating-preview>Generating preview for your file</span>
+                    </span>
+                    {{/if}}
+                  </div>
+              </div>
+          {{/if}}
+          {{#unless-permission editPermission}}
+            {{#if (not currentFileName)}}
+              <div class="row inputfile-saved">
+                  <div class="uploaded-file">Currently, no file has been uploaded</div>
+              </div>
+            {{/if}}
+          {{/unless-permission}}
+      </form>
+
+  </div>
+</div><!-- row -->
+
+<div class="modal" id="deleteFileModal" tabindex="-1" role="dialog" aria-labelledby="deleteFileModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteItemModalLabel" data-test-single-upload-modal-title>Delete File</h4>
+            </div>
+            <div class="modal-body" data-test-single-upload-modal-body>
+                Are you sure you want to delete <span class="word-break-all">{{currentFileName}}?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'deleteFile'}} data-test-single-upload-modal-delete-button>Delete</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-test-single-upload-modal-cancel-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="acceptFileModal" tabindex="-1" role="dialog" aria-labelledby="acceptFileModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'rejectFile'}}><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteItemModalLabel" data-test-single-upload-accept-modal-title>Preview: {{previewSectionName}}</h4>
+            </div>
+            <div class="modal-body modal-body-scroll-350" data-test-single-upload-accept-modal-body>
+                <p>{{previewSectionInstruction}}</p>
+                {{{previewTableHTML}}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'acceptFile'}} data-test-single-upload-modal-accept-button>Upload File</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'rejectFile'}} data-test-single-upload-modal-reject-button>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{yield}}

@@ -1,0 +1,46 @@
+{{title breadCrumb}}
+
+
+<div class="panel-body">
+
+    {{screen-messages-service fileUploadForm=true}}
+
+    <div class="panel panel-gray right pappg-panel">
+      <div class="panel-body">
+        <a data-test-bio-sketch-pappg-link href="{{props.pappgLinks.bioSketch}}" target="_blank" title="opens in a new window">Biographical Sketch(es)<br>(PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+    </div>
+
+    <p class="bold" data-test-upload-instructions-title>Instructions to upload Biographical Sketch:</p>
+    <ul data-test-upload-instructions>
+        <li data-test-upload-instructions1>Only 1 document can be uploaded</li>
+        <li data-test-upload-instructions2>Accepted file types include: Adobe PDF</li>
+        <li data-test-upload-instructions3>Your file must include the following 4 section headings: 'Professional Preparation', 'Appointments', 'Products' (or, as applicable, 'Publications'{{click-popover-icon-tooltip "Products or Publications Guidance <button type=\"button\" class=\"close\" data-dismiss=\"popover\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" "Include up to five products most closely related to the proposed project; and up to five other significant products, whether or not related to the proposed project. Acceptable products must be citable and accessible including but not limited to publications, data sets, software, patents, and copyrights. If only publications are included, the heading \"Publications\" may be used." "bottom" "Guidance"}}), and 'Synergistic Activities'. To be valid, a heading must be on its own line with no other text on that line.</li>
+        <li data-test-upload-instructions4>Do not submit any personal information in the biographical sketch {{popover-icon-tooltip "" "Personal information includes home address; home telephone, fax, or cell phone numbers; home e-mails address; driver's license number; marital status; personal hobbies; and other similar information."}}</li>
+        <li data-test-upload-instructions10>File cannot exceed 2 pages</li>
+        <li data-test-upload-instructions5>
+          Please refer to the <a data-test-file-upload-pappg-link href="{{props.pappgLinks.documentUploadInstructions}}" target="_blank" title="opens in a new window">Format of the proposal (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+          for all margin and spacing requirements and the <a data-test-file-upload-propprep-site-faq-link href="{{props.proposalPrepSiteFAQ.faq}}" target="_blank" title="opens in a new window">Proposal Preparation Site FAQs</a> for font type and size requirements.&nbsp;
+        </li>
+        <li data-test-upload-instructions6>{{{PROPOSAL_CONSTANTS.UPLOAD_DOCUMENT.SHOULD_NOT_PAGE_NUMBER}}}</li>
+        <li data-test-upload-instructions7>If you use a third-party solution to create the upload PDF, such as NIH’s SciENcv, ensure the sketch complies with NSF proposal preparation requirements</li>
+        <li data-test-upload-instructions8>Collaborators and Other Affiliations should not be included in the Biographical Sketch, as it is now a separate section for each Senior Personnel</li>
+        <li data-test-upload-instructions9>Max file size permitted is {{maxFileSizeDisplay}}</li>
+    </ul>
+
+    {{single-file-upload-with-messages-service
+      sectionInfo=sectionInfo
+      fileName=fileName
+      pendingFileName=pendingFileName
+      previewAccepted=previewAccepted
+      onDelete=(action 'deleteFile')
+      onFileChange=(action 'uploadFile')
+      onFileBrowseClick=(action 'fileBrowseClick')
+      onFileClick=(action 'fileLinkClick')
+      isLoading=isDocumentLoading
+      isError=isError
+      selectedFilePath=selectedDocumentPath
+      editPermission='proposal.data.modify'}}
+
+</div>
+

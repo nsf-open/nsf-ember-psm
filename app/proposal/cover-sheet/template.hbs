@@ -1,0 +1,638 @@
+{{title breadCrumb}}
+
+
+
+<div class="panel-body">
+
+  {{screen-messages-service formSubmission=isFormSubmission}}
+
+  <div class="row">
+    <div class="col-xs-12">
+      <i class="fa fa-asterisk" aria-hidden="true"></i><b data-test-cs-required-text>Required</b>
+      <div class="panel panel-gray right pappg-panel">
+        <div class="panel-body">
+          <a data-test-cs-pappg-link href="{{props.pappgLinks.coverSheet}}" target="_blank" title="opens in a new window">{{breadCrumb}} (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{#if currentlyLoading}}
+    <div id="loadingOverlay" class="overlay">
+      <div class="overlay-content">
+        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="panel-cool-blue" data-test-requested-start-date-and-duration-panel>
+    <div class="panel-header" data-test-requested-start-date-and-duration-panel-title>Requested Start Date and Proposal Duration</div>
+    <div class="panel-body padding-btm-0">
+      <p class="padding-btm-10">
+        The requested start date is important to NSF staff; however, requests for specific start dates may not be met. The duration should be consistent with the nature and complexity of the proposed activity.
+      </p>
+      <div class="form-group row margin-btm-0">
+        <div class="col-xs-4" style="width:280px;" data-test-requested-start-date>
+          <label for="requested-start-date-select-input" data-test-requested-start-date-name data-date-long-name='Requested Start Date' data-date-field-name='requestedStartDate'>Requested Start Date</label> <span style="font-size:13px;">(mm/dd/yyyy)</span> {{popover-icon-tooltip "" "The requested start date should allow at least six months for NSF review, processing and decision." "top"}}
+          {{datetime-picker
+              date=(format-unix-date coverSheet.requestedStartDate)
+              keepInvalid=true
+              minDate=today
+              disabledDates=disabledDate
+              useStrict=true
+              focusOut=(action 'requestedStartDateFocusOut')
+              focusIn=(action 'setCalendarFocusInValue')
+              disabled=viewOnly
+              elementId='requested-start-date-select'
+          }}
+          <span class="contentError error-text block-display" data-test-requested-start-date-error>{{coverSheet.requestedStartDateError}}</span>
+        </div>
+        <div class="col-xs-3" style="width:185px;" data-test-proposal-duration>
+          <label for="proposed-duration" data-test-proposal-duration-name>Proposed Duration</label> {{input type="text" id="proposed-duration" class=(if coverSheet.proposalDurationError 'error psm-cv-proposal-duration display-inline form-control' 'psm-cv-proposal-duration display-inline form-control' ) value=coverSheet.proposalDuration key-up=(action 'durationCheck') focus-out=(action 'durationFocusOut') focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+          Months
+          <span class="contentError error-text block-display" data-test-proposal-duration-error>{{coverSheet.proposalDurationError}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-cool-blue" data-test-awardee-org>
+    <div class="panel-header" data-test-awardee-org-panel-title>Awardee Organization</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-5">
+          <dl>
+            <dt data-test-awardee-org-address-title>Awardee Organization</dt>
+            <dd>
+              <p>
+                <span data-test-awardee-org-name>{{awardeeOrg.organizationName}}</span><br/>
+                <span data-test-awardee-org-street1>{{awardeeOrg.address.streetAddress}}</span><br/>
+                {{#if awardeeOrg.address.streetAddress2}}
+                  <span data-test-awardee-org-street2>{{awardeeOrg.address.streetAddress2}}</span><br/>
+                {{/if}}
+                <span data-test-awardee-org-city-state-postal-code>
+                  {{if awardeeOrg.address.stateCode (concat awardeeOrg.address.cityName ',' ) awardeeOrg.address.cityName}}
+                  {{if awardeeOrg.address.stateCode awardeeOrg.address.stateCode ''}}
+                  {{if (eq "US" awardeeOrg.address.countryCode) (format-postal-code awardeeOrg.address.postalCode) awardeeOrg.address.postalCode}}
+
+                </span>
+                <br/>
+                <span data-test-awardee-org-country>{{awardeeOrg.address.countryCode}}</span>
+              </p>
+              <p>
+                {{#if-permission 'proposal.data.modify'}}
+                  {{#if (and (gt allAwardeeOrgs.length 1) (not model.isInPFUStatus) ) }}
+                    <a {{action 'openChangeAwardeeOrgModal'}} data-test-change-awardee-org-link>Change Awardee Organization</a>
+                  {{/if}}
+                {{/if-permission}}
+              </p>
+            </dd>
+          </dl>
+
+        </div>
+        <div class="col-xs-7">
+          <div class="row">
+            <div class="col-xs-6">
+              <dl>
+                <dt data-test-awardee-org-time-zone-title>Time Zone {{popover-icon-tooltip "Time Zone" "Deadlines are based on the awardee organization's time zone." "bottom"}}</dt>
+                <dd data-test-awardee-org-time-zone>{{awardeeOrg.timeZone}}</dd>
+              </dl>
+            </div>
+            <div class="col-xs-6">
+              <dl>
+                <dt data-test-awardee-org-duns-no-title>DUNS Number</dt>
+                <dd data-test-awardee-org-duns-no>{{awardeeOrg.dunsNumber}}</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <dl>
+                <dt data-test-awardee-org-tax-id-title>Employer or Taxpayer Identification Number</dt>
+                <dd data-test-awardee-org-tax-id>{{awardeeOrg.taxId}}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="bold margin-btm-0" data-test-awardee-org-checkboxes-title>
+        Check all that apply to the Awardee Organization
+      </p>
+
+      <div class="checkbox-inline">
+        <label class="checkbox not-bold {{if viewOnly 'disabled' ''}}" data-test-awardee-org-for-profit>{{input type="checkbox" name="forProfit" checked=coverSheet.forProfit click=(action "coversheetChange") disabled=viewOnly}}For Profit</label>
+        <label class="checkbox not-bold {{if viewOnly 'disabled' ''}}" data-test-awardee-org-minority-business>{{input type="checkbox" name="minorityBusiness" checked=coverSheet.minoritybusiness click=(action "coversheetChange") disabled=viewOnly}}Minority Business</label>
+      </div>
+      <div class="checkbox-inline">
+        <label class="checkbox not-bold {{if viewOnly 'disabled' ''}}" data-test-awardee-org-small-business>{{input type="checkbox" name="smallBusiness" checked=coverSheet.smallbusiness click=(action "coversheetChange") disabled=viewOnly}}Small Business</label>
+        <label class="checkbox not-bold {{if viewOnly 'disabled' ''}}" data-test-awardee-org-woman-owned-business>{{input type="checkbox" name="womanOwnedBusiness" checked=coverSheet.womenOwnedbusiness click=(action "coversheetChange") disabled=viewOnly}}Woman-owned Business</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-cool-blue" data-test-ppop>
+    <div class="panel-header" data-test-ppop-panel-title>Primary Place of Performance</div>
+    <div class="panel-body padding-btm-0">
+      <p class="padding-btm-10" data-test-ppop-instruction-text>
+        Please edit this information if the work will primarily be performed at a location that is different from the Awardee Organization.
+      </p>
+      <div class="col-sm-12">
+        <div class="row margin-btm-0">
+          <div data-test-ppop-org-input>
+            <label class="display-block" data-test-ppop-org-name><i class="fa fa-asterisk" aria-hidden="true"></i>Organization Name
+                {{input type="text" class=(if ppop.organizationNameError 'error form-control cover-sheet-540' 'form-control cover-sheet-540' ) value=ppop.organizationName key-up=(action 'textCheck' 'ppop.organizationName' 'Organization Name' 64) focus-out=(action 'trimInput' 'ppop.organizationName' 'Organization Name' 64) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+                <span class={{if ppop.organizationNameError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-org-name-error>{{ppop.organizationNameError}}</span>
+              </label>
+          </div>
+        </div>
+        <div class="row margin-btm-0">
+          <div>
+            <label for="ppop-country-select" class="margin-btm-0" data-test-ppop-country><i class="fa fa-asterisk" aria-hidden="true"></i>Country</label>
+            <select id="ppop-country-select" data-test-ppop-country-select class="form-control cover-sheet-540" onchange= {{action "selectCountry" value="target.value"}} disabled={{viewOnly}}>
+                  {{#if (eq "" ppop.countryCode)}}
+                    <option value="" selected>Select Country</option>
+                  {{else}}
+                    <option value="">Select Country</option>
+                  {{/if}}
+
+
+                  {{#each sortedCountries as |country|}}
+                    {{#if (eq ppop.countryCode country.countryCode)}}
+                      <option value={{country.countryCode}} selected>{{country.countryName}}</option>
+                    {{else}}
+                      <option value={{country.countryCode}}>{{country.countryName}}</option>
+                    {{/if}}
+                  {{/each}}
+                </select>
+            <span class= {{if ppop.countryError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-country-select-error>{{countryError}}</span>
+          </div>
+        </div>
+        <div class="row margin-btm-0">
+          <div data-test-ppop-street1-input>
+            <label class="display-block" data-test-ppop-street1><i class="fa fa-asterisk" aria-hidden="true"></i>Street Address
+                {{input type="text" class=(if ppop.streetAddressError 'error form-control cover-sheet-540' 'form-control cover-sheet-540' ) value=ppop.streetAddress key-up=(action 'textCheck' 'ppop.streetAddress' 'Street Address' 80) focus-out=(action 'trimInput' 'ppop.streetAddress' 'Street Address' 80) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+              </label>
+            <span class= {{if ppop.streetAddressError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-street1-error>{{ppop.streetAddressError}}</span>
+          </div>
+        </div>
+        <div class="row margin-btm-0">
+          <div data-test-ppop-street2-input>
+            <label class="display-block" data-test-ppop-street2>Street Address <span class="not-bold">(Line 2)</span>
+                {{input type="text" class=(if ppop.streetAddress2Error 'error form-control cover-sheet-540' 'form-control cover-sheet-540' ) value=ppop.streetAddress2 key-up=(action 'textCheck' 'ppop.streetAddress2' 'Street Address (Line 2)' 80) focus-out=(action 'trimInput' 'ppop.streetAddress2' 'Street Address (Line 2)' 80) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+              </label>
+            <span class= {{if ppop.streetAddress2Error 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-street2-error>{{ppop.streetAddress2Error}}</span>
+          </div>
+        </div>
+        <div class="row margin-btm-0">
+          <div data-test-ppop-department-input>
+            <label class="display-block" data-test-ppop-dept-name>Department Name
+                {{input type="text" class=(if ppop.departmentNameError 'error form-control cover-sheet-540' 'form-control cover-sheet-540' ) value=ppop.departmentName key-up=(action 'textCheck' 'ppop.departmentName' 'Department Name' 64) focus-out=(action 'trimInput' 'ppop.departmentName' 'Department Name' 64) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+              </label>
+            <span class= {{if ppop.departmentNameError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-dept-name-error>{{ppop.departmentNameError}}</span>
+          </div>
+        </div>
+        <div class="row margin-btm-0">
+          <div data-test-ppop-city-input>
+            <label class="display-block" data-test-ppop-city><i class="fa fa-asterisk" aria-hidden="true"></i>City
+                {{input type="text" class=(if ppop.cityNameError 'error form-control cover-sheet-327 ' 'form-control cover-sheet-327 ' ) value=ppop.cityName key-up=(action 'textCheck' 'ppop.cityName' 'City' 26) focus-out=(action 'trimInput' 'ppop.cityName' 'City' 26) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+              </label>
+            <span class= {{if ppop.cityNameError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-city-error>{{ppop.cityNameError}}</span>
+          </div>
+        </div>
+
+        <div class="row margin-btm-0">
+          <div class="col-xs-8 col-sm-6 col-md-5 m-right-10">
+            <div class="form-group">
+              <label class="margin-btm-0" for="ppop-state-select">
+                {{#if (eq "US" ppop.countryCode)}}<i class="fa fa-asterisk" aria-hidden="true"></i>{{/if}}State
+              </label>
+              <select id="ppop-state-select" data-test-ppop-state-select class="form-control" disabled={{if (or viewOnly (not-eq "US" ppop.countryCode) ) true false}} onchange={{action "selectState" value="target.value"}}>
+
+                {{#if (eq "" ppop.stateCode)}}
+                  <option value="" selected>Select State</option>
+                {{else}}
+                  <option value="">Select State</option>
+                {{/if}}
+
+                {{#each sortedStates as |state|}}
+                  {{#if (eq ppop.stateCode state.stateCode)}}
+                    <option value={{state.stateCode}} selected>{{state.stateCode}} - {{state.stateName}}</option>
+                  {{else}}
+                    <option value={{state.stateCode}}>{{state.stateCode}} - {{state.stateName}}</option>
+                  {{/if}}
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="col-xs-8 col-sm-6 col-md-6">
+            <div class="form-group input-md-addon-width" data-test-ppop-postal-code-input>
+              <label for="postal-code-select" class="margin-btm-0 display-block no-wrap" data-test-ppop-postal-code data-ppop-postal-code>{{#if (eq "US" ppop.countryCode)}}<i class="fa fa-asterisk" aria-hidden="true"></i>{{/if}}Postal Code</label>
+              <div class="input-group">
+                  {{input data-ppop-postal-code type="text" id="postal-code-select" class=(if ppop.postalCodeError 'error form-control cover-sheet-184' 'form-control cover-sheet-184' ) value=ppop.postalCode key-up=(action 'postalCodeCheck') focus-out=(action 'postalCodeFocusOut') focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+                  <span class="input-group-addon no-background-border">
+                    <a {{ action 'postalCodeClick' }}>{{ text.usps_link_text }}</a>
+                  </span>
+              </div>
+              <span class= {{if ppop.postalCodeError 'contentError error-text display-block no-wrap margin-btm-20' 'contentError error-text display-block no-wrap' }} data-test-ppop-postal-code-error>{{ppop.postalCodeError}}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-cool-blue" data-test-other-fed-agency>
+    <div class="panel-header">Other Federal Agencies</div>
+    <div class="panel-body">
+      <p>
+        If this proposal is being submitted to another Federal Agency, enter a reasonable abbreviation, up to 10 characters, for each agency. Only the first 5 agencies you enter will appear on the PDF version of the proposal, but all should be entered below.
+      </p>
+      <span data-test-proposal-title><p class="bold">Federal Agency</p></span>
+
+      {{#each federalAgencies as |fedAg index|}}
+        <div class="form-group margin-btm-0">
+          <label class="display-inline">
+              <span class="vert-aligned-numbered-label">{{add index 1}}.</span>
+              <div data-federal-agencies class="display-inline-block display-input-inline-block">
+                {{input key-up=(action 'federalAgencyTextCheck' 'federalAgency' 'Federal Agency' index 10) focus-out=(action 'federalAgencyTrimInput' 'federalAgency' 'Federal Agency' index 10) focus-in=(action 'setFocusInValue') class=(if fedAg.fedAgencyError 'error form-control cover-sheet-184' 'form-control cover-sheet-184') type="text" value=fedAg.fedAgencyNameAbbreviation disabled=viewOnly}}
+                {{#if-permission 'proposal.data.modify'}}
+                  {{#if (gt federalAgencies.length 1)}}
+                    <a tabindex="0" title="Delete Federal Agency"  {{action "deleteFederalAgency" fedAg}}  data-test-delete-federal-agency-link><i class="fa fa-lg fa-trash-o" aria-hidden="true"></i></a>
+                  {{/if}}
+                {{/if-permission}}
+                <br/>
+                {{#if (eq index (sub federalAgencies.length 1 ) )}}
+                  <span data-test-federal-agency-error-message class={{if fedAg.fedAgencyError 'contentError left error-text no-wrap margin-btm-10 margin-top-5' 'margin-btm-7 display-block' }}>{{fedAg.fedAgencyError}}</span>
+                {{else}}
+                  <span data-test-federal-agency-error-message class={{if fedAg.fedAgencyError 'contentError left error-text no-wrap margin-btm-20 margin-top-5' 'margin-btm-7 display-block' }}>{{fedAg.fedAgencyError}}</span>
+                {{/if}}
+              </div>
+
+            </label>
+        </div>
+      {{/each}}
+
+      {{#if-permission 'proposal.data.modify'}}
+        <a tabindex="0" {{action "addFederalAgency"}} data-test-add-fed-agency-link><i class="fa fa-plus margin-top-10"></i> Add Additional Federal Agency</a>
+      {{/if-permission}}
+    </div>
+  </div>
+
+  <div class="panel-cool-blue" data-test-other-information>
+    <div class="panel-header">Other Information</div>
+    <div class="panel-body">
+      <p>Check appropriate box(es) if this proposal includes any of the items listed below. Some selections may require additional information.</p>
+
+      <div class="checkbox padding-top-10" data-test-cover-sheet-beginning-investigator-container>
+        <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-beginning-investigator><input type="checkbox" name={{beginningInvestigatorName}} checked={{coverSheet.beginningInvestigator}} {{action 'deselectInfo' beginningInvestigatorName on='change'}} disabled={{viewOnly}}>{{beginningInvestigatorName}} <i>(Biological Sciences Directorate proposals only)</i></label>{{popover-icon-tooltip '' 'For Research proposals to the Biological Sciences Directorate only, beginning investigators are individuals who have not been a PI or co-PI on a Federally-funded award with the exception of a doctoral dissertation, postdoctoral fellowship or research planning grant.'}}
+        <a class="padding-left-10" data-test-cover-sheet-beginning-investigator-pappg-link href="{{props.pappgLinks.beginningInvestigator}}" target="_blank" title="opens in a new window">PAPPG II.D.2 <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+
+      <div class="checkbox padding-top-10">
+        <!-- <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-lobbying-disclosure><input type="checkbox" name={{lobbyingActivitiesName}} checked={{coverSheet.disclosureLobbyActy}} {{action 'deselectInfo' lobbyingActivitiesName on='change'}} disabled={{viewOnly}}>{{lobbyingActivitiesName}}</label>              <a class="padding-left-10" data-test-cover-sheet-lobbying-disclosure-pappg-link href="{{props.pappgLinks.lobbyingActivities}}" target="_blank" title="opens in a new window">PAPPG II.C.1.d <i class="fa fa-external-link" aria-hidden="true"></i></a> -->
+        <label class="checkbox not-bold display-inline disabled" title="{{notYetAvailableText}}" data-test-cover-sheet-lobbying-disclosure><input type="checkbox" name={{lobbyingActivitiesName}} checked={{coverSheet.disclosureLobbyActy}} {{action 'deselectInfo' lobbyingActivitiesName on='change'}} disabled>{{lobbyingActivitiesName}}</label>              <a class="padding-left-10" data-test-cover-sheet-lobbying-disclosure-pappg-link href="{{props.pappgLinks.lobbyingActivities}}" target="_blank" title="opens in a new window">PAPPG II.C.1.d <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+
+      <div class="checkbox padding-top-10">
+        <!-- <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-proprietary-info><input type="checkbox" name={{propPrivInfoName}} checked={{coverSheet.proprietaryPrivileged}} {{action 'deselectInfo' propPrivInfoName on='change'}} disabled={{viewOnly}}>{{propPrivInfoName}}</label>              <a class="padding-left-10" data-test-cover-sheet-proprietary-info-pappg-link-1 href="{{props.pappgLinks.proprietaryAndPrivilegedInfo}}" target="_blank" title="opens in a new window">PAPPG II.D.1 <i class="fa fa-external-link" aria-hidden="true"></i></a>              &amp; <a data-test-cover-sheet-proprietary-info-pappg-link-2 href="{{props.pappgLinks.proprietaryAndPrivilegedInfo_link2}}" target="_blank" title="opens in a new window">II.C.1.c <i class="fa fa-external-link" aria-hidden="true"></i></a> -->
+        <label class="checkbox not-bold display-inline disabled" title="{{notYetAvailableText}}" data-test-cover-sheet-proprietary-info><input type="checkbox" name={{propPrivInfoName}} checked={{coverSheet.proprietaryPrivileged}} {{action 'deselectInfo' propPrivInfoName on='change'}} disabled>{{propPrivInfoName}}</label>              <a class="padding-left-10" data-test-cover-sheet-proprietary-info-pappg-link-1 href="{{props.pappgLinks.proprietaryAndPrivilegedInfo}}" target="_blank" title="opens in a new window">PAPPG II.D.1 <i class="fa fa-external-link" aria-hidden="true"></i></a>              &amp; <a data-test-cover-sheet-proprietary-info-pappg-link-2 href="{{props.pappgLinks.proprietaryAndPrivilegedInfo_link2}}" target="_blank" title="opens in a new window">II.C.1.c <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+
+      <div class="checkbox padding-top-10">
+        <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-historic-places><input type="checkbox" name={{historicPlacesName}} checked={{coverSheet.historicPlace}} {{action 'deselectInfo' historicPlacesName on='change'}} disabled={{viewOnly}}>{{historicPlacesName}}</label>              <a class="padding-left-10" data-test-cover-sheet-historic-places-pappg-link href="{{props.pappgLinks.historicPlaces}}" target="_blank" title="opens in a new window">PAPPG II.C.2.j <i class="fa fa-external-link" aria-hidden="true"></i></a>             &amp; <a data-test-cover-sheet-historic-places-pappg-link-2 href="{{props.pappgLinks.historicPlaces_link2}}" target="_blank" title="opens in a new window">XI.J<i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+
+      <div class="checkbox padding-top-10" data-test-cover-sheet-vertebrate-animals-container>
+        <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-vertebrate-animals><input type="checkbox" name={{vertebrateAnimalsName}} checked={{coverSheet.vertebrateAnimal}} {{action 'deselectInfo' vertebrateAnimalsName on='change'}} disabled={{viewOnly}}>{{vertebrateAnimalsName}}</label>              <a class="padding-left-10" data-test-cover-sheet-vertebrate-animals-pappg-link href="{{props.pappgLinks.vertebrateAnimals}}" target="_blank" title="opens in a new window">PAPPG II.D.4 <i class="fa fa-external-link" aria-hidden="true"></i></a>
+
+        {{#if coverSheet.vertebrateAnimal }}
+          <div class="padding-left-20 padding-top-10">
+
+            <p><i class="fa fa-asterisk" aria-hidden="true"></i>{{text.v_animals.has_been_approved}}</p>
+
+
+            {{#radio-button groupValue=coverSheet.vrtbAnimalAPType value="approved" changed="changeVertebrateAnimalsSelection" disabled=viewOnly}}
+              <span data-test-vertebrate-animals-approved class="{{if viewOnly 'disabled' ''}}">Approved</span>
+            {{/radio-button}}
+            <span class="padding-left-60">{{#radio-button groupValue=coverSheet.vrtbAnimalAPType value="pending" changed="changeVertebrateAnimalsSelection" disabled=viewOnly}}
+                <span data-test-vertebrate-animals-pending class="{{if viewOnly 'disabled' ''}}">Pending</span>
+            {{/radio-button}}
+            </span>
+
+            {{#if (eq coverSheet.vrtbAnimalAPType 'approved' )}}
+
+              <div class="form-group row margin-btm-0">
+                <div class="col-xs-4 padding-top-10">
+                  <label data-date-long-name='IACUC Approval Date' data-date-field-name='iAcucSAppDate' class="inline-block-display no-wrap" data-test-requested-start-date-date><i class="fa fa-asterisk" aria-hidden="true"></i>IACUC Approval Date (mm/dd/yyyy)
+                  {{datetime-picker
+                        date=(format-unix-date coverSheet.iAcucSAppDate)
+                        keepInvalid=true
+                        useStrict=true
+                        focusOut=(action 'iAcucSFocusOut')
+                        focusIn=(action 'setCalendarFocusInValue')
+                        disabled=viewOnly
+                  }}
+                  <span class="contentError error-text block-display no-wrap" data-test-iacuc-approval-date-error>{{coverSheet.iAcucSAppDateError}}</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row margin-btm-0">
+                <div class="col-xs-4 padding-top-10">
+                  <label class="display-block no-wrap" data-test-animal-welfare-assurance-no><i class="fa fa-asterisk" aria-hidden="true"></i>PHS Animal Welfare Assurance Number
+                    {{input type="text" class="form-control" value=coverSheet.animalWelfareAssuNumber key-up=(action 'textCheck' 'coverSheet.animalWelfareAssuNumber' 'PHS Animal Welfare Assurance Number' 15) focus-out=(action 'trimInput' 'coverSheet.animalWelfareAssuNumber' 'PHS Animal Welfare Assurance Number' 15) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+                    <span class="contentError error-text display-block no-wrap" data-test-animal-welfare-assurance-no-error>{{coverSheet.animalWelfareAssuNumberError}}</span>
+                  </label>
+                </div>
+              </div>
+
+            {{/if}}
+
+          </div>
+        {{/if}}
+
+      </div>
+
+      <div class="checkbox padding-top-10" data-test-cover-sheet-human-subjects-container>
+        <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-human-subjects><input type="checkbox" name={{humanSubjectsName}} checked={{coverSheet.humanSubject}} {{action 'deselectInfo' humanSubjectsName on='change'}} disabled={{viewOnly}}>{{humanSubjectsName}}</label>              <a class="padding-left-10" data-test-cover-sheet-human-subjects-pappg-link href="{{props.pappgLinks.humanSubjects}}" target="_blank" title="opens in a new window">PAPPG II.D.5 <i class="fa fa-external-link" aria-hidden="true"></i></a>
+
+        {{#if coverSheet.humanSubject}}
+          <div class="padding-left-20 padding-top-10">
+            <p data-test-cover-sheet-human-subjects-description><i class="fa fa-asterisk" aria-hidden="true"></i>Has the human subjects research for the project been approved by an Institutional Review Board (IRB)?</p>
+
+
+            {{#radio-button groupValue=coverSheet.humanSubjectsAPEType value="approved" changed="changeHumanSubjectsSelection" disabled=viewOnly}}
+              <span data-test-human-subjects-approved class="{{if viewOnly 'disabled' ''}}">Approved</span>
+            {{/radio-button}}
+            <span class="padding-left-60">{{#radio-button groupValue=coverSheet.humanSubjectsAPEType value="pending" changed="changeHumanSubjectsSelection" disabled=viewOnly}}
+              <span data-test-human-subjects-pending class="{{if viewOnly 'disabled' ''}}">Pending</span>
+            {{/radio-button}}
+            </span>
+            <span class="padding-left-60">
+              {{#radio-button radioClass="padding-left-60" groupValue=coverSheet.humanSubjectsAPEType value="exempt" changed="changeHumanSubjectsSelection" disabled=viewOnly}}
+                <span data-test-human-subjects-exempt class="{{if viewOnly 'disabled' ''}}">Exempt</span>
+            {{/radio-button}}
+
+            </span>
+
+            {{#if (eq coverSheet.humanSubjectsAPEType 'approved')}}
+              <div class="form-group row margin-btm-0">
+                <div class="col-xs-4 padding-top-10">
+                  <label data-date-long-name='IRB Approval Date' data-date-field-name='iRbAppDate' class="inline-block-display no-wrap" data-test-irbappdate-date><i class="fa fa-asterisk" aria-hidden="true"></i>IRB Approval Date (mm/dd/yyyy)
+                  {{datetime-picker
+                        date=(format-unix-date coverSheet.iRbAppDate)
+                        keepInvalid=true
+                        useStrict=true
+                        focusOut=(action 'irbFocusOut')
+                        focusIn=(action 'setCalendarFocusInValue')
+                        disabled=viewOnly
+                  }}
+                  <span class="contentError error-text block-display no-wrap" data-test-irbappdate-date-error>{{coverSheet.iRbAppDateError}}</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row margin-btm-0">
+                <div class="col-xs-4 padding-top-10">
+                  <label class="display-block no-wrap" data-test-human-subjects-assurance-no>Federal Wide Assurance (FWA) Number
+                    {{input type="text" class="form-control" value=coverSheet.humanSubjectAssuNumber key-up=(action 'textCheck' 'coverSheet.humanSubjectAssuNumber' 'Federal Wide Assurance (FWA) Number' 15) focus-out=(action 'trimInput' 'coverSheet.humanSubjectAssuNumber' 'Federal Wide Assurance (FWA) Number' 15) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+                    <span class="contentError error-text display-block no-wrap" data-test-human-subjects-assurance-no-error>{{coverSheet.humanSubjectAssuNumberError}}</span>
+                  </label>
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if (eq coverSheet.humanSubjectsAPEType 'exempt')}}
+              <div class="margin-btm-0 padding-top-10" style="padding-left:316px;">
+                <div class="" style="width:236px;">
+                  <label class="display-block no-wrap" data-test-human-subjects-exempt-number><i class="fa fa-asterisk" aria-hidden="true"></i>Exemption Number
+                  {{input type="text" class="form-control" value=coverSheet.exemptionSubsection key-up=(action 'textCheck' 'coverSheet.exemptionSubsection' 'Exemption Number' 11) focus-out=(action 'trimInput' 'coverSheet.exemptionSubsection' 'Exemption Number' 11) focus-in=(action 'setFocusInValue') disabled=viewOnly}}
+                  <span class="contentError error-text display-block no-wrap" data-test-human-subjects-exempt-number-error>{{coverSheet.exemptionSubsectionError}}</span>
+                </label>
+                </div>
+              </div>
+            {{/if}}
+
+          </div>
+        {{/if}}
+
+      </div>
+
+      <div class="checkbox padding-top-10" data-test-cover-sheet-international-activities-container>
+        <label class="checkbox not-bold display-inline {{if viewOnly 'disabled' ''}}" data-test-cover-sheet-international-activities><input type="checkbox" name={{internationalActivitiesName}} checked={{coverSheet.intlActivities}} {{action 'deselectInfo' internationalActivitiesName on='change'}} disabled={{viewOnly}}>{{internationalActivitiesName}}</label>              {{popover-icon-tooltip '' 'For International Activities, only the first 5 countries you select will appear on the PDF version of the proposal, but all should be added below.'}} <a class="padding-left-10" data-test-cover-sheet-international-activities-pappg-link
+          href="{{props.pappgLinks.historicPlaces}}" target="_blank" title="opens in a new window">PAPPG II.C.2.j <i class="fa fa-external-link" aria-hidden="true"></i></a>
+
+        {{#if coverSheet.intlActivities}}
+
+          {{#each internationalActyCountries as |selectedCountry index| }}
+            <div class="form-inline padding-top-10">
+              <div class="form-group">
+                <label class="margin-btm-0" style={{if selectedCountry.intlCountryError 'position: relative; top: -25px;' }} for= {{concat "international-activities-country-select-" (add index 1)}}>
+                        <i class="fa fa-asterisk" aria-hidden="true"></i>Country {{add index 1}}.
+                </label>
+                <div class="display-inline-block">
+                  <span class="display-block">
+                          <select id={{concat "international-activities-country-select-" (add index 1)}} data-test-international-activities-country-select class={{if selectedCountry.intlCountryError 'error form-control' 'form-control' }} onchange={{action (action "selectIACountry" index) value="target.value"}} disabled={{viewOnly}}>
+
+                            {{#if (eq "" selectedCountry.intlCountryCode)}}
+                              <option value="" selected>Select Country</option>
+                            {{else}}
+                              <option value="">Select Country</option>
+                            {{/if}}
+
+                            {{#each sortedInternationalCountries as |country|}}
+                              {{#if (or (eq selectedCountry.intlCountryCode country.countryCode) (not (exists-in country internationalActyCountries)) )}}
+
+                                {{#if (eq selectedCountry.intlCountryCode country.countryCode)}}
+                                  <option value={{country.countryCode}} selected>{{country.countryName}}</option>
+                                {{else}}
+                                  <option value={{country.countryCode}}>{{country.countryName}}</option>
+                                {{/if}}
+
+                              {{/if}}
+
+                            {{/each}}
+                          </select>
+                          {{#if-permission 'proposal.data.modify'}}
+                            {{#if (gt internationalActyCountries.length 1)}}
+                              <a tabindex="0" title="Delete Country"  {{action "deleteIACountry" selectedCountry index}}  data-test-delete-international-activities-link><i class="fa fa-lg fa-trash-o" aria-hidden="true"></i></a>
+                            {{/if}}
+                          {{/if-permission}}
+                        </span>
+                  <span data-test-intl-country-error-message class= {{if selectedCountry.intlCountryError 'contentError error-text no-wrap margin-btm-10 margin-top-5' 'margin-btm-7 display-block' }}>{{selectedCountry.intlCountryError}}</span>
+                </div>
+              </div>
+            </div>
+
+          {{/each}}
+
+          {{#if-permission 'proposal.data.modify'}}
+            <a class="padding-left-20 padding-top-10" tabindex="0" {{action "addIACountry"}} class="{{internationalActyCountriesDisabledClass}}" disabled={{internationalActyCountriesDisabled}} title={{internationalActyCountriesDisabledText}} data-test-add-international-activities-link><i class="fa fa-plus margin-top-10"></i> Add Additional Country</a>
+          {{/if-permission}}
+        {{/if}}
+
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+<div class="panel-footer">
+  {{#if-permission 'proposal.data.modify'}}
+    {{#save-button btnClass="primary" onClick=(action 'save') isLoading=isSaving
+      data-test-cover-sheet-save-button=""}}Save{{/save-button}}
+  {{/if-permission}}
+  <button class="btn btn-default" {{action "viewFile"}} data-test-cover-sheet-preview-print-button>Preview/Print</button>
+  {{#if-permission 'proposal.data.modify'}}
+    {{link-to "Cancel" "proposal" trackNote="Cancel button_Cover Sheet page" class="btn btn-default not-active"}}
+  {{/if-permission}}
+</div>
+
+
+{{#if (gt allAwardeeOrgs.length 1) }}
+
+  <div class="modal" id="changeAwardeeOrgModal" tabindex="-1" role="dialog" aria-labelledby="changeAwardeeOrgModalLabel">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'closeChangeAwardeeOrgModal'}}><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="changeAwardeeOrgModalLabel" data-test-change-awardee-org-title>Change Awardee Organization</h4>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info" role="alert" data-test-change-awardee-org-info>
+            Changing the Awardee Organization will also update the Place of Performance.
+          </div>
+
+          <p>
+            <b data-test-current-awardee-org-title>Current Awardee Organization</b>
+            <br/><span data-test-current-awardee-org>{{awardeeOrg.organizationName}}</span>
+          </p>
+
+          <div class="form-group">
+
+            {{#if (gt selectNewAwardeeOrgOptions.length 1) }}
+              <label data-test-change-awardee-org-select-label for="changeAwardeeOrgSelect">New Awardee Organization</label>
+              <select data-test-change-awardee-org-select id="changeAwardeeOrgSelect" class="form-control" onchange= {{action "selectNewAwardeeOrg" value="target.value"}}>
+                      <option selected value="">Select Awardee Organization</option>
+                      {{#each selectNewAwardeeOrgOptions as |org|}}
+                          <option value={{org.id}}>{{org.organizationName}}</option>
+                      {{/each}}
+                    </select>
+            {{else}}
+              <p>
+                <b data-test-change-awardee-org-select-label>New Awardee Organization</b>
+                <br/><span data-test-change-awardee-single-option>{{selectNewAwardeeOrgOptions.[0].organizationName}}</span>
+              </p>
+            {{/if}}
+
+          </div>
+          {{#if (and selectedNewAwardeeOrg (gt selectNewAwardeeOrgOptions.length 1)) }}
+            <p>
+              <span data-test-change-awardee-org-new-street1>{{if selectedNewAwardeeOrg selectedNewAwardeeOrg.address.streetAddress '' }}</span><br/>
+              {{#if selectedNewAwardeeOrg.address.streetAddress2}}
+                <span data-test-change-awardee-org-new-street2>{{selectedNewAwardeeOrg.address.streetAddress2}}</span><br/>
+              {{/if}}
+              <span data-test-change-awardee-org-new-city-state-postal-code>
+                {{#if selectedNewAwardeeOrg }}
+
+                  {{if selectedNewAwardeeOrg.address.stateCode (concat selectedNewAwardeeOrg.address.cityName ',' ) selectedNewAwardeeOrg.address.cityName}}
+                  {{if selectedNewAwardeeOrg.address.stateCode selectedNewAwardeeOrg.address.stateCode ''}}
+                  {{if (eq "US" selectedNewAwardeeOrg.address.countryCode) (format-postal-code selectedNewAwardeeOrg.address.postalCode) selectedNewAwardeeOrg.address.postalCode}}
+
+                {{/if}}
+              </span><br/>
+              <span data-test-change-awardee-org-new-country>{{if selectedNewAwardeeOrg selectedNewAwardeeOrg.address.countryCode '' }}</span>
+            </p>
+          {{/if}}
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'changeAwardeeOrg'}} disabled={{changeAwardeeOrgButtonIsDisabled}} title="{{if changeAwardeeOrgButtonIsDisabled 'Select Organization Name first' ''}}" data-test-change-awardee-org-submit-button>Change Organization</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'closeChangeAwardeeOrgModal'}} data-test-change-awardee-org-cancel-button>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
+
+<div class="modal" id="deleteFederalAgencyModal" tabindex="-1" role="dialog" aria-labelledby="deleteFederalAgencyModalLabel">
+  <div class="modal-dialog" style="width: 375px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'clearFederalAgencyToDelete'}}><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteFederalAgencyModalLabel" data-test-federal-agency-modal-title>Delete Federal Agency</h4>
+      </div>
+      <div class="modal-body" data-test-delete-federal-agency-modal-body>
+        <p>Are you sure you want to delete this Federal Agency?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'confirmDeleteFederalAgency'}} data-test-federal-agency-modal-delete-button>Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'clearFederalAgencyToDelete'}} data-test-federal-agency-modal-cancel-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="infoDeselectWarningModal" tabindex="-1" role="dialog" aria-labelledby="infoDeselectWarningModalLabel">
+  <div class="modal-dialog" style="width: 500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'cancelDeselectInfo'}}><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="infoDeselectWarningModalLabel" data-test-info-deselect-modal-title>Warning: Information Will Be Lost</h4>
+      </div>
+      <div class="modal-body" data-test-delete-info-deselect-modal-body>
+        <p>Are you sure you want to deselect <b>{{deselectionName}}</b>?</p>
+        {{#unless (eq deselectionName internationalActivitiesName )}}
+          <p>If you continue, any information you have entered related to this section will be deleted.</p>
+          {{else}}
+            <p>If you continue, any countries you have selected will be deleted.</p>
+        {{/unless}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'confirmDeselectInfo'}} data-test-info-deselect-modal-continue-button>Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'cancelDeselectInfo'}} data-test-info-deselect-modal-cancel-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="changeSelectionWarningModal" tabindex="-1" role="dialog" aria-labelledby="changeSelectionWarningModalLabel">
+  <div class="modal-dialog" style="width: 500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'cancelChangeSelection'}}><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="changeSelectionWarningModalLabel" data-test-change-selection-modal-title>Warning: Information Will Be Lost</h4>
+      </div>
+      <div class="modal-body" data-test-change-selection-modal-body>
+        <p>Are you sure you want to make a different selection?</p>
+        <p>If you continue, any information you have entered related to the previous selection will be deleted.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'confirmChangeSelection'}} data-test-change-selection-modal-continue-button>Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'cancelChangeSelection'}} data-test-change-selection-modal-cancel-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteCountryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCountryModalLabel">
+  <div class="modal-dialog" style="width: 350px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" {{action 'clearDeleteCountry'}}><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteCountryModalLabel" data-test-delete-country-modal-title>Delete Country</h4>
+      </div>
+      <div class="modal-body" data-test-delete-delete-country-modal-body>
+        <p>Are you sure you want to delete this country?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" {{action 'confirmDeleteCountry'}} data-test-delete-country-modal-continue-button>Delete</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'clearDeleteCountry'}} data-test-delete-country-modal-cancel-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{unsaved-exit exitConfirmAction=(action 'exitCoverSheetConfirmed') exitCancelAction=(action 'exitCoverSheetCancelled')}}
+{{unsaved-exit exitConfirmAction=(action 'continueChangeAwardeeOrganization') exitCancelAction=(action 'exitCoverSheetCancelled')}}

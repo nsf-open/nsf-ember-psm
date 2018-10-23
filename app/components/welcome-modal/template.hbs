@@ -1,0 +1,22 @@
+
+<div class="modal in" style="position:absolute;" id="newPSMWelcomeModal" role="dialog" aria-labelledby="newPSMWelcomeModalLabel"  data-backdrop="static" data-test-modal-welcome-modal>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button {{action 'closeWelcomeModal'}} type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="newPSMWelcomeModalLabel">Welcome to NSF's New Proposal Preparation System</h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          <b>Research.gov's new proposal preparation system is now available for preparing and submitting full research non-collaborative proposals.</b> NSF welcomes all to give feedback! Proposals prepared in FastLane will continue to be available from FastLane.
+        </p>
+        <p>
+          <a {{action 'openReleaseTimeline'}}>View all the features available now and in future releases</a>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button {{action 'closeWelcomeModal'}} type="button" class="btn btn-primary" data-dismiss="modal">Continue to Proposal Preparation</button>
+      </div>
+    </div>
+  </div>
+</div>

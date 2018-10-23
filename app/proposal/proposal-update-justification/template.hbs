@@ -1,0 +1,33 @@
+{{title breadCrumb}}
+
+
+<div class="panel-body">
+
+    {{screen-messages-service fileUploadForm=true}}
+
+    <div class="panel panel-gray right pappg-panel">
+      <div class="panel-body">
+        <a data-test-project-summary-pappg-link href="{{props.pappgLinks.proposalFileUpdates}}" target="_blank" title="opens in a new window">Proposal File Updates (PAPPG) <i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
+    </div>
+
+    <p data-test-proposal-update-justification-instructions>
+        {{PROPOSAL_CONSTANTS.PROPOSAL_UPDATE_JUST.INSTRUCTIONS}}
+      <br><br>
+    </p>
+
+    <h4 data-test-proposal-update-justification-subheader>Proposal Update Justification</h4>
+    {{textarea value=justificationText cols="80" rows="6" key-up="pujTextChanged" disabled=textareaDisabled title=textareaDisabledText}}
+
+    <div class="panel-footer">
+      {{#if-permission 'proposal.data.modify'}}
+          <button class="btn btn-primary" {{action 'saveJustification'}} data-test-proposal-update-justification-save-button>Save</button>
+      {{/if-permission}}
+      {{#if-permission 'proposal.data.modify'}}
+        {{link-to "Cancel" "proposal" class="btn btn-default not-active"}}
+      {{/if-permission}}
+    </div>
+
+</div>
+
+{{unsaved-exit exitConfirmAction=(action 'exitPUJConfirmed') exitCancelAction=(action 'exitPUJCancelled')}}

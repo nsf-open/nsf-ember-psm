@@ -1,0 +1,53 @@
+
+    <label class="no-label-label"><select class="test-page-size-select dropdown form-control page-size-dropdown" onchange= {{action 'changePageSize' value='target.value'}} data-test-page-size-select>
+      {{#each pageSizes as |pageSize|}}
+        {{#if (eq pageSize.value pageSizeSelected)}}
+            <option value={{pageSize.value}} selected>{{pageSize.label}}</option>
+        {{else}}
+            <option value={{pageSize.value}}>{{pageSize.label}}</option>
+        {{/if}}
+      {{/each}}
+    </select></label>
+
+    <ul class="pagination pagination-sm pagination-buttons">
+      <li class="{{if canStepBackward '' 'disabled'}}">
+        <a href="#" {{action "goToFirstPage"}} title="First" aria-label="First">
+          <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+        </a>
+      </li>
+      <li class="{{if canStepBackward '' 'disabled'}}">
+        <a href="#" {{action "stepBackward"}} aria-label="Previous Results">
+          <i class="fa fa-angle-left" aria-hidden="true"></i> Prev
+        </a>
+      </li>
+
+      {{#each links as |link|}}
+        {{#if (eq currentPage link)}}
+          <li class="active"><a href="#" {{action "goToPage" link}}>{{link}}</a></li>
+        {{else}}
+          <li><a href="#"{{action "goToPage" link}}>{{link}}</a></li>
+        {{/if}}
+      {{/each}}
+
+      <li class="{{if canStepForward '' 'disabled'}}">
+        <a href="#" {{action "stepForward"}} aria-label="Next Results">
+          Next <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </a>
+      </li>
+      <li class="{{if canStepForward '' 'disabled'}}">
+        <a href="#" {{action "gotToLastPage"}} title="Last" aria-label="Last">
+          <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </a>
+      </li>
+    </ul>
+
+    <span class="showing-current-page pagination">
+        {{#if (gt endRecord totalRecordsShown)}}
+            Showing <strong>{{startRecord}}-{{totalRecordsShown}} </strong>of <span class="totalRecordsShown">{{totalRecordsShown}}</span>
+        {{else}}
+            Showing <strong>{{startRecord}}-{{endRecord}} </strong>of <span class="totalRecordsShown">{{totalRecordsShown}}</span>
+        {{/if}}
+    </span>
+
+
+{{yield}}

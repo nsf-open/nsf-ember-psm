@@ -1,0 +1,24 @@
+
+<h3 class="margin-btm-0">Select Proposal Type</h3>
+
+<div class="panel-body">
+  <p  class="bold">
+    What type of proposal will be used? {{popover-icon-tooltip "Proposal Type" proposalTypeInfoText "right" }}
+  </p>
+  <ul class="response-radio">
+    {{#each proposalTypes as |option|}}
+      <li class="{{option.disabledClass}} proposal-type" title="{{option.title}}">
+          {{#radio-button groupValue=wizard.proposalType value=option.code disabled=option.disabled changed="setProposalType"}}{{option.description}}{{/radio-button}}
+      </li>
+    {{/each}}
+  </ul>
+</div>
+
+<div class="panel-footer">
+  <div class="right">
+    <button data-test-previous-button class="btn btn-default" {{action 'previous'}}>Previous</button>
+    <button data-test-next-button class="btn btn-primary" title={{nextDisabledTitle}} disabled={{nextDisabled}} {{action 'next'}}>Next</button>
+  </div>
+</div>
+
+{{yield}}

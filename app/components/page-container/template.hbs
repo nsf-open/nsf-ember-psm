@@ -1,0 +1,20 @@
+
+
+<div class="panel">
+  <h1 class="panel-title">{{title}}
+    {{#if description}}
+      <span class="psm-pd-including-results">{{descriptionFormatted}}</span>
+    {{/if}}
+    {{#if (or institutionInfo subTitle)}}
+        <i class="sub-title" data-test-page-container-name>
+          {{#if institutionInfo}}For <span  data-test-page-container-institution-name>{{institutionName}}</span> {{popover-icon-tooltip '' institutionInfoText}}{{/if}}
+          {{#if subTitle}}{{subTitle}}{{/if}}
+        </i>
+    {{/if}}
+
+    {{#if false}}
+      <i class="sub-title">For Proposal - {{#if model.nsfPropId}}{{model.nsfPropId}}{{else}}{{model.propPrepId}}{{/if}}</i>
+    {{/if}}
+  </h1>
+  {{yield}}
+</div>
